@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Coupon Stack Calculator - TC McThrifty</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{paper:'#F4E7C5',paper2:'#EAD9AE',ink:'#151515',mustard:'#F2B705',hunter:'#1F5B3A',hunter2:'#2E7D4F',orange:'#EE7A1E',tagred:'#D7322A'},fontFamily:{pixel:['"Press Start 2P"','monospace'],body:['Archivo','system-ui','sans-serif']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
+<style>
+body{font-family:Archivo,system-ui,sans-serif;background:#F4E7C5;color:#151515;font-size:17px;line-height:1.5;background-image:radial-gradient(rgba(21,21,21,.08) 1.2px,transparent 1.4px);background-size:9px 9px}
+.card{background:#F4E7C5;border:4px solid #151515;box-shadow:6px 6px 0 #000}
+.btn{border:3px solid #151515;background:#F2B705;font-weight:800;padding:10px 16px;box-shadow:3px 3px 0 #000;cursor:pointer}
+.btn:active{transform:translate(3px,3px);box-shadow:none}
+.btn.alt{background:#F4E7C5}
+.btn:focus-visible,input:focus-visible,select:focus-visible{outline:4px solid #D7322A;outline-offset:2px}
+input,select{border:3px solid #151515;background:#fff;padding:8px;font:inherit;width:100%;min-height:44px}
+label{font-weight:700;font-size:14px;display:block;margin-bottom:2px}
+.step{border-left:6px solid #151515;padding-left:10px}
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:none;opacity:1}}
+.pop{animation:pop .25s ease-out both}
+@media (prefers-reduced-motion:reduce){.pop{animation:none}}
+</style>
+</head>
+<body>
+<main class="max-w-3xl mx-auto p-4 pb-16">
+ <header class="flex items-center gap-4 mb-5">
+  <img src="mascot.png" alt="TC McThrifty, a cheerful mascot in a green hat" class="w-20 h-20 object-contain bg-paper2 border-4 border-ink shrink-0">
+  <div>
+   <p class="font-pixel text-[9px] text-hunter leading-relaxed">T.C. McTHRIFTY MODULE</p>
+   <h1 class="font-pixel text-[15px] sm:text-lg leading-relaxed">Coupon Stack Calculator</h1>
+   <p class="text-sm">Enter a price, pile on the coupons, and find the order that saves the most.</p>
+  </div>
+ </header>
+
+ <section class="card p-4 mb-5" aria-labelledby="h-item">
+  <h2 id="h-item" class="font-extrabold text-xl mb-3">1. The item</h2>
+  <div class="grid grid-cols-2 gap-3">
+   <div><label for="price">Price of one ($)</label><input id="price" type="number" inputmode="decimal" min="0" step="0.01" value="40"></div>
+   <div><label for="qty">How many</label><input id="qty" type="number" inputmode="numeric" min="1" step="1" value="2"></div>
+  </div>
+  <p class="text-sm mt-2">Buy-one-get-one needs at least 2.</p>
+ </section>
+
+ <section class="card p-4 mb-5" aria-labelledby="h-add">
+  <h2 id="h-add" class="font-extrabold text-xl mb-3">2. Add a coupon</h2>
+  <form id="addf" class="grid grid-cols-2 gap-3" novalidate>
+   <div class="col-span-2 sm:col-span-1"><label for="ctype">Kind</label>
+    <select id="ctype"><option value="pct">Percent off (20% off)</option><option value="usd">Dollars off ($10 off)</option><option value="bogo">Buy one, get one free</option><option value="rew">Rewards credit ($ applied last)</option></select></div>
+   <div id="vwrap"><label for="cval" id="cvl">Percent (%)</label><input id="cval" type="number" inputmode="decimal" min="0" step="0.01" value="20"></div>
+   <div id="mwrap"><label for="cmin">Minimum spend ($, optional)</label><input id="cmin" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0"></div>
+   <div class="col-span-2 flex flex-wrap gap-3 items-center">
+    <button class="btn" type="submit"><i class="fa-solid fa-plus" aria-hidden="true"></i> Add coupon</button>
+    <button class="btn alt" type="button" id="ex">Try an example</button>
+    <button class="btn alt" type="button" id="clr">Clear coupons</button>
+   </div>
+  </form>
+  <p id="err" class="text-tagred font-bold mt-2" role="alert" hidden></p>
+  <ul id="clist" class="mt-4 space-y-2" aria-label="Your coupons"></ul>
+  <p id="cempty" class="mt-3 text-sm">No coupons yet. TC is disappointed, but not surprised.</p>
+ </section>
+
+ <section class="card p-4 mb-5" aria-live="polite" aria-labelledby="h-res">
+  <h2 id="h-res" class="font-extrabold text-xl mb-3">3. The best stack</h2>
+  <div id="res"><p>Add a price and at least one coupon.</p></div>
+ </section>
+
+ <p class="text-xs opacity-70">Rules used: coupons stack one after another, in the order shown. A coupon with a minimum spend only works if the running total is at least that much when it is used. Rewards credit always goes last and cannot push the total below $0. Real stores differ, so check the fine print once, then never again.</p>
+</main>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const m=n=>'$'+(Math.round(n*100)/100).toFixed(2);
+const r2=n=>Math.round(n*100)/100;
+let coupons=[],id=1;
+
+const KINDS={pct:'Percent off',usd:'Dollars off',bogo:'Buy one, get one free',rew:'Rewards credit'};
+function label(c){return c.type==='pct'?c.val+'% off':c.type==='usd'?m(c.val)+' off':c.type==='bogo'?'BOGO (second one free)':m(c.val)+' rewards credit'}
+function minTxt(c){return c.min>0?' (min spend '+m(c.min)+')':''}
+
+/* apply one coupon to a running subtotal; returns new subtotal or null if it cannot be used */
+function apply(c,sub,n,unit){
+ if(c.min>0 && sub<c.min) return null;
+ if(c.type==='pct') return r2(sub*(1-c.val/100));
+ if(c.type==='usd') return r2(Math.max(0,sub-c.val));
+ if(c.type==='bogo'){ if(n<2) return null; const free=Math.floor(n/2); return r2(sub*(n-free)/n); }
+ return null;
+}
+function runOrder(order,rews,start,n,unit){
+ let sub=start,steps=[],skipped=[];
+ for(const c of order){const next=apply(c,sub,n,unit);
+  if(next===null){skipped.push(c);continue}
+  steps.push({c,before:sub,after:next});sub=next}
+ for(const c of rews){ if(c.min>0 && sub<c.min){skipped.push(c);continue}
+  const next=r2(Math.max(0,sub-c.val));steps.push({c,before:sub,after:next});sub=next}
+ return {final:sub,steps,skipped};
+}
+function best(start,n,unit){
+ const rews=coupons.filter(c=>c.type==='rew'),rest=coupons.filter(c=>c.type!=='rew');
+ let top=null;
+ const consider=order=>{const r=runOrder(order,rews,start,n,unit);
+  if(!top||r.final<top.final-1e-9||(Math.abs(r.final-top.final)<1e-9&&r.steps.length<top.steps.length))top={...r,order:[...order]}};
+ const used=new Array(rest.length).fill(false);
+ (function go(order){consider(order);
+  for(let i=0;i<rest.length;i++){if(used[i])continue;used[i]=true;order.push(rest[i]);go(order);order.pop();used[i]=false}})([]);
+ return top;
+}
+function render(){
+ const ul=$('#clist');
+ ul.innerHTML=coupons.map(c=>`<li class="flex items-center gap-3 border-[3px] border-ink bg-paper2 p-2"><span class="font-pixel text-[8px] bg-ink text-mustard px-1.5 py-1 shrink-0">${KINDS[c.type].toUpperCase().slice(0,8)}</span><span class="flex-1 font-bold">${esc(label(c))}${esc(minTxt(c))}</span><button class="btn alt !p-1 !px-3" data-rm="${c.id}" aria-label="Remove ${esc(label(c))}"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></li>`).join('');
+ $('#cempty').hidden=coupons.length>0;
+ ul.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{coupons=coupons.filter(c=>c.id!=b.dataset.rm);render()});
+ const price=parseFloat($('#price').value),n=parseInt($('#qty').value,10);
+ const res=$('#res');
+ if(!(price>0)||!(n>=1)){res.innerHTML='<p class="text-tagred font-bold">Enter a price above $0 and a quantity of at least 1.</p>';return}
+ const start=r2(price*n);
+ if(coupons.length===0){res.innerHTML=`<p>Full price is <b>${m(start)}</b>. TC refuses to say that number out loud. Add a coupon.</p>`;return}
+ if(coupons.length>8){res.innerHTML='<p class="text-tagred font-bold">That is a lot of coupons. Keep it to 8 or fewer and TC will find the best order.</p>';return}
+ const b=best(start,n,price);
+ const rews=coupons.filter(c=>c.type==='rew'),rest=coupons.filter(c=>c.type!=='rew');
+ const naive=runOrder(rest,rews,start,n,price); /* the order you typed them in */
+ const saved=r2(start-b.final),pct=start>0?Math.round(saved/start*100):0;
+ const extra=r2(naive.final-b.final);
+ const quip=pct>=90?'That is not shopping, that is a heist with receipts.':pct>=60?'TC is quietly proud. Do not tell anyone.':pct>=30?'Respectable. Now find the next coupon.':pct>0?'A start. TC has seen worse. TC has done worse.':'Nothing stacked. Check the minimum spends.';
+ let h=`<div class="pop border-4 border-ink bg-mustard p-4 text-center">
+  <p class="text-sm font-bold">YOU PAY</p>
+  <p class="font-pixel text-2xl sm:text-3xl my-2 leading-relaxed">${m(b.final)}</p>
+  <p class="font-bold">instead of <s>${m(start)}</s>. You keep <span class="text-hunter">${m(saved)}</span> (${pct}% off).</p>
+  <p class="text-sm mt-1">${esc(quip)}</p></div>`;
+ h+=`<h3 class="font-extrabold mt-5 mb-2">Use them in this order</h3><ol class="space-y-2">`;
+ h+=`<li class="step"><b>Start:</b> ${m(price)} each x ${n} = ${m(start)}</li>`;
+ b.steps.forEach((s,i)=>{h+=`<li class="step"><b>${i+1}. ${esc(label(s.c))}</b>${esc(minTxt(s.c))}<br><span class="text-sm">${m(s.before)} &rarr; <b>${m(s.after)}</b> (saves ${m(s.before-s.after)})</span></li>`});
+ h+=`</ol>`;
+ const left=coupons.filter(c=>!b.steps.some(x=>x.c===c));
+ if(left.length)h+=`<p class="mt-3 text-sm font-bold text-tagred">Left out: ${left.map(c=>esc(label(c))).join(', ')}. ${left.some(c=>c.type==='bogo')&&n<2?'BOGO needs 2 or more items. ':''}They either cannot be used (minimum spend or quantity) or they save nothing extra here.</p>`;
+ h+=extra>0.004?`<p class="mt-3 border-[3px] border-ink bg-paper2 p-3 font-bold"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> Order matters: using them in the order you added them would cost ${m(naive.final)}. The order above saves you ${m(extra)} more.</p>`
+   :`<p class="mt-3 border-[3px] border-ink bg-paper2 p-3 font-bold"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Your coupons are already in a best order, or the order makes no difference.</p>`;
+ res.innerHTML=h;
+}
+/* the form */
+function kindUI(){const t=$('#ctype').value;
+ $('#vwrap').hidden=t==='bogo';$('#mwrap').hidden=t==='rew';
+ $('#cvl').textContent=t==='pct'?'Percent (%)':'Dollars ($)';
+ $('#cval').value=t==='pct'?20:t==='usd'?10:5}
+$('#ctype').onchange=kindUI;kindUI();
+$('#addf').onsubmit=e=>{e.preventDefault();const t=$('#ctype').value;
+ const val=t==='bogo'?0:parseFloat($('#cval').value);const min=t==='rew'?0:(parseFloat($('#cmin').value)||0);
+ const err=$('#err');
+ if(t!=='bogo'&&!(val>0)){err.textContent='Enter an amount above zero.';err.hidden=false;return}
+ if(t==='pct'&&val>100){err.textContent='A percent off cannot be more than 100.';err.hidden=false;return}
+ if(coupons.length>=8){err.textContent='Eight coupons is the limit. TC has a stack, not a binder.';err.hidden=false;return}
+ err.hidden=true;coupons.push({id:id++,type:t,val,min});$('#cmin').value='';render()};
+$('#clr').onclick=()=>{coupons=[];render()};
+$('#ex').onclick=()=>{$('#price').value=40;$('#qty').value=2;id=1;
+ coupons=[{id:id++,type:'pct',val:20,min:0},{id:id++,type:'usd',val:10,min:30},{id:id++,type:'bogo',val:0,min:0},{id:id++,type:'rew',val:5,min:0}];render()};
+['price','qty'].forEach(k=>$('#'+k).addEventListener('input',render));
+render();
+</script>
+</body>
+</html>

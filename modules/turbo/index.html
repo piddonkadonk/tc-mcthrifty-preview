@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Receipt Roast - TC McThrifty</title>
+<meta name="description" content="Type in what you bought and what you paid. TC McThrifty roasts it and tells you what you should have paid.">
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;700;800&family=Special+Elite&family=VT323&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{colors:{paper:'#F4E7C5',ink:'#151515',mustard:'#F2B705',hunter:'#1F5B3A',tagred:'#D7322A',slip:'#FBF6E6'},
+fontFamily:{mast:['Anton','Impact','sans-serif'],zine:['"Special Elite"','"Courier New"','monospace'],vt:['VT323','monospace'],body:['Archivo','system-ui','sans-serif']}}}}
+</script>
+<style>
+body{font-family:Archivo,system-ui,sans-serif;background:#1F5B3A;color:#151515;min-height:100vh;
+ background-image:repeating-linear-gradient(45deg,rgba(0,0,0,.14) 0 12px,transparent 12px 24px)}
+.tear{position:relative;margin-bottom:14px}
+.tear::after{content:"";position:absolute;left:0;right:0;bottom:-14px;height:14px;
+ background:linear-gradient(135deg,#FBF6E6 7px,transparent 0) 0 0/14px 14px,linear-gradient(225deg,#FBF6E6 7px,transparent 0) 0 0/14px 14px}
+.barcode{height:44px;background:repeating-linear-gradient(90deg,#151515 0 2px,transparent 2px 4px,#151515 4px 5px,transparent 5px 9px,#151515 9px 12px,transparent 12px 14px)}
+.stamp{border:4px solid #D7322A;color:#D7322A;font-family:Anton,Impact,sans-serif;letter-spacing:.06em;text-transform:uppercase;transform:rotate(-8deg);padding:2px 10px;display:inline-block;opacity:.9}
+.stamp.good{border-color:#1F5B3A;color:#1F5B3A;transform:rotate(5deg)}
+@keyframes print{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+.print{animation:print .9s steps(14) both}
+@media (prefers-reduced-motion:reduce){.print{animation:none}}
+.pop{box-shadow:4px 4px 0 0 #151515}
+:focus-visible{outline:4px solid #D7322A;outline-offset:2px}
+</style>
+</head>
+<body>
+<header class="px-4 pt-8 pb-4 text-center">
+  <p class="font-vt text-2xl text-mustard">TC McTHRIFTY PRESENTS</p>
+  <h1 class="font-mast uppercase text-paper leading-[.9] text-[56px] sm:text-[92px]" style="text-shadow:4px 4px 0 #151515">Receipt<br><span class="text-mustard">Roast</span></h1>
+  <p class="mt-3 text-paper font-zine text-lg max-w-xl mx-auto">Type in what you bought and what you paid. TC will roast it and tell you what you should have paid.</p>
+</header>
+
+<main class="max-w-4xl mx-auto px-4 pb-16 grid lg:grid-cols-2 gap-8 items-start">
+
+  <!-- input -->
+  <section class="bg-paper border-4 border-ink pop p-5" aria-labelledby="in-h">
+    <h2 id="in-h" class="font-mast uppercase text-3xl text-hunter">Hand me the receipt</h2>
+    <form id="add" class="mt-4 grid grid-cols-5 gap-3" novalidate>
+      <div class="col-span-5 sm:col-span-3">
+        <label for="item" class="font-extrabold text-sm block mb-1">What did you buy?</label>
+        <input id="item" maxlength="40" autocomplete="off" class="w-full min-h-[44px] border-4 border-ink bg-white p-2 text-base" placeholder="a latte, jeans, a couch...">
+      </div>
+      <div class="col-span-3 sm:col-span-1">
+        <label for="paid" class="font-extrabold text-sm block mb-1">Paid ($)</label>
+        <input id="paid" inputmode="decimal" autocomplete="off" class="w-full min-h-[44px] border-4 border-ink bg-white p-2 text-base" placeholder="6.75">
+      </div>
+      <div class="col-span-2 sm:col-span-1 flex items-end">
+        <button class="w-full min-h-[44px] bg-mustard border-4 border-ink font-extrabold pop" type="submit"><i class="fa-solid fa-plus"></i> Add</button>
+      </div>
+      <p id="err" class="col-span-5 hidden font-bold text-tagred" role="alert"></p>
+    </form>
+
+    <ul id="lines" class="mt-4 space-y-2 list-none p-0" aria-live="polite"></ul>
+    <p id="none" class="mt-4 font-zine">Nothing on the receipt yet. Even a sad one counts.</p>
+
+    <div class="mt-5 flex flex-wrap gap-3">
+      <button id="roast" class="min-h-[48px] px-5 bg-tagred text-paper font-mast uppercase text-xl border-4 border-ink pop" type="button"><i class="fa-solid fa-fire"></i> Roast it</button>
+      <button id="sample" class="min-h-[48px] px-4 bg-white font-bold border-4 border-ink pop" type="button">Try a sample receipt</button>
+      <button id="clear" class="min-h-[48px] px-4 bg-paper font-bold border-4 border-ink" type="button">Clear</button>
+    </div>
+  </section>
+
+  <!-- output -->
+  <section aria-labelledby="out-h" class="min-h-[200px]">
+    <h2 id="out-h" class="sr-only">Your roasted receipt</h2>
+    <div id="out" class="hidden">
+      <div class="tear bg-slip border-x-4 border-t-4 border-ink px-5 pt-5 pb-3 font-zine print" id="slip">
+        <p class="text-center font-mast uppercase text-2xl leading-none">TC McThrifty</p>
+        <p class="text-center text-sm">Shopping Audit &middot; <span id="date"></span></p>
+        <p class="text-center text-sm mt-1">Anonymous. Cheap. Always right.</p>
+        <hr class="border-t-2 border-dashed border-ink my-3">
+        <div id="rows" class="space-y-4"></div>
+        <hr class="border-t-2 border-dashed border-ink my-3">
+        <dl class="text-lg space-y-1">
+          <div class="flex justify-between"><dt>YOU PAID</dt><dd id="t-paid">$0.00</dd></div>
+          <div class="flex justify-between"><dt>YOU SHOULD HAVE PAID</dt><dd id="t-fair">$0.00</dd></div>
+          <div class="flex justify-between font-bold"><dt>LEFT ON THE TABLE</dt><dd id="t-left" class="text-tagred">$0.00</dd></div>
+        </dl>
+        <div class="text-center mt-4"><span id="verdict-stamp" class="stamp"></span></div>
+        <p id="verdict" class="mt-3 text-center text-lg"></p>
+        <div class="barcode mt-4" aria-hidden="true"></div>
+        <p class="text-center text-xs mt-1">THANK YOU FOR NOT PAYING FULL PRICE NEXT TIME</p>
+      </div>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <button id="copy" class="min-h-[44px] px-4 bg-mustard font-bold border-4 border-ink pop" type="button"><i class="fa-regular fa-copy"></i> Copy my roast</button>
+        <button id="again" class="min-h-[44px] px-4 bg-paper font-bold border-4 border-ink" type="button">Roast another</button>
+        <span id="copied" class="self-center font-vt text-2xl text-paper hidden">Copied. Share your shame.</span>
+      </div>
+    </div>
+    <div id="idle" class="border-4 border-dashed border-paper/60 p-8 text-center text-paper font-zine text-lg">
+      <i class="fa-solid fa-receipt text-5xl text-mustard"></i>
+      <p class="mt-3">Your roasted receipt prints here.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="text-center text-paper/80 font-zine pb-8 px-4">TC McThrifty modules &middot; for fun, and for a few dollars back in your pocket</footer>
+
+<script>
+/* ---- price brain: item words, thrift price range, a roast, and a real tip ---- */
+const DB=[
+ {k:['latte','cappuccino','coffee','espresso','mocha','frappe'],lo:1,hi:2,roast:'You paid rent on a cup.',tip:'Gas station coffee with the app deal, or a thermos from home. The second cup in the fridge counts as iced coffee.'},
+ {k:['burger','fries','combo meal','nuggets','drive-thru','drive thru'],lo:3,hi:6,roast:'The fries were free. You just did not know the trick.',tip:'Check the app before you order. The deal hides under rewards, not menu.'},
+ {k:['sandwich','lunch','salad','bowl','wrap','sushi','pizza','takeout','take-out'],lo:4,hi:8,roast:'That lunch had a price tag and a personality. Neither was cheap.',tip:'Lunch specials, day-old bins and leftovers cost less than the line you stood in.'},
+ {k:['beer','cocktail','wine','drink','margarita'],lo:3,hi:7,roast:'Happy hour has a clock. You ignored it.',tip:'Go during happy hour, or bring a friend with a coupon and a stern look.'},
+ {k:['jeans','pants','trousers','slacks'],lo:6,hi:12,roast:'Those pants were already broken in by someone else, and cheaper.',tip:'Thrift stores on fill-a-bag days. Check the pockets for treasure.'},
+ {k:['t-shirt','tshirt','shirt','tee','flannel','blouse','polo'],lo:3,hi:8,roast:'A shirt is a shirt. Somebody already washed this one for you.',tip:'The thrift rack, then a hem if it needs one. Vintage is just old with a story.'},
+ {k:['jacket','coat','parka','blazer','vest'],lo:10,hi:25,roast:'You bought warmth at a fashion price.',tip:'Thrift stores get the good coats in fall. Look in September, not December.'},
+ {k:['sweater','hoodie','sweatshirt','cardigan','dress','skirt'],lo:5,hi:12,roast:'Soft and cheap exist together. You just never met them.',tip:'Thrift racks sort by color, so scan fast and pick the soft ones.'},
+ {k:['shoes','boots','sneakers','sandals','heels','loafers'],lo:10,hi:25,roast:'Your feet have never once asked about the brand.',tip:'Look for barely worn pairs at thrift stores and swap sites. Check the soles, skip the smell test.'},
+ {k:['couch','sofa','loveseat','sectional'],lo:40,hi:120,roast:'A couch is where you sit. It does not need a showroom.',tip:'Estate sales, curb alerts and moving sales. Bring a van and a friend with strong knees.'},
+ {k:['table','desk','chair','dresser','nightstand','stool'],lo:15,hi:60,roast:'Solid wood has been on sale since before you were born.',tip:'Estate sales on day two. Ask for the bundle price and be kind.'},
+ {k:['bookshelf','shelf','cabinet','bookcase'],lo:15,hi:40,roast:'You paid for particle board and a lot of hope.',tip:'Estate sales and local buy-nothing groups have real wood for the price of gas.'},
+ {k:['lamp','light','lantern'],lo:5,hi:15,roast:'The lamp works the same at any price. The shade is the only thing that glows up.',tip:'Thrift stores have a lamp aisle. New shade is two dollars.'},
+ {k:['book','novel','paperback','hardcover','textbook'],lo:1,hi:4,roast:'Words are cheaper than that. They have been since the printing press.',tip:'Library sales and thrift shelves. Used books are the same words.'},
+ {k:['record','vinyl','lp','album'],lo:2,hi:8,roast:'The record spins the same at any price. Check the dollar bin first.',tip:'Estate sales and thrift bins. Look for scratches, not bargains.'},
+ {k:['dvd','blu-ray','bluray'],lo:1,hi:3,roast:'A disc is a disc. This one has probably been on a shelf waiting for you.',tip:'The thrift bin, or the library for free.'},
+ {k:['game','puzzle','board game','toy','lego'],lo:2,hi:6,roast:'Somebody finished it already and now it is cheap.',tip:'Count the pieces at the register. Thrift stores rarely do.'},
+ {k:['laptop','computer','macbook','chromebook'],lo:150,hi:300,roast:'You bought a brand new laptop to read email.',tip:'Refurbished or last year model. Ask for the warranty and check the battery health.'},
+ {k:['phone','smartphone','iphone','android'],lo:100,hi:250,roast:'The phone you did not buy new still makes calls.',tip:'Refurbished from the carrier or a trusted seller, with a return window.'},
+ {k:['headphones','earbuds','speaker'],lo:20,hi:60,roast:'The music does not know the price.',tip:'Open-box and refurbished. Test the left and right channels at the counter.'},
+ {k:['tv','television','monitor'],lo:60,hi:150,roast:'A used screen has the same pixels and a smaller bill.',tip:'Estate sales and local listings. Test it with a movie, not a hope.'},
+ {k:['bike','bicycle'],lo:60,hi:150,roast:'Someone is selling a bike they promised to ride.',tip:'Garage sales in spring. Check the brakes and the tires and negotiate.'},
+ {k:['flight','plane ticket','airfare','plane','airline'],lo:150,hi:400,roast:'You booked like a person with a schedule.',tip:'Fare alerts and error fares. Be flexible by a day, and book the one with a 24-hour cancel.'},
+ {k:['movie ticket','cinema','theater ticket'],lo:4,hi:8,roast:'You paid prime time for a dark room.',tip:'Matinees and discount Tuesdays. The popcorn is not mandatory.'},
+ {k:['concert','show ticket','tickets'],lo:25,hi:60,roast:'The band would have played the same if you waited for the resale drop.',tip:'Check resale the day of the show. Prices usually fall near the door.'},
+ {k:['haircut','hair cut','salon'],lo:12,hi:25,roast:'Hair grows back. Your money does not.',tip:'Beauty school students charge less and have a teacher watching.'},
+ {k:['candle','soap','lotion'],lo:2,hi:5,roast:'You paid extra for a smell.',tip:'Thrift stores have a candle shelf. Light it, sniff it, done.'},
+ {k:['mug','plate','dish','bowl set','cup','glass','pan','pot'],lo:1,hi:3,roast:'Dishes are the most thrifted thing on earth. You just did not look.',tip:'Thrift stores have a dish aisle. Pick the heavy ones and wash them twice.'},
+ {k:['frame','picture frame','art','poster'],lo:1,hi:4,roast:'The frame is the whole price. The picture is yours anyway.',tip:'Thrift frames. Swap the picture and nobody knows.'},
+ {k:['plant','succulent','houseplant','flowers'],lo:2,hi:8,roast:'Plants grow for free. You paid for the pot.',tip:'Ask a friend for a cutting. The pot is a coffee mug.'},
+ {k:['gift','present'],lo:3,hi:10,roast:'The thought counts. The receipt does not need to.',tip:'Thrift a great gift and wrap it. Nobody checks the tag.'}
+];
+const FALLBACK={lo:null,hi:null,roast:'I do not have that one in my book, but I have a feeling.',tip:'Check a thrift store first, then wait for a coupon, then ask for the bundle price.'};
+
+const TIERS=[
+ {max:1.0,stamp:'Steal',good:true,line:['You paid less than I would have. I am proud and slightly jealous.','That price makes me emotional.','Frame the receipt.']},
+ {max:1.35,stamp:'Fair',good:true,line:['Close enough. I will allow it.','Not a steal, not a mugging. A shrug with a receipt.','You are almost one of us.']},
+ {max:2.2,stamp:'Mugged',good:false,line:['You were gently mugged, with a smile.','A price like that needs a witness.','Somewhere, a cashier is very pleased.']},
+ {max:4,stamp:'Robbed',good:false,line:['That is a robbery with a bag.','I need to sit down.','You did not buy it. You donated to it.']},
+ {max:1e9,stamp:'Highway Robbery',good:false,line:['I would call someone, but they are in on it.','Please step away from the register.','This receipt is a cry for help.']}
+];
+const VERDICTS=[
+ {max:1.1,stamp:'Certified Cheapskate',text:'You shop like me. I have no notes. Maybe one.'},
+ {max:1.7,stamp:'Almost There',text:'You are one coupon away from greatness.'},
+ {max:2.8,stamp:'Gently Mugged',text:'You are paying for the lights, the music and the person who hid the good stuff.'},
+ {max:1e9,stamp:'Full-Price Person',text:'I respect the confidence. I would not let you near a register alone.'}
+];
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const usd=n=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const hash=s=>[...s].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);
+let items=[];
+
+function parsePrice(v){const n=parseFloat(String(v).replace(/[$,\s]/g,''));return Number.isFinite(n)&&n>0&&n<1e6?Math.round(n*100)/100:null}
+function lookup(name){const l=name.toLowerCase();return DB.find(e=>e.k.some(k=>l.includes(k)))||null}
+
+function renderLines(){
+  $('none').classList.toggle('hidden',items.length>0);
+  $('lines').innerHTML=items.map((it,i)=>`<li class="flex items-center justify-between gap-3 bg-white border-2 border-ink px-3 py-2"><span class="font-zine min-w-0 truncate">${esc(it.name)}</span><span class="flex items-center gap-3 shrink-0"><b>${usd(it.paid)}</b><button type="button" class="min-w-[44px] min-h-[44px] text-tagred" data-rm="${i}" aria-label="Remove ${esc(it.name)}"><i class="fa-solid fa-xmark"></i></button></span></li>`).join('');
+}
+function showErr(m){const e=$('err');e.textContent=m;e.classList.toggle('hidden',!m)}
+
+$('add').addEventListener('submit',e=>{
+  e.preventDefault();
+  const name=$('item').value.trim(),paid=parsePrice($('paid').value);
+  if(!name){showErr('What did you buy? Even "a regret" counts.');return}
+  if(paid===null){showErr('What did it cost? Numbers only, like 6.75.');return}
+  if(items.length>=12){showErr('Twelve lines is plenty. Roast these first.');return}
+  showErr('');items.push({name,paid});$('item').value='';$('paid').value='';renderLines();$('item').focus();
+});
+$('lines').addEventListener('click',e=>{const b=e.target.closest('[data-rm]');if(!b)return;items.splice(Number(b.dataset.rm),1);renderLines()});
+$('sample').addEventListener('click',()=>{items=[{name:'Large latte',paid:6.75},{name:'Jeans',paid:34},{name:'Burger combo',paid:9.5},{name:'Used paperback',paid:2.5}];showErr('');renderLines()});
+$('clear').addEventListener('click',()=>{items=[];showErr('');renderLines();$('out').classList.add('hidden');$('idle').classList.remove('hidden')});
+$('again').addEventListener('click',()=>{$('out').classList.add('hidden');$('idle').classList.remove('hidden');$('item').focus();window.scrollTo({top:0,behavior:'smooth'})});
+
+let lastText='';
+$('roast').addEventListener('click',()=>{
+  if(!items.length){showErr('The receipt is empty. Add one thing, and I will do the rest.');return}
+  showErr('');
+  let tp=0,tf=0,left=0,rows='',txt='TC McThrifty Shopping Audit\n';
+  items.forEach(it=>{
+    const e=lookup(it.name)||FALLBACK;
+    let lo,hi,range;
+    if(e.lo===null){lo=Math.max(0.25,it.paid*0.3);hi=Math.max(lo,it.paid*0.55);range='a rough guess'}
+    else{lo=e.lo;hi=e.hi;range=usd(lo)+' to '+usd(hi)}
+    const fair=Math.round(((lo+hi)/2)*100)/100;
+    const ratio=it.paid/fair;
+    const tier=TIERS.find(t=>ratio<=t.max);
+    const line=tier.line[hash(it.name+it.paid)%tier.line.length];
+    const over=Math.max(0,it.paid-fair);
+    tp+=it.paid;tf+=Math.min(fair,it.paid>fair?fair:it.paid);left+=over;
+    const shouldPay=Math.min(fair,it.paid>fair?fair:it.paid);
+    rows+=`<div><div class="flex justify-between text-lg"><span class="font-bold uppercase min-w-0 break-words pr-2">${esc(it.name)}</span><span>${usd(it.paid)}</span></div>
+      <p class="text-[15px] mt-1">${esc(e.roast)} ${esc(line)}</p>
+      <p class="text-[15px] mt-1"><b>Should have paid:</b> ${usd(shouldPay)} <span class="opacity-70">(${range} used or on deal)</span></p>
+      <p class="text-[15px] mt-1"><b>Do this:</b> ${esc(e.tip)}</p>
+      <span class="stamp ${tier.good?'good':''} mt-2 text-sm">${tier.stamp}</span></div>`;
+    txt+=`\n${it.name}: paid ${usd(it.paid)}, should have paid ${usd(shouldPay)}. ${e.roast} ${line}`;
+  });
+  const overall=tp/Math.max(tf,0.01),v=VERDICTS.find(x=>overall<=x.max);
+  $('rows').innerHTML=rows;$('t-paid').textContent=usd(tp);$('t-fair').textContent=usd(tf);$('t-left').textContent=usd(left);
+  $('verdict-stamp').textContent=v.stamp;$('verdict-stamp').className='stamp'+(overall<=1.7?' good':'');$('verdict').textContent=v.text;
+  $('date').textContent=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  txt+=`\n\nPaid ${usd(tp)}. Should have paid ${usd(tf)}. Left on the table: ${usd(left)}. Verdict: ${v.stamp}.`;lastText=txt;
+  const slip=$('slip');slip.classList.remove('print');void slip.offsetWidth;slip.classList.add('print');
+  $('idle').classList.add('hidden');$('out').classList.remove('hidden');$('copied').classList.add('hidden');
+  if(matchMedia('(max-width: 1023px)').matches){$('out').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}
+});
+$('copy').addEventListener('click',async()=>{
+  try{await navigator.clipboard.writeText(lastText)}catch(e){const t=document.createElement('textarea');t.value=lastText;document.body.appendChild(t);t.select();try{document.execCommand('copy')}catch(_){}t.remove()}
+  $('copied').classList.remove('hidden');
+});
+renderLines();
+</script>
+</body>
+</html>

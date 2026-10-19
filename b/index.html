@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TC McThrifty</title>
+<meta name="description" content="Minnesota's premier anonymous cheapskate and thrift thrill-seeker.">
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=Archivo:wght@400;600;800&family=Bowlby+One+SC&family=Press+Start+2P&family=Special+Elite&display=swap" rel="stylesheet">
+<script>
+/* tokens from the mascot art (Prince's spec) */
+tailwind.config = { theme: { extend: {
+  colors: { paper:'#F4E7C5', paper2:'#EAD9AE', ink:'#151515', mustard:'#F2B705', hunter:'#1F5B3A', hunter2:'#2E7D4F', orange:'#EE7A1E', tagred:'#D7322A', sky:'#7FC6D9' },
+  fontFamily: { mast:['Anton','Impact','sans-serif'], news:['Newsreader','Georgia','serif'], display:['"Bowlby One SC"','Impact','sans-serif'], pixel:['"Press Start 2P"','monospace'], body:['Archivo','system-ui','sans-serif'], zine:['"Special Elite"','"Courier New"','monospace'] },
+  boxShadow: { pop:'4px 4px 0 0 #000', popl:'8px 8px 0 0 #000', pops:'2px 2px 0 0 #000' }
+}}}
+</script>
+<style>
+  html{scroll-behavior:smooth}
+  body{font-family:Archivo,system-ui,sans-serif;background:#F4E7C5;color:#151515;overflow-x:hidden;font-size:17px;line-height:1.55}
+  @media (min-width:1024px){body{font-size:18px}}
+  .halftone{background-image:radial-gradient(rgba(21,21,21,.08) 1.2px,transparent 1.4px);background-size:9px 9px}
+  .plaid{background-image:repeating-linear-gradient(45deg,rgba(0,0,0,.14) 0 12px,transparent 12px 24px)}
+  .lift{transition:transform .1s,box-shadow .1s}
+  .lift:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 0 #000}
+  .lift:active{transform:translate(4px,4px);box-shadow:0 0 0 0 #000}
+  .chip[aria-pressed="true"]{background:#F2B705}
+  .tagcut{clip-path:polygon(0 0,calc(100% - 14px) 0,100% 50%,calc(100% - 14px) 100%,0 100%)}
+  .perf{border-left:4px dashed #151515}
+  .cut{border-top:4px dashed #151515;position:relative}
+  .torn{position:relative;margin-bottom:14px}
+  .torn::after{content:"";position:absolute;left:0;right:0;bottom:-14px;height:14px;
+    background:linear-gradient(135deg,#F4E7C5 7px,transparent 0) 0 0/14px 14px,linear-gradient(225deg,#F4E7C5 7px,transparent 0) 0 0/14px 14px}
+  @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .marquee{display:flex;width:max-content;animation:marquee 30s linear infinite}
+  @keyframes bin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .bin{animation:bin .35s ease-out both}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  .fadein{animation:fadein .25s ease-out both}
+  @media (prefers-reduced-motion:reduce){.marquee{animation:none}.bin,.fadein{animation:none}html{scroll-behavior:auto}.lift{transition:none}}
+  .tagx{font:800 11px/1 Archivo,sans-serif;letter-spacing:.1em;text-transform:uppercase}
+  .sticker{display:inline-block;font:800 12px/1 Archivo,sans-serif;letter-spacing:.06em;text-transform:uppercase;background:#F4E7C5;color:#151515;border:2px solid #151515;border-radius:999px;padding:7px 12px;box-shadow:2px 2px 0 0 #151515}
+  .doodle{position:absolute;pointer-events:none}
+  #feed > li:first-child h3{font-size:clamp(24px,3vw,34px);line-height:1.12}
+  @media (min-width:768px){#feed > li:first-child{grid-column:span 2}}
+  :focus-visible{outline:4px solid #D7322A;outline-offset:2px}
+  @media (max-width:359px){.shadow-pop{box-shadow:3px 3px 0 0 #000}}
+</style>
+</head>
+<body>
+
+<!-- 1. top strip: coupon tape + nav -->
+<div class="bg-mustard text-ink border-b-4 border-black overflow-hidden" aria-hidden="true">
+  <div class="marquee font-pixel text-[10px] py-2 gap-10 whitespace-nowrap">
+    <span>SPENT TODAY $0.75 &middot; LIFETIME SAVED $84,911.43 &middot; NO FULL PRICE EVER &middot; ASK ABOUT THE FLOOR MODEL &middot; SPENT TODAY $0.75 &middot; LIFETIME SAVED $84,911.43 &middot; NO FULL PRICE EVER &middot; ASK ABOUT THE FLOOR MODEL &middot;</span>
+    <span>SPENT TODAY $0.75 &middot; LIFETIME SAVED $84,911.43 &middot; NO FULL PRICE EVER &middot; SPENT TODAY $0.75 &middot; LIFETIME SAVED $84,911.43 &middot; NO FULL PRICE EVER &middot;</span>
+  </div>
+</div>
+<nav class="sticky top-0 z-50 bg-paper border-b-4 border-black" aria-label="Sections">
+  <div class="max-w-6xl mx-auto px-3 py-2 flex items-center justify-between gap-2">
+    <a href="#top" class="font-display text-base sm:text-xl text-hunter leading-none">TC <span class="text-tagred">Mc</span>THRIFTY</a>
+    <div class="flex gap-1 sm:gap-2 text-[14px] font-bold">
+      <a class="min-h-[44px] grid place-items-center px-2 border-[3px] sm:border-4 border-black bg-paper2 shadow-pop lift" href="#radar">Radar</a>
+      <a class="min-h-[44px] grid place-items-center px-2 border-[3px] sm:border-4 border-black bg-paper2 shadow-pop lift" href="#texts">Texts</a>
+      <a class="min-h-[44px] grid place-items-center px-2 border-[3px] sm:border-4 border-black bg-paper2 shadow-pop lift" href="#meter">Meter</a>
+      <a class="hidden sm:grid min-h-[44px] place-items-center px-2 border-4 border-black bg-paper2 shadow-pop lift" href="#finds">Finds</a>
+      <a class="min-h-[44px] grid place-items-center px-2 border-[3px] sm:border-4 border-black bg-orange shadow-pop lift" href="#tip">Tip</a>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+
+<!-- 2. hero -->
+<header class="halftone">
+  <div class="bg-ink text-paper border-b-4 border-black relative overflow-hidden">
+    <svg class="doodle right-[6%] top-4 w-10 h-10 sm:w-14 sm:h-14" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2l4 14 14 4-14 4-4 14-4-14-14-4 14-4z" fill="#F2B705"/></svg>
+    <svg class="doodle right-[18%] bottom-4 w-24 h-6 hidden sm:block" viewBox="0 0 100 20" aria-hidden="true"><path d="M2 14l8-8 8 8 8-8 8 8 8-8 8 8 8-8 8 8 8-8 8 8 8-8" fill="none" stroke="#2E7D4F" stroke-width="4" stroke-linejoin="round"/></svg>
+    <div class="max-w-6xl mx-auto px-4 pt-6 pb-5 sm:pt-8">
+      <p class="mb-3"><span class="sticker">Player 1 &middot; Twin Cities &middot; LVL 99</span></p>
+      <h1 class="font-mast uppercase leading-[.8] tracking-tight text-[clamp(60px,15.5vw,232px)] text-paper">TC <span class="text-mustard">Mc</span>Thrifty</h1>
+    </div>
+  </div>
+  <div class="max-w-6xl mx-auto px-4 py-8 lg:py-12 grid lg:grid-cols-2 gap-10 items-center">
+    <div class="order-2 lg:order-1">
+      <p class="inline-block bg-paper2 border-4 border-black shadow-pop px-3 py-2 font-extrabold uppercase text-sm sm:text-base -rotate-1">
+        Minnesota's Premier Anonymous Cheapskate &amp; Thrift Thrill-Seeker
+      </p>
+      <p class="mt-5 font-news text-2xl sm:text-[28px] leading-snug font-semibold max-w-xl">
+        Squeezing every penny out of the Twin Cities (and beyond) so you don't have to.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="#radar" class="lift font-display bg-tagred text-paper border-4 border-black shadow-pop px-5 min-h-[48px] grid place-items-center text-lg"><span><i class="fa-solid fa-satellite-dish" aria-hidden="true"></i> This week's radar</span></a>
+        <a href="#meter" class="lift font-display bg-hunter text-paper border-4 border-black shadow-pop px-5 min-h-[48px] grid place-items-center text-lg"><span><i class="fa-solid fa-gauge-high" aria-hidden="true"></i> Rate my cheap</span></a>
+      </div>
+      <!-- taped note -->
+      <div class="relative mt-9 max-w-xl bg-[#fbf4dc] border-2 border-black shadow-pop px-5 py-5 rotate-[-1.5deg]">
+        <span class="absolute -top-3 left-8 w-24 h-6 bg-tagred/80 rotate-[-4deg]" aria-hidden="true"></span>
+        <p class="font-zine text-base sm:text-lg">
+          Yes, I have a day job. Yes, it pays fine. No, I will not pay full price for anything, ever. Names stay out of this. Savings stay in.
+        </p>
+      </div>
+    </div>
+
+    <div class="order-1 lg:order-2 relative">
+      <div class="border-4 border-black shadow-popl bg-paper">
+        <img src="mascot.png" width="1200" height="896" alt="TC McThrifty: a breakfast-sandwich-headed thrift king in shades, a ball cap, a green flannel and gold chains, holding a coupon book and a peace sign, with the Minneapolis skyline behind" class="w-full h-auto block">
+      </div>
+      <span class="absolute -top-4 -left-1 sm:-left-5 font-display bg-orange text-ink border-4 border-black shadow-pop px-3 py-1 text-lg tagcut pr-6 -rotate-6">$0.99</span>
+      <span class="absolute -top-4 right-3 font-display bg-mustard text-ink border-4 border-black shadow-pop px-3 py-1 text-sm rotate-3">FREE FRIES</span>
+      <p class="mt-4 flex justify-start"><span class="font-pixel text-[10px] bg-ink text-mustard border-2 border-black px-2 py-2 -rotate-1"><i class="fa-solid fa-leaf" aria-hidden="true"></i> 100% PRE-LOVED</span></p>
+    </div>
+  </div>
+</header>
+
+<!-- 3. radar -->
+<section id="radar" class="bg-hunter border-y-4 border-black plaid" aria-labelledby="radar-h">
+  <div class="max-w-6xl mx-auto px-4 py-12">
+    <p class="mb-3 flex flex-wrap items-center gap-3"><span class="bg-orange text-ink font-news font-bold text-xl sm:text-2xl px-3 py-1 border-2 border-black">Week of Oct 18</span><span class="tagx text-paper">Issue #1 &middot; First Radar</span></p>
+    <h2 id="radar-h" class="font-mast uppercase leading-[.9] text-[44px] sm:text-[64px] lg:text-[76px] text-paper">Deals &amp; Estate Sales Weekly Radar</h2>
+    <p class="mt-2 font-zine text-paper text-lg">Scraped fresh. Verified by nobody. Go anyway.</p>
+
+    <div class="mt-6 flex flex-wrap items-center gap-2" role="group" aria-label="Filter the radar">
+      <button class="chip lift min-h-[44px] font-bold text-[14px] border-[3px] sm:border-4 border-black bg-paper shadow-pop px-4 rounded-full" data-f="all" aria-pressed="true">All</button>
+      <button class="chip lift min-h-[44px] font-bold text-[14px] border-[3px] sm:border-4 border-black bg-paper shadow-pop px-4 rounded-full" data-f="thrifts" aria-pressed="false">Thrifts</button>
+      <button class="chip lift min-h-[44px] font-bold text-[14px] border-[3px] sm:border-4 border-black bg-paper shadow-pop px-4 rounded-full" data-f="food" aria-pressed="false">Food &amp; Freebies</button>
+      <button class="chip lift min-h-[44px] font-bold text-[14px] border-[3px] sm:border-4 border-black bg-paper shadow-pop px-4 rounded-full" data-f="travels" aria-pressed="false">Travels</button>
+      <button class="chip lift min-h-[44px] font-bold text-[14px] border-[3px] sm:border-4 border-black bg-paper shadow-pop px-4 rounded-full" data-f="weird" aria-pressed="false">Weird Junk</button>
+      <span id="count" class="font-pixel text-[10px] text-mustard ml-1" aria-live="polite">5 FOUND</span>
+    </div>
+
+    <ul id="feed" class="mt-7 grid md:grid-cols-2 gap-5 list-none p-0"></ul>
+    <p id="empty" class="hidden mt-6 font-bold text-paper">Nothing in this pile. Either you are too picky or the good stuff is already in someone's trunk.</p>
+  </div>
+</section>
+
+<!-- 4. texts -->
+<section id="texts" class="bg-orange border-b-4 border-black halftone" aria-labelledby="texts-h">
+  <div class="max-w-6xl mx-auto px-4 py-12">
+    <h2 id="texts-h" class="font-mast uppercase leading-[.9] text-[44px] sm:text-[64px] lg:text-[76px] text-ink">Texts From Last Night</h2>
+    <p class="mt-2 font-zine text-lg">Screenshots, lightly redacted.</p>
+
+    <div class="relative mt-10 grid md:grid-cols-2 gap-10 items-start">
+      <!-- generic top hat and cane, line art only -->
+      <svg class="hidden md:block absolute -left-2 -top-8 w-28 h-28 opacity-30 -rotate-12 pointer-events-none" viewBox="0 0 100 100" fill="none" stroke="#151515" stroke-width="4" stroke-linecap="round" aria-hidden="true">
+        <path d="M30 62V28h40v34"/><path d="M18 66h64"/><path d="M30 52h40"/><path d="M82 70c8 0 8 12 0 12v14"/>
+      </svg>
+
+      <figure class="bg-ink border-4 border-black shadow-popl p-3 max-w-md w-full mx-auto">
+        <figcaption class="bg-paper px-4 py-2 flex items-center gap-3 border-b-4 border-black">
+          <span class="text-2xl" aria-hidden="true">&#127913;</span>
+          <span class="font-display text-sm">Top Hat Pal <span class="font-pixel text-[10px] block font-normal mt-1">TYPING...</span></span>
+        </figcaption>
+        <div class="bg-paper2 halftone p-4 space-y-3">
+          <p class="bin max-w-[85%] bg-sky border-2 border-black px-3 py-2 text-[15px]">Coupons in hand? 🎩</p>
+          <p class="bin ml-auto max-w-[85%] bg-mustard border-2 border-black px-3 py-2 text-[15px]">Back at it with the game pieces, they hate to see me coming! 🍔🎩</p>
+          <p class="bin max-w-[85%] bg-sky border-2 border-black px-3 py-2 text-[15px]">How many free fries is that</p>
+          <p class="bin ml-auto max-w-[85%] bg-mustard border-2 border-black px-3 py-2 text-[15px]">Enough that the app knows my name</p>
+          <p class="font-pixel text-[10px] text-right opacity-70">11:38 PM</p>
+        </div>
+      </figure>
+
+      <figure class="bg-ink border-4 border-black shadow-popl p-3 max-w-md w-full mx-auto">
+        <figcaption class="bg-paper px-4 py-2 flex items-center gap-3 border-b-4 border-black">
+          <span class="text-2xl" aria-hidden="true">&#128220;</span>
+          <span class="font-display text-sm">Group Chat <span class="font-pixel text-[10px] block font-normal mt-1">READ 11:42 PM</span></span>
+        </figcaption>
+        <div class="bg-paper2 halftone p-4 space-y-3">
+          <p class="bin max-w-[85%] bg-sky border-2 border-black px-3 py-2 text-[15px]">Wait, you still get both?</p>
+          <p class="bin ml-auto max-w-[92%] bg-mustard border-2 border-black px-3 py-2 text-[15px]">I fought a subscription that tried to cut me off, kept print AND digital forever. SUE ME (literally).</p>
+          <p class="bin max-w-[85%] bg-sky border-2 border-black px-3 py-2 text-[15px]">huh huh. "literally."</p>
+        </div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- 5. meter -->
+<section id="meter" class="bg-ink text-paper border-b-4 border-black" aria-labelledby="meter-h">
+  <div class="max-w-6xl mx-auto px-4 py-12">
+    <h2 id="meter-h" class="font-mast uppercase leading-[.9] text-[44px] sm:text-[64px] lg:text-[76px] text-mustard">The Thrift-Level Meter</h2>
+    <p class="mt-2 font-zine text-lg">Five questions. No wrong answers, only wrong prices.</p>
+
+    <div class="mt-8 grid lg:grid-cols-5 gap-8">
+      <form id="quiz" class="lg:col-span-3 bg-paper text-ink border-4 border-paper shadow-popl p-4 sm:p-6 space-y-6" novalidate></form>
+
+      <div class="lg:col-span-2 space-y-5 lg:sticky lg:top-24 lg:self-start">
+        <div id="result" class="border-4 border-paper p-5 scroll-mt-20" role="status" aria-live="polite">
+          <p class="font-pixel text-[10px] text-paper opacity-80">YOUR THRIFT LEVEL</p>
+          <p class="font-pixel text-[11px] text-mustard mt-2" id="r-level">LEVEL ? / 5</p>
+          <div class="mt-3 flex gap-1" id="bar" aria-hidden="true"></div>
+          <p class="font-display text-3xl mt-4" id="r-title">Answer all five</p>
+          <p class="mt-2 italic" id="r-text">Your tier shows up here. TC McThrifty will rate it. Dryly.</p>
+          <p class="mt-3 font-semibold hidden" id="r-help"></p>
+          <button type="button" id="r-again" class="lift hidden font-display bg-mustard text-ink border-4 border-paper shadow-pop px-4 min-h-[44px] mt-4 text-sm">Rate me again. I might lie this time.</button>
+        </div>
+        <ol id="ladder" class="space-y-2 list-none p-0"></ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. finds -->
+<section id="finds" class="bg-paper2 border-b-4 border-black halftone" aria-labelledby="finds-h">
+  <div class="max-w-6xl mx-auto px-4 py-12">
+    <h2 id="finds-h" class="font-mast uppercase leading-[.9] text-[44px] sm:text-[64px] lg:text-[76px] text-hunter">Crazy Finds &amp; Tributes</h2>
+    <p class="mt-2 font-zine text-lg">Photos coming. For now, imagine the smell.</p>
+
+    <div class="mt-8 relative bg-ink text-paper border-4 border-black shadow-popl px-5 py-8 sm:py-12 text-center overflow-hidden">
+      <svg class="doodle left-4 top-4 w-8 h-8" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2l4 14 14 4-14 4-4 14-4-14-14-4 14-4z" fill="#F2B705"/></svg>
+      <svg class="doodle right-6 bottom-5 w-6 h-6" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2l4 14 14 4-14 4-4 14-4-14-14-4 14-4z" fill="#EE7A1E"/></svg>
+      <p class="font-pixel text-[10px] sm:text-[11px] text-mustard">ESTIMATED LIFETIME SAVINGS</p>
+      <p class="font-mast leading-[.85] text-[clamp(56px,13vw,150px)] mt-3">$84,911.43</p>
+      <p class="mt-5"><span class="sticker" style="background:#F2B705">Spent today: $0.75</span></p>
+    </div>
+
+    <div class="cut mt-10 mb-8" aria-hidden="true"><span class="absolute -top-3 left-4 bg-paper2 px-2"><i class="fa-solid fa-scissors"></i></span></div>
+
+    <div class="grid sm:grid-cols-3 gap-6">
+      <article class="bg-paper border-4 border-black shadow-pop p-3 pb-5 rotate-[-2deg]">
+        <div class="bg-hunter plaid border-4 border-black aspect-[4/3] grid place-items-center text-mustard"><i class="fa-solid fa-bag-shopping text-5xl" aria-hidden="true"></i></div>
+        <h3 class="font-display text-lg mt-3 leading-tight">The Japanese Store Haul</h3>
+        <p class="font-zine text-sm mt-1">Many tiny erasers. Zero regrets.</p>
+      </article>
+      <article class="bg-paper border-4 border-black shadow-pop p-3 pb-5 rotate-[1.5deg]">
+        <div class="bg-hunter plaid border-4 border-black aspect-[4/3] grid place-items-center text-mustard"><i class="fa-solid fa-tree text-5xl" aria-hidden="true"></i></div>
+        <h3 class="font-display text-lg mt-3 leading-tight">The MN Pridefest Nature Thrifting Special</h3>
+        <p class="font-zine text-sm mt-1">Rainbow flannel, found in the wild.</p>
+      </article>
+      <article class="bg-paper border-4 border-black shadow-pop p-3 pb-5 rotate-[-1deg]">
+        <div class="bg-hunter plaid border-4 border-black aspect-[4/3] grid place-items-center text-mustard"><i class="fa-solid fa-dove text-5xl" aria-hidden="true"></i></div>
+        <h3 class="font-display text-lg mt-3 leading-tight">The Late Great Cockatiel Memorial Thrift Find</h3>
+        <p class="font-zine text-sm mt-1">A small tribute, found secondhand, kept forever.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 7. tip -->
+<section id="tip" class="bg-hunter border-b-4 border-black plaid" aria-labelledby="tip-h">
+  <div class="max-w-3xl mx-auto px-4 py-12">
+    <h2 id="tip-h" class="font-mast uppercase leading-[.9] text-[44px] sm:text-[64px] lg:text-[76px] text-mustard">Got a Tip?</h2>
+    <p class="mt-2 text-paper font-zine text-lg">Submit a steal. Anonymous is fine. Cheap is required.</p>
+    <form id="tipform" class="mt-6 bg-paper border-4 border-dashed border-black shadow-popl p-5 sm:p-7 space-y-4" novalidate>
+      <div>
+        <label class="font-extrabold block mb-1" for="t-what">What's the steal?</label>
+        <textarea id="t-what" required rows="3" class="w-full border-4 border-black p-2 bg-white text-base" placeholder="Estate sale, coupon glitch, error fare..."></textarea>
+      </div>
+      <div>
+        <label class="font-extrabold block mb-1" for="t-where">Where? (city, link or cross streets)</label>
+        <input id="t-where" class="w-full min-h-[44px] border-4 border-black p-2 bg-white text-base" type="text">
+        <p id="w-err" class="hidden font-bold text-tagred mt-1" role="alert">Where is it? Cross streets are fine. "By the big tree" is not.</p>
+      </div>
+      <button class="lift font-display bg-orange border-4 border-black shadow-pop px-6 min-h-[48px] text-lg" type="submit" title="Be the reason someone else pays less.">Submit the steal</button>
+      <p id="t-err" class="hidden font-bold text-tagred" role="alert">A steal needs a steal. What did you find?</p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<!-- 8. footer -->
+<footer class="bg-ink text-paper px-4 py-8">
+  <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
+    <span class="block w-16 h-16 border-4 border-paper overflow-hidden shrink-0"><img src="mascot.png" alt="" width="1200" height="896" class="w-full h-full object-cover" style="object-position:50% 30%;transform:scale(2.4);transform-origin:50% 28%"></span>
+    <div>
+      <p class="font-display text-2xl text-mustard">TC <span class="text-orange">Mc</span>THRIFTY</p>
+      <p class="font-zine mt-1">Est. in a Twin Cities thrift aisle. Not financial advice. Not paying full price.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- popup: receipt -->
+<div id="modal" class="hidden fixed inset-0 z-[70] bg-black/70 grid place-items-center p-4" role="dialog" aria-modal="true" aria-labelledby="m-h">
+  <div class="torn bg-paper border-4 border-b-0 border-black max-w-sm w-full p-6 text-center font-zine">
+    <p class="font-pixel text-[10px] text-tagred">RECEIPT #0075</p>
+    <h3 id="m-h" class="font-display text-2xl mt-3">Tip received</h3>
+    <p class="mt-1 border-t-2 border-dashed border-black pt-3">Filed under "might be a steal." Reviewed by nobody until I have had coffee.</p>
+    <p class="mt-2">If it checks out, it ends up on the radar. If it does not, I will pretend I never saw it.</p>
+    <p class="mt-3 text-sm opacity-80">Anonymous is fine. Cheap is required. Free is better.</p>
+    <p class="mt-3 font-pixel text-[10px]">TOTAL: $0.00</p>
+    <button id="m-close" class="lift font-display bg-hunter text-paper border-4 border-black shadow-pop px-5 min-h-[44px] mt-5 mb-1">Back to saving</button>
+  </div>
+</div>
+
+<script>
+/* ---------- sample data (words from Jake's brief; Biggie's lines merge here) ---------- */
+const DEALS = [
+  { tags:['thrifts','weird'], price:'70% OFF', badge:'Estate Sale', title:'South Mpls estate sale: 70% off retro taxidermy, Sunday only', meta:'Sat and Sun, 9am. Cash only. Bring a van and zero shame.', src:'scraped from: a flyer stapled to a pole', rating:'5 of 5 pelts', tip:'Go Sunday, not Saturday. Day two is when "firm" prices get negotiable and the owl starts looking like a bargain.' },
+  { tags:['food'], price:'$0.00', badge:'Free Fries', title:'Free fries with a burger-chain game-piece trick', meta:'Any drive-thru, any week the game is on. Peel, stack, redeem.', src:'scraped from: a very long comment thread', rating:'5 of 5 fries', tip:'Check the app before you order. The free item is usually hiding under "rewards," not "menu." Read the fine print once, then never again.' },
+  { tags:['thrifts'], price:'$5 BAG', badge:'Thrift Store', title:'Roseville bin store: fill-a-bag Tuesday, $5 a bag', meta:'Doors at 8. Elbows out by 8:01.', src:'scraped from: the bin store newsletter', rating:'4 of 5 flannels', tip:'Wear gloves and bring your own bag. A bag you packed like a puzzle holds twice what theirs does.' },
+  { tags:['travels'], price:'$412 RT', badge:'Flight Find', title:'MSP to Lisbon, $412 round trip, possible error fare', meta:'Fares like this last hours. Fully refundable for 24 hours, so you can book first and panic later.', src:'scraped from: a fare alert at 3am', rating:'5 of 5 layovers', tip:'Book it, then check the 24-hour cancel rule on that airline before you tell anyone. The tip is the cancel button, not the fare.' },
+  { tags:['food','thrifts'], price:'BOGO', badge:'Cheap Eats', title:'Gas station coffee, buy one get one, with the app and a stern look', meta:'St. Paul, Maplewood and a suspicious Cottage Grove.', src:'scraped from: the app, reluctantly', rating:'3 of 5 refills', tip:'The second cup is for later. Put it in the fridge. Cold coffee is a personality, not a problem.' }
+];
+const LABEL = { thrifts:'Thrifts', food:'Food & Freebies', travels:'Travels', weird:'Weird Junk' };
+const LEVELS = [
+  { n:1, name:'Coupon Clipper', color:'#F4E7C5', text:'2 out of 10 cheapskates. He is only being polite.', help:'Stack the paper coupon with the store app deal. Two small wins beat one big one, and you already do the clipping.' },
+  { n:2, name:'The Cruise Ship Milkman', color:'#F2B705', text:'4 out of 10. Would share a buffet with you. Would also count the plates.', help:'Free things are only free if you do not buy the upgrade. Take the buffet, skip the drink package, keep the receipt for nothing.' },
+  { n:3, name:'The Monopoly Maestro', color:'#EE7A1E', text:'6 out of 10. Huh huh. You said "peel."', help:'Treat every game piece like a coupon with a deadline. Photograph them, check the expiry, and trade the extras before they turn into stickers.' },
+  { n:4, name:'Muppet-Tier Estate Graverobber', color:'#D7322A', text:'8 out of 10, with a footnote. The footnote is that the coffee was still warm.', help:'Arrive on the last day, ask for the bundle price, and be kind. The family remembers who was polite, and politeness gets the extra box.' },
+  { n:5, name:'The DIY Doctor', color:'#2E7D4F', text:'10 out of 10 for savings, and a respectful note that actual professionals exist and are very good at their jobs.', help:'Watch the video twice, buy the part second-hand, and know the line where YouTube ends and a trained person begins. That line is the cheapest thing you will ever save.' }
+];
+const QUESTIONS = [
+  { q:'You see a $4 shirt that is almost your size.', a:[['Walk past, it is not a bargain.',1],['Buy it, hem it, call it vintage.',3],['Buy six, resell five, wear one.',5]] },
+  { q:'Fast food and you:', a:[['I use the app coupons.',1],['I play the game pieces.',3],['I have a spreadsheet of every promo since 2009.',5]] },
+  { q:'A company offers you a refund. You:', a:[['Take the refund.',1],['Ask for the refund AND a coupon.',3],['Join the class action out of sheer principle.',5]] },
+  { q:'A weekend plan:', a:[['Brunch, full price, at a place with a line.',1],['Estate sale hop, then free samples.',3],['Estate sale hop, fix the thing myself, sell it back.',5]] },
+  { q:'Something at home breaks:', a:[['Call someone and pay them.',1],['Watch a video, then call someone.',3],['Watch a video, find the part at a thrift store, fix it.',5]] }
+];
+
+/* ---------- radar ---------- */
+const feed = document.getElementById('feed');
+function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function renderFeed(f){
+  const list = DEALS.filter(d => f==='all' || d.tags.includes(f));
+  feed.innerHTML = list.map((d,i)=>`
+    <li class="fadein bg-paper border-4 border-black shadow-pop flex">
+      <div class="shrink-0 w-24 sm:w-28 bg-mustard border-r-4 border-dashed border-black grid place-items-center p-2">
+        <span class="font-display text-xl sm:text-2xl leading-tight text-center ${i%2?'rotate-3':'-rotate-3'}">${esc(d.price)}</span>
+      </div>
+      <div class="min-w-0 p-4">
+        <p class="flex flex-wrap gap-1 mb-2">
+          <span class="tagx bg-ink text-mustard px-2 py-1.5">${esc(d.badge)}</span>
+          ${d.tags.map(t=>`<span class="tagx border border-black px-2 py-1.5">${LABEL[t]}</span>`).join('')}
+        </p>
+        <h3 class="font-news font-bold text-[22px] sm:text-2xl leading-tight">${esc(d.title)}</h3>
+        <p class="text-[15px] mt-1">${esc(d.meta)}</p>
+        <p class="text-sm font-bold text-hunter mt-2"><i class="fa-solid fa-star" aria-hidden="true"></i> TC rating: ${esc(d.rating)}</p>
+        <p class="font-zine text-sm mt-1 opacity-80">${esc(d.src)}</p>
+        <details class="mt-2"><summary class="cursor-pointer font-pixel text-[9px] min-h-[24px] inline-flex items-center bg-mustard border-2 border-black px-2 py-1">TIP</summary><p class="mt-2 text-[15px]">${esc(d.tip)}</p></details>
+      </div>
+    </li>`).join('');
+  document.getElementById('empty').classList.toggle('hidden', list.length>0);
+  document.getElementById('count').textContent = list.length===1 ? "1 FOUND. Lonely, but it's yours." : list.length+' FOUND';
+}
+document.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed', x===b));
+  renderFeed(b.dataset.f);
+}));
+renderFeed('all');
+
+/* ---------- meter ---------- */
+const quiz = document.getElementById('quiz');
+quiz.innerHTML = QUESTIONS.map((x,i)=>`
+  <fieldset>
+    <legend class="font-display text-lg mb-2">${i+1}. ${esc(x.q)}</legend>
+    <div class="grid gap-2">
+      ${x.a.map(o=>`<label class="flex items-start gap-3 border-4 border-black bg-white p-3 min-h-[44px] cursor-pointer has-[:checked]:bg-mustard">
+        <input class="mt-1 accent-[#1F5B3A] w-5 h-5" type="radio" name="q${i}" value="${o[1]}"><span>${esc(o[0])}</span></label>`).join('')}
+    </div>
+  </fieldset>`).join('');
+const bar = document.getElementById('bar'), ladder = document.getElementById('ladder');
+function paintBar(lvl){
+  bar.innerHTML = LEVELS.map(l=>`<span class="h-6 flex-1 border-2 border-paper" style="background:${l.n<=lvl?l.color:'transparent'}"></span>`).join('');
+}
+paintBar(0);
+ladder.innerHTML = LEVELS.map(l=>`<li data-l="${l.n}" class="flex items-center gap-3 border-2 border-paper px-3 py-2"><span class="font-pixel text-[10px] w-8">L${l.n}</span><span class="font-bold text-[15px]">${esc(l.name)}</span></li>`).join('');
+quiz.addEventListener('change',()=>{
+  const picked = QUESTIONS.map((_,i)=>quiz.querySelector(`input[name=q${i}]:checked`)).filter(Boolean);
+  if(picked.length<QUESTIONS.length) return;
+  const sum = picked.reduce((s,p)=>s+Number(p.value),0);
+  const lvl = sum<=9?1 : sum<=13?2 : sum<=17?3 : sum<=21?4 : 5;
+  const L = LEVELS[lvl-1];
+  document.getElementById('r-level').textContent = 'LEVEL '+lvl+' / 5';
+  document.getElementById('r-title').textContent = L.name;
+  document.getElementById('r-text').textContent = L.text;
+  const hp=document.getElementById('r-help'); hp.textContent = L.help; hp.classList.remove('hidden');
+  document.getElementById('r-again').classList.remove('hidden');
+  paintBar(lvl);
+  if(window.matchMedia('(max-width: 1023px)').matches){
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.getElementById('result').scrollIntoView({behavior: calm ? 'auto' : 'smooth', block:'start'});
+  }
+  ladder.querySelectorAll('li').forEach(li=>{
+    const on = Number(li.dataset.l)===lvl;
+    li.style.background = on ? L.color : 'transparent';
+    li.style.color = on ? (lvl===1||lvl===2?'#151515':'#F4E7C5') : '';
+  });
+});
+
+document.getElementById('r-again').addEventListener('click',()=>{
+  quiz.reset(); paintBar(0);
+  document.getElementById('r-level').textContent='LEVEL ? / 5';
+  document.getElementById('r-title').textContent='Answer all five';
+  document.getElementById('r-text').textContent='Your tier shows up here. TC McThrifty will rate it. Dryly.';
+  document.getElementById('r-help').classList.add('hidden');
+  document.getElementById('r-again').classList.add('hidden');
+  ladder.querySelectorAll('li').forEach(li=>{li.style.background='transparent';li.style.color=''});
+  document.getElementById('quiz').scrollIntoView({behavior:'smooth',block:'start'});
+});
+
+/* ---------- tip form popup ---------- */
+const modal = document.getElementById('modal'), form = document.getElementById('tipform');
+form.addEventListener('submit',e=>{
+  e.preventDefault();
+  const okWhat = document.getElementById('t-what').value.trim().length>0;
+  const okWhere = document.getElementById('t-where').value.trim().length>0;
+  document.getElementById('t-err').classList.toggle('hidden', okWhat);
+  document.getElementById('w-err').classList.toggle('hidden', okWhere);
+  if(!okWhat || !okWhere) return;
+  modal.classList.remove('hidden'); document.getElementById('m-close').focus();
+  form.reset();
+});
+document.getElementById('m-close').addEventListener('click',()=>modal.classList.add('hidden'));
+modal.addEventListener('click',e=>{ if(e.target===modal) modal.classList.add('hidden') });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') modal.classList.add('hidden') });
+</script>
+</body>
+</html>

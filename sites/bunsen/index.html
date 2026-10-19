@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TC McThrifty OS</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{paper:'#F4E7C5',paper2:'#EAD9AE',ink:'#151515',mustard:'#F2B705',hunter:'#1F5B3A',hunter2:'#2E7D4F',orange:'#EE7A1E',tagred:'#D7322A',sky:'#7FC6D9'},fontFamily:{pixel:['"Press Start 2P"','monospace'],body:['Archivo','system-ui','sans-serif']}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
+<style>
+html,body{height:100%;margin:0;overflow:hidden}
+body{font-family:Archivo,system-ui,sans-serif;background:#1F5B3A;color:#151515;font-size:16px;line-height:1.5}
+#desk{position:fixed;inset:0 0 44px 0;background-color:#1F5B3A;background-image:radial-gradient(rgba(244,231,197,.14) 1.4px,transparent 1.6px);background-size:12px 12px}
+.ico{width:92px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 4px;color:#F4E7C5;text-align:center;font-size:13px;font-weight:700;background:none;border:2px solid transparent;cursor:pointer;line-height:1.2}
+.ico:hover,.ico:focus-visible{border:2px dashed #F4E7C5;outline:none;background:rgba(0,0,0,.2)}
+.ico .g{width:52px;height:52px;display:grid;place-items:center;font-size:26px;background:#F4E7C5;color:#151515;border:3px solid #151515;box-shadow:3px 3px 0 #000}
+.win{position:absolute;background:#F4E7C5;border:4px solid #151515;box-shadow:8px 8px 0 #000;display:none;flex-direction:column;max-width:calc(100vw - 8px);max-height:calc(100% - 8px)}
+.win.open{display:flex}
+.tb{display:flex;align-items:center;gap:8px;padding:6px 8px;border-bottom:4px solid #151515;cursor:grab;user-select:none;touch-action:none}
+.tb h2{flex:1;font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.4;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wb{width:28px;height:28px;border:3px solid #151515;background:#F4E7C5;font-weight:800;line-height:1;cursor:pointer;display:grid;place-items:center}
+.wb:hover{background:#F2B705}.wb:focus-visible{outline:3px solid #D7322A}
+.body{overflow:auto;padding:14px;flex:1;min-height:0}
+.menubar{display:flex;gap:14px;padding:4px 10px;border-bottom:3px solid #151515;background:#EAD9AE;font-size:13px;font-weight:700}
+.status{border-top:3px solid #151515;background:#EAD9AE;padding:3px 10px;font-size:12px;font-weight:700}
+#task{position:fixed;left:0;right:0;bottom:0;height:44px;background:#151515;color:#F4E7C5;display:flex;align-items:center;gap:6px;padding:0 6px;z-index:9000}
+#task button.t{height:32px;padding:0 10px;border:2px solid #F4E7C5;background:none;color:#F4E7C5;font-size:12px;font-weight:700;cursor:pointer;max-width:130px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+#task button.t.on{background:#F2B705;color:#151515;border-color:#F2B705}
+#start{background:#F2B705;color:#151515;border:3px solid #F4E7C5;height:34px;padding:0 12px;font-family:'Press Start 2P';font-size:10px;cursor:pointer}
+#menu{position:fixed;left:6px;bottom:48px;width:250px;background:#F4E7C5;border:4px solid #151515;box-shadow:6px 6px 0 #000;z-index:9500;display:none}
+#menu.open{display:block}
+#menu button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;padding:10px 12px;font-weight:700;background:none;border:0;border-bottom:2px solid #151515;cursor:pointer;font-size:15px}
+#menu button:hover,#menu button:focus-visible{background:#F2B705;outline:none}
+.chip{border:3px solid #151515;padding:3px 10px;font-weight:700;font-size:13px;background:#F4E7C5;cursor:pointer;box-shadow:2px 2px 0 #000}
+.chip[aria-pressed=true]{background:#F2B705}
+.row{display:flex;border:3px solid #151515;background:#F4E7C5;margin-bottom:12px;box-shadow:3px 3px 0 #000}
+.price{flex:0 0 92px;background:#F2B705;border-right:3px dashed #151515;display:grid;place-items:center;text-align:center;font-family:'Press Start 2P';font-size:11px;padding:6px;line-height:1.5}
+.btn{border:3px solid #151515;background:#F2B705;font-weight:800;padding:8px 14px;box-shadow:3px 3px 0 #000;cursor:pointer}
+.btn:active{transform:translate(3px,3px);box-shadow:none}.btn:focus-visible{outline:3px solid #D7322A}
+.opt{display:block;border:3px solid #151515;padding:8px 10px;margin-top:6px;cursor:pointer;background:#F4E7C5}
+.opt:has(input:checked){background:#F2B705}
+.opt:focus-within{outline:3px solid #D7322A}
+textarea,input[type=text]{width:100%;border:3px solid #151515;background:#fff;padding:8px;font:inherit}
+textarea:focus,input[type=text]:focus{outline:3px solid #D7322A}
+#boot{position:fixed;inset:0;z-index:20000;background:#151515;color:#F4E7C5;display:grid;place-items:center;text-align:center;padding:20px;cursor:pointer}
+@media (max-width:639px){
+ .win{left:4px!important;top:4px!important;width:calc(100vw - 8px)!important;height:calc(100% - 8px)!important;max-height:none}
+ .tb{cursor:default}
+ #desk{display:grid;grid-template-columns:repeat(3,1fr);align-content:start;padding:10px 4px;gap:6px}
+ .ico{width:auto}
+ #task button.t{max-width:90px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>/* Prince QA: 44px tap targets */#start{min-height:44px}</style>
+</head>
+<body>
+
+<div id="boot" role="button" tabindex="0" aria-label="Start TC McThrifty OS">
+ <div>
+  <img src="mascot.png" alt="TC McThrifty, a cheerful mascot in a green hat" class="mx-auto w-40 h-40 object-contain bg-paper border-4 border-paper mb-5">
+  <p class="font-pixel text-[13px] leading-loose">T.C. McTHRIFTY OS</p>
+  <p class="text-sm mt-2 opacity-80">Version 0.75. Spent today: $0.75.</p>
+  <div class="mx-auto mt-5 w-64 h-5 border-2 border-paper"><div id="bar" class="h-full bg-mustard" style="width:0"></div></div>
+  <p class="text-xs mt-3 opacity-70">Tap anywhere to skip. Nothing here costs full price.</p>
+ </div>
+</div>
+
+<div id="desk">
+ <button class="ico" data-open="radar"><span class="g"><i class="fa-solid fa-satellite-dish"></i></span>Radar.exe</button>
+ <button class="ico" data-open="texts"><span class="g"><i class="fa-solid fa-file-lines"></i></span>Texts.txt</button>
+ <button class="ico" data-open="meter"><span class="g"><i class="fa-solid fa-gauge-high"></i></span>Meter.app</button>
+ <button class="ico" data-open="finds"><span class="g"><i class="fa-solid fa-folder-open"></i></span>Finds</button>
+ <button class="ico" data-open="tip"><span class="g"><i class="fa-solid fa-envelope"></i></span>Tip.exe</button>
+ <button class="ico" data-open="about"><span class="g"><i class="fa-solid fa-circle-info"></i></span>ReadMe.txt</button>
+
+ <!-- RADAR -->
+ <section class="win" id="radar" style="left:150px;top:24px;width:560px;height:480px" aria-labelledby="t-radar">
+  <div class="tb bg-mustard"><h2 id="t-radar">Radar.exe</h2><button class="wb" data-min aria-label="Minimize Radar">_</button><button class="wb" data-close aria-label="Close Radar">X</button></div>
+  <div class="menubar"><span>Deals &amp; Estate Sales Weekly Radar</span></div>
+  <div class="body">
+   <p class="text-sm mb-3">Scraped fresh. Verified by nobody. Go anyway.</p>
+   <div class="flex flex-wrap gap-2 mb-4" id="chips">
+    <button class="chip" data-f="all" aria-pressed="true">All</button>
+    <button class="chip" data-f="thrifts" aria-pressed="false">Thrifts</button>
+    <button class="chip" data-f="food" aria-pressed="false">Food &amp; Freebies</button>
+    <button class="chip" data-f="travels" aria-pressed="false">Travels</button>
+    <button class="chip" data-f="weird" aria-pressed="false">Weird Junk</button>
+   </div>
+   <div id="feed"></div>
+  </div>
+  <div class="status" id="rcount">5 FOUND</div>
+ </section>
+
+ <!-- TEXTS -->
+ <section class="win" id="texts" style="left:200px;top:60px;width:430px;height:470px" aria-labelledby="t-texts">
+  <div class="tb bg-sky"><h2 id="t-texts">Texts.txt</h2><button class="wb" data-min aria-label="Minimize Texts">_</button><button class="wb" data-close aria-label="Close Texts">X</button></div>
+  <div class="menubar"><span>Texts From Last Night</span><span class="font-normal">Screenshots, lightly redacted.</span></div>
+  <div class="body bg-white">
+   <p class="text-xs font-bold mb-2">&#127913; Top Hat Pal</p>
+   <div class="space-y-2 mb-6">
+    <p class="bg-paper2 border-2 border-ink p-2 w-fit max-w-[85%]">Coupons in hand? 🎩</p>
+    <p class="bg-mustard border-2 border-ink p-2 w-fit max-w-[85%] ml-auto">Back at it with the game pieces, they hate to see me coming! 🍔🎩</p>
+    <p class="bg-paper2 border-2 border-ink p-2 w-fit max-w-[85%]">How many free fries is that</p>
+    <p class="bg-mustard border-2 border-ink p-2 w-fit max-w-[85%] ml-auto">Enough that the app knows my name</p>
+    <p class="text-xs text-right opacity-60">11:38 PM</p>
+   </div>
+   <p class="text-xs font-bold mb-2">&#128220; Group Chat</p>
+   <div class="space-y-2">
+    <p class="bg-paper2 border-2 border-ink p-2 w-fit max-w-[85%]">Wait, you still get both?</p>
+    <p class="bg-mustard border-2 border-ink p-2 w-fit max-w-[85%] ml-auto">I fought a subscription that tried to cut me off, kept print AND digital forever. SUE ME (literally).</p>
+    <p class="bg-paper2 border-2 border-ink p-2 w-fit max-w-[85%]">huh huh. "literally."</p>
+    <p class="text-xs text-right opacity-60">Read 11:42 PM</p>
+   </div>
+  </div>
+ </section>
+
+ <!-- METER -->
+ <section class="win" id="meter" style="left:240px;top:30px;width:480px;height:500px" aria-labelledby="t-meter">
+  <div class="tb bg-orange"><h2 id="t-meter">Meter.app</h2><button class="wb" data-min aria-label="Minimize Meter">_</button><button class="wb" data-close aria-label="Close Meter">X</button></div>
+  <div class="menubar"><span>The Thrift-Level Meter</span></div>
+  <div class="body">
+   <p class="text-sm mb-3">Five questions. No wrong answers, only wrong prices.</p>
+   <form id="quiz"></form>
+   <div id="res" class="mt-5 border-4 border-ink p-4 bg-paper2" aria-live="polite">
+    <p class="font-pixel text-[10px]" id="lvl">YOUR THRIFT LEVEL: ? / 5</p>
+    <div class="flex gap-1 my-3" id="lbar"></div>
+    <p class="font-extrabold text-lg" id="lname">Answer all five</p>
+    <p id="ltext" class="mt-1">Your tier shows up here. TC McThrifty will rate it. Dryly.</p>
+    <p id="lhelp" class="mt-2 text-sm font-bold text-hunter"></p>
+    <button type="button" class="btn mt-4" id="again">Rate me again. I might lie this time.</button>
+   </div>
+  </div>
+ </section>
+
+ <!-- FINDS -->
+ <section class="win" id="finds" style="left:280px;top:70px;width:440px;height:430px" aria-labelledby="t-finds">
+  <div class="tb bg-hunter2 text-paper"><h2 id="t-finds">C:\FINDS</h2><button class="wb text-ink" data-min aria-label="Minimize Finds">_</button><button class="wb text-ink" data-close aria-label="Close Finds">X</button></div>
+  <div class="menubar"><span>Crazy Finds &amp; Tributes</span></div>
+  <div class="body">
+   <p class="text-sm mb-3">Photos coming. For now, imagine the smell.</p>
+   <div class="grid grid-cols-2 gap-3 mb-4">
+    <div class="border-4 border-ink bg-paper2 p-3 text-center"><p class="text-xs font-bold">ESTIMATED LIFETIME SAVINGS</p><p class="font-pixel text-[13px] mt-2 leading-relaxed">$84,911.43</p></div>
+    <div class="border-4 border-ink bg-mustard p-3 text-center"><p class="text-xs font-bold">SPENT TODAY</p><p class="font-pixel text-[13px] mt-2 leading-relaxed">$0.75</p></div>
+   </div>
+   <ul class="space-y-3">
+    <li class="flex gap-3 items-start border-3 border-ink border-[3px] p-3 bg-paper"><i class="fa-solid fa-file-image text-3xl mt-1" aria-hidden="true"></i><div><h3 class="font-extrabold leading-snug">The Japanese Store Haul</h3><p>Many tiny erasers. Zero regrets.</p></div></li>
+    <li class="flex gap-3 items-start border-[3px] border-ink p-3 bg-paper"><i class="fa-solid fa-file-image text-3xl mt-1" aria-hidden="true"></i><div><h3 class="font-extrabold leading-snug">The MN Pridefest Nature Thrifting Special</h3><p>Rainbow flannel, found in the wild.</p></div></li>
+    <li class="flex gap-3 items-start border-[3px] border-ink p-3 bg-paper"><i class="fa-solid fa-file-image text-3xl mt-1" aria-hidden="true"></i><div><h3 class="font-extrabold leading-snug">The Late Great Cockatiel Memorial Thrift Find</h3><p>A small tribute, found secondhand, kept forever.</p></div></li>
+   </ul>
+  </div>
+  <div class="status">3 object(s) &middot; 0 KB &middot; photos not found</div>
+ </section>
+
+ <!-- TIP -->
+ <section class="win" id="tip" style="left:320px;top:40px;width:430px;height:470px" aria-labelledby="t-tip">
+  <div class="tb bg-tagred text-paper"><h2 id="t-tip">Tip.exe</h2><button class="wb text-ink" data-min aria-label="Minimize Tip">_</button><button class="wb text-ink" data-close aria-label="Close Tip">X</button></div>
+  <div class="menubar"><span>Got a Tip?</span></div>
+  <div class="body">
+   <form id="tipform" novalidate>
+    <p class="mb-3">Submit a steal. Anonymous is fine. Cheap is required.</p>
+    <label for="steal" class="font-bold block">What's the steal?</label>
+    <textarea id="steal" rows="3"></textarea>
+    <label for="where" class="font-bold block mt-3">Where? (city, link or cross streets)</label>
+    <input type="text" id="where">
+    <p class="text-sm mt-1 opacity-80">Where is it? Cross streets are fine. "By the big tree" is not.</p>
+    <p id="err" class="text-tagred font-bold mt-2" role="alert" hidden>A steal needs a steal. What did you find?</p>
+    <button class="btn mt-4" type="submit">Submit the steal</button>
+   </form>
+   <div id="rcpt" hidden class="border-4 border-dashed border-ink bg-white p-4 font-mono">
+    <p class="font-pixel text-[10px]">RECEIPT #0075</p>
+    <p class="font-extrabold text-lg mt-2">Tip received</p>
+    <p class="mt-2">Filed under "might be a steal." Reviewed by nobody until I have had coffee.</p>
+    <p class="mt-2">If it checks out, it ends up on the radar. If it does not, I will pretend I never saw it.</p>
+    <p class="mt-2">Anonymous is fine. Cheap is required. Free is better.</p>
+    <p class="mt-3 font-bold">TOTAL: $0.00</p>
+    <button class="btn mt-4" id="back" type="button">Back to saving</button>
+   </div>
+  </div>
+ </section>
+
+ <!-- ABOUT -->
+ <section class="win" id="about" style="left:180px;top:90px;width:420px;height:420px" aria-labelledby="t-about">
+  <div class="tb bg-paper2"><h2 id="t-about">ReadMe.txt</h2><button class="wb" data-min aria-label="Minimize ReadMe">_</button><button class="wb" data-close aria-label="Close ReadMe">X</button></div>
+  <div class="body">
+   <img src="mascot.png" alt="TC McThrifty, a cheerful mascot in a green hat" class="w-36 h-36 object-contain mx-auto bg-paper2 border-4 border-ink">
+   <h1 class="font-pixel text-[13px] leading-loose text-center mt-3">T.C. McTHRIFTY</h1>
+   <p class="text-center font-bold">Minnesota's Premier Anonymous Cheapskate &amp; Thrift Thrill-Seeker</p>
+   <p class="mt-3">Squeezing every penny out of the Twin Cities (and beyond) so you don't have to.</p>
+   <p class="mt-3">Yes, I have a day job. Yes, it pays fine. No, I will not pay full price for anything, ever. Names stay out of this. Savings stay in.</p>
+   <p class="mt-3 text-sm opacity-80">Est. in a Twin Cities thrift aisle. Not financial advice. Not paying full price.</p>
+  </div>
+ </section>
+</div>
+
+<div id="menu" role="menu" aria-label="Start menu">
+ <button data-open="radar"><i class="fa-solid fa-satellite-dish w-5"></i>Radar.exe</button>
+ <button data-open="texts"><i class="fa-solid fa-file-lines w-5"></i>Texts.txt</button>
+ <button data-open="meter"><i class="fa-solid fa-gauge-high w-5"></i>Meter.app</button>
+ <button data-open="finds"><i class="fa-solid fa-folder-open w-5"></i>Finds</button>
+ <button data-open="tip"><i class="fa-solid fa-envelope w-5"></i>Tip.exe</button>
+ <button data-open="about"><i class="fa-solid fa-circle-info w-5"></i>ReadMe.txt</button>
+ <button id="shut" style="border-bottom:0;background:#EAD9AE"><i class="fa-solid fa-power-off w-5"></i>Shut down</button>
+</div>
+
+<div id="task"><button id="start" aria-haspopup="true" aria-expanded="false">START</button><div id="tasks" class="flex gap-1 flex-1 overflow-hidden"></div><div class="hidden sm:block text-xs font-bold px-2 whitespace-nowrap">SPENT TODAY $0.75</div><div id="clock" class="text-xs font-bold px-2 border-l-2 border-paper/40">--:--</div></div>
+
+<div id="bye" class="fixed inset-0 z-[30000] bg-ink text-paper hidden place-items-center text-center p-6" style="display:none">
+ <div><p class="font-pixel text-[13px] leading-loose">IT IS NOW SAFE TO KEEP SAVING</p><p class="mt-3 text-sm opacity-80">You never turned off the radar. Nobody does.</p><button class="btn mt-6" id="wake">Turn it back on</button></div>
+</div>
+
+<script>
+/* ---- data (from the main TC McThrifty site) ---- */
+const DEALS=[
+{tags:['thrifts','weird'],price:'70% OFF',badge:'Estate Sale',title:'South Mpls estate sale: 70% off retro taxidermy, Sunday only',meta:'Sat and Sun, 9am. Cash only. Bring a van and zero shame.',src:'scraped from: a flyer stapled to a pole',rating:'5 of 5 pelts',tip:'Go Sunday, not Saturday. Day two is when "firm" prices get negotiable and the owl starts looking like a bargain.'},
+{tags:['food'],price:'$0.00',badge:'Free Fries',title:'Free fries with a burger-chain game-piece trick',meta:'Any drive-thru, any week the game is on. Peel, stack, redeem.',src:'scraped from: a very long comment thread',rating:'5 of 5 fries',tip:'Check the app before you order. The free item is usually hiding under "rewards," not "menu." Read the fine print once, then never again.'},
+{tags:['thrifts'],price:'$5 BAG',badge:'Thrift Store',title:'Roseville bin store: fill-a-bag Tuesday, $5 a bag',meta:'Doors at 8. Elbows out by 8:01.',src:'scraped from: the bin store newsletter',rating:'4 of 5 flannels',tip:'Wear gloves and bring your own bag. A bag you packed like a puzzle holds twice what theirs does.'},
+{tags:['travels'],price:'$412 RT',badge:'Flight Find',title:'MSP to Lisbon, $412 round trip, possible error fare',meta:'Fares like this last hours. Fully refundable for 24 hours, so you can book first and panic later.',src:'scraped from: a fare alert at 3am',rating:'5 of 5 layovers',tip:'Book it, then check the 24-hour cancel rule on that airline before you tell anyone.'},
+{tags:['food','thrifts'],price:'BOGO',badge:'Cheap Eats',title:'Gas station coffee, buy one get one, with the app and a stern look',meta:'St. Paul, Maplewood and a suspicious Cottage Grove.',src:'scraped from: the app, reluctantly',rating:'3 of 5 refills',tip:'The second cup is for later. Put it in the fridge. Cold coffee is a personality, not a problem.'}];
+const LABEL={thrifts:'Thrifts',food:'Food & Freebies',travels:'Travels',weird:'Weird Junk'};
+const LEVELS=[
+{n:1,name:'Coupon Clipper',color:'#F4E7C5',text:'2 out of 10 cheapskates. He is only being polite.',help:'Stack the paper coupon with the store app deal. Two small wins beat one big one, and you already do the clipping.'},
+{n:2,name:'The Cruise Ship Milkman',color:'#F2B705',text:'4 out of 10. Would share a buffet with you. Would also count the plates.',help:'Free things are only free if you do not buy the upgrade. Take the buffet, skip the drink package, keep the receipt for nothing.'},
+{n:3,name:'The Monopoly Maestro',color:'#EE7A1E',text:'6 out of 10. Huh huh. You said "peel."',help:'Treat every game piece like a coupon with a deadline. Photograph them, check the expiry, and trade the extras before they turn into stickers.'},
+{n:4,name:'Muppet-Tier Estate Graverobber',color:'#D7322A',text:'8 out of 10, with a footnote. The footnote is that the coffee was still warm.',help:'Arrive on the last day, ask for the bundle price, and be kind. The family remembers who was polite, and politeness gets the extra box.'},
+{n:5,name:'The DIY Doctor',color:'#2E7D4F',text:'10 out of 10 for savings, and a respectful note that actual professionals exist and are very good at their jobs.',help:'Watch the video twice, buy the part second-hand, and know the line where YouTube ends and a trained person begins. That line is the cheapest thing you will ever save.'}];
+const QS=[
+{q:'You see a $4 shirt that is almost your size.',a:[['Walk past, it is not a bargain.',1],['Buy it, hem it, call it vintage.',3],['Buy six, resell five, wear one.',5]]},
+{q:'Fast food and you:',a:[['I use the app coupons.',1],['I play the game pieces.',3],['I have a spreadsheet of every promo since 2009.',5]]},
+{q:'A company offers you a refund. You:',a:[['Take the refund.',1],['Ask for the refund AND a coupon.',3],['Join the class action out of sheer principle.',5]]},
+{q:'A weekend plan:',a:[['Brunch, full price, at a place with a line.',1],['Estate sale hop, then free samples.',3],['Estate sale hop, fix the thing myself, sell it back.',5]]},
+{q:'Something at home breaks:',a:[['Call someone and pay them.',1],['Watch a video, then call someone.',3],['Watch a video, find the part at a thrift store, fix it.',5]]}];
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---- radar ---- */
+function feed(f){const l=DEALS.filter(d=>f==='all'||d.tags.includes(f));
+ $('#feed').innerHTML=l.length?l.map(d=>`<article class="row"><div class="price">${esc(d.price)}</div><div class="p-3 min-w-0">
+ <p class="mb-1"><span class="font-pixel text-[8px] bg-ink text-mustard px-1.5 py-1">${esc(d.badge.toUpperCase())}</span> ${d.tags.map(t=>`<span class="font-pixel text-[8px] border-2 border-ink px-1.5 py-1">${LABEL[t].toUpperCase()}</span>`).join(' ')}</p>
+ <h3 class="font-extrabold leading-snug">${esc(d.title)}</h3><p class="text-sm mt-1">${esc(d.meta)}</p>
+ <p class="text-sm font-bold text-hunter mt-1"><i class="fa-solid fa-star" aria-hidden="true"></i> TC rating: ${esc(d.rating)}</p>
+ <details class="mt-1"><summary class="cursor-pointer font-bold text-sm">TC's tip</summary><p class="text-sm mt-1">${esc(d.tip)}</p></details>
+ <p class="text-xs opacity-70 mt-1">${esc(d.src)}</p></div></article>`).join(''):'<p>Nothing in this pile. Either you are too picky or the good stuff is already in someone\'s trunk.</p>';
+ $('#rcount').textContent=l.length+' FOUND';}
+$$('#chips .chip').forEach(b=>b.onclick=()=>{$$('#chips .chip').forEach(x=>x.setAttribute('aria-pressed',x===b));feed(b.dataset.f)});feed('all');
+
+/* ---- meter ---- */
+$('#quiz').innerHTML=QS.map((x,i)=>`<fieldset class="mb-4"><legend class="font-bold">${i+1}. ${esc(x.q)}</legend>${x.a.map(([t,v])=>`<label class="opt"><input type="radio" name="q${i}" value="${v}" class="mr-2">${esc(t)}</label>`).join('')}</fieldset>`).join('');
+function lbar(n){$('#lbar').innerHTML=LEVELS.map(l=>`<span class="h-6 flex-1 border-2 border-ink" style="background:${l.n<=n?l.color:'transparent'}"></span>`).join('')}lbar(0);
+$('#quiz').addEventListener('change',()=>{const p=QS.map((_,i)=>$(`input[name=q${i}]:checked`)).filter(Boolean);if(p.length<QS.length)return;
+ const avg=p.reduce((a,b)=>a+ +b.value,0)/p.length;const n=Math.max(1,Math.min(5,Math.round(avg)));const L=LEVELS[n-1];
+ $('#lvl').textContent='YOUR THRIFT LEVEL: '+n+' / 5';lbar(n);$('#lname').textContent=L.name;$('#ltext').textContent=L.text;$('#lhelp').textContent='TC says: '+L.help;});
+$('#again').onclick=()=>{$('#quiz').reset();$('#lvl').textContent='YOUR THRIFT LEVEL: ? / 5';lbar(0);$('#lname').textContent='Answer all five';$('#ltext').textContent='Your tier shows up here. TC McThrifty will rate it. Dryly.';$('#lhelp').textContent=''};
+
+/* ---- tip ---- */
+$('#tipform').onsubmit=e=>{e.preventDefault();if(!$('#steal').value.trim()){$('#err').hidden=false;$('#steal').focus();return}$('#err').hidden=true;$('#tipform').hidden=true;$('#rcpt').hidden=false};
+$('#back').onclick=()=>{$('#tipform').reset();$('#tipform').hidden=false;$('#rcpt').hidden=true};
+
+/* ---- window manager ---- */
+let z=10;const open=new Set();
+function render(){const t=$('#tasks');t.innerHTML='';open.forEach(id=>{const w=$('#'+id),b=document.createElement('button');b.className='t'+(w.classList.contains('open')&&w.dataset.top?' on':'');b.textContent=$('#t-'+id).textContent;b.onclick=()=>{if(w.classList.contains('open')&&w.dataset.top==='1'){w.classList.remove('open')}else{w.classList.add('open');focus(id)};render()};t.appendChild(b)})}
+function focus(id){$$('.win').forEach(w=>delete w.dataset.top);const w=$('#'+id);w.style.zIndex=++z;w.dataset.top='1';render()}
+function openW(id){const w=$('#'+id);w.classList.add('open');open.add(id);focus(id);$('#menu').classList.remove('open');$('#start').setAttribute('aria-expanded','false')}
+$$('[data-open]').forEach(b=>b.addEventListener(b.classList.contains('ico')?'dblclick':'click',()=>openW(b.dataset.open)));
+$$('.ico').forEach(b=>{b.addEventListener('click',()=>{if(matchMedia('(max-width:639px)').matches||matchMedia('(pointer:coarse)').matches)openW(b.dataset.open)});b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openW(b.dataset.open)}})});
+$$('.win').forEach(w=>{w.addEventListener('pointerdown',()=>focus(w.id));
+ w.querySelector('[data-close]').onclick=()=>{w.classList.remove('open');open.delete(w.id);render()};
+ w.querySelector('[data-min]').onclick=()=>{w.classList.remove('open');delete w.dataset.top;render()};
+ const tb=w.querySelector('.tb');let sx,sy,ox,oy,drag=false;
+ tb.addEventListener('pointerdown',e=>{if(e.target.closest('button')||matchMedia('(max-width:639px)').matches)return;drag=true;sx=e.clientX;sy=e.clientY;ox=w.offsetLeft;oy=w.offsetTop;tb.setPointerCapture(e.pointerId)});
+ tb.addEventListener('pointermove',e=>{if(!drag)return;w.style.left=Math.max(0,Math.min(innerWidth-120,ox+e.clientX-sx))+'px';w.style.top=Math.max(0,Math.min(innerHeight-90,oy+e.clientY-sy))+'px'});
+ tb.addEventListener('pointerup',()=>drag=false)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('#menu').classList.remove('open');const t=$$('.win').find(w=>w.dataset.top);if(t&&!$('#menu').classList.contains('open')&&e.shiftKey){t.querySelector('[data-close]').click()}}});
+$('#start').onclick=e=>{e.stopPropagation();const m=$('#menu');m.classList.toggle('open');$('#start').setAttribute('aria-expanded',m.classList.contains('open'))};
+document.addEventListener('click',e=>{if(!e.target.closest('#menu'))$('#menu').classList.remove('open')});
+$('#shut').onclick=()=>{$('#menu').classList.remove('open');const b=$('#bye');b.style.display='grid'};
+$('#wake').onclick=()=>{$('#bye').style.display='none'};
+function clock(){const d=new Date();$('#clock').textContent=d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}clock();setInterval(clock,20000);
+
+/* ---- boot ---- */
+let p=0;const bt=setInterval(()=>{p+=8;$('#bar').style.width=Math.min(p,100)+'%';if(p>=100)go()},90);
+function go(){clearInterval(bt);const b=$('#boot');if(!b)return;b.remove();if(!matchMedia('(max-width:639px)').matches)openW('radar')}
+$('#boot').onclick=go;$('#boot').onkeydown=e=>{if(e.key==='Enter'||e.key===' ')go()};
+</script>
+</body>
+</html>

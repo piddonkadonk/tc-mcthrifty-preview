@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TC McThrifty's Thrift Horoscope</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=Archivo:wght@400;700;800&family=Special+Elite&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{colors:{paper:'#F4E7C5',paper2:'#EAD9AE',ink:'#151515',mustard:'#F2B705',hunter:'#1F5B3A',hunter2:'#2E7D4F',orange:'#EE7A1E',tagred:'#D7322A',sky:'#7FC6D9',night:'#1b1a2e'},
+fontFamily:{display:['"Bowlby One SC"','Impact','sans-serif'],body:['Archivo','system-ui','sans-serif'],zine:['"Special Elite"','"Courier New"',"monospace"],hand:['Caveat','cursive']},
+boxShadow:{pop:'4px 4px 0 0 #000',popl:'8px 8px 0 0 #000'}}}}
+</script>
+<style>
+body{background:radial-gradient(circle at 20% 10%,#2a2850 0,#1b1a2e 55%,#12111f 100%);min-height:100vh;color:#151515}
+.stars{position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(#fff 1px,transparent 1.4px),radial-gradient(#F2B705 1px,transparent 1.6px);background-size:90px 90px,140px 140px;background-position:10px 20px,60px 70px;opacity:.35}
+.sign{min-height:84px;transition:transform .15s}
+.sign:hover{transform:translateY(-3px) rotate(-1deg)}
+.sign[aria-pressed=true]{background:#F2B705;box-shadow:4px 4px 0 #000;transform:translate(-2px,-2px)}
+.tag{position:relative;clip-path:polygon(14px 0,100% 0,100% 100%,14px 100%,0 50%)}
+.fadein{animation:f .4s ease both}@keyframes f{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.spin{animation:spin .9s ease-out}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+:focus-visible{outline:3px solid #F2B705;outline-offset:3px}
+</style></head>
+<body>
+<div class="stars" aria-hidden="true"></div>
+<main class="relative max-w-3xl mx-auto px-4 py-8">
+
+<header class="text-center text-paper">
+  <img src="mascot.png" alt="TC McThrifty, the mascot, in a flannel and top hat" class="mx-auto w-40 sm:w-48 rounded-lg border-4 border-black shadow-pop -rotate-2 bg-paper">
+  <p class="font-zine text-mustard mt-4 text-sm tracking-widest">&#9733; THE STARS HAVE SEEN YOUR CART &#9733;</p>
+  <h1 class="font-display text-4xl sm:text-5xl leading-none mt-1">Thrift Horoscope</h1>
+  <p class="mt-3 text-paper/90 max-w-md mx-auto">Pick your sign. TC McThrifty reads the aisles and tells you this week's fortune, lucky aisle and lucky price. Fortunes change every Monday and are the same for everyone who shares your sign.</p>
+  <p class="font-zine text-xs mt-2 text-paper/60">For entertainment. Not financial advice. Not paying full price.</p>
+</header>
+
+<section aria-labelledby="pick" class="mt-8">
+  <h2 id="pick" class="font-display text-paper text-xl mb-3 text-center">1. Pick your sign</h2>
+  <div id="signs" class="grid grid-cols-3 sm:grid-cols-4 gap-3" role="group" aria-label="Zodiac signs"></div>
+</section>
+
+<section id="out" class="mt-10 hidden" aria-live="polite" aria-labelledby="oh">
+  <div class="bg-paper border-4 border-black shadow-popl p-5 sm:p-7 fadein">
+    <div class="flex items-center gap-4">
+      <span id="osym" class="grid place-items-center w-16 h-16 rounded-full bg-night text-mustard text-4xl border-4 border-black" aria-hidden="true"></span>
+      <div>
+        <h2 id="oh" class="font-display text-2xl sm:text-3xl leading-tight"></h2>
+        <p id="odates" class="font-zine text-sm"></p>
+        <p id="oweek" class="font-zine text-xs opacity-70"></p>
+      </div>
+    </div>
+
+    <p class="font-zine text-xs tracking-widest text-hunter mt-5">THIS WEEK'S FORTUNE</p>
+    <p id="ofort" class="text-xl sm:text-2xl font-extrabold leading-snug mt-1"></p>
+
+    <div class="grid sm:grid-cols-2 gap-4 mt-6">
+      <div class="bg-white border-4 border-black p-4">
+        <p class="font-zine text-xs tracking-widest text-hunter"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> LUCKY AISLE</p>
+        <p id="oaisle" class="font-display text-lg leading-snug mt-1"></p>
+      </div>
+      <div class="flex items-center justify-center">
+        <div class="tag bg-mustard border-4 border-black pl-8 pr-5 py-3 text-center rotate-2">
+          <p class="font-zine text-[11px] tracking-widest">LUCKY PRICE</p>
+          <p id="oprice" class="font-display text-4xl leading-none"></p>
+        </div>
+      </div>
+      <div class="bg-white border-4 border-black p-4">
+        <p class="font-zine text-xs tracking-widest text-hunter"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> HUNT FOR</p>
+        <p id="ohunt" class="font-bold mt-1"></p>
+      </div>
+      <div class="bg-white border-4 border-black p-4">
+        <p class="font-zine text-xs tracking-widest text-tagred"><i class="fa-solid fa-ban" aria-hidden="true"></i> WALK PAST</p>
+        <p id="oavoid" class="font-bold mt-1"></p>
+      </div>
+    </div>
+
+    <div class="mt-5 bg-hunter text-paper border-4 border-black p-4">
+      <p class="font-zine text-xs tracking-widest text-mustard"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> TC'S ACTUAL TIP (THIS PART IS REAL)</p>
+      <p id="otip" class="font-bold mt-1"></p>
+    </div>
+
+    <div class="mt-5 grid sm:grid-cols-2 gap-4 items-center">
+      <div>
+        <p class="font-zine text-xs tracking-widest">CHEAPNESS FORECAST</p>
+        <p id="ostars" class="text-2xl text-orange" role="img" aria-label=""></p>
+      </div>
+      <p class="font-hand text-2xl font-bold leading-6">Best thrift buddy this week: <span id="obuddy" class="text-hunter"></span></p>
+    </div>
+
+    <div class="mt-6 flex flex-wrap gap-3">
+      <button id="copy" class="bg-mustard border-4 border-black shadow-pop px-4 py-2 font-extrabold min-h-[44px]"><i class="fa-solid fa-copy" aria-hidden="true"></i> Copy my fortune</button>
+      <button id="rand" class="bg-white border-4 border-black shadow-pop px-4 py-2 font-extrabold min-h-[44px]"><i id="dice" class="fa-solid fa-dice" aria-hidden="true"></i> Read a friend's sign</button>
+    </div>
+    <p id="copied" class="font-zine text-sm text-hunter mt-2 h-5" role="status"></p>
+  </div>
+</section>
+
+<footer class="text-center text-paper/70 mt-10 font-zine text-xs">
+  <p>TC McThrifty &middot; Est. in a Twin Cities thrift aisle.</p>
+</footer>
+</main>
+
+<script>
+const SIGNS=[
+{n:'Aries',s:'♈',d:'Mar 21 to Apr 19',f:[
+ 'Mars is in your cart. Do not buy the first lamp you see. Walk the whole store, then come back for the second lamp.',
+ 'Your impulse is strong this week. So is the return policy. Check both before the register.',
+ 'A rack of coats wants to meet you. Check the pockets. Someone\'s loss is your lining.']},
+{n:'Taurus',s:'♉',d:'Apr 20 to May 20',f:[
+ 'Venus rewards patience. The $40 chair drops to $20 the day you stop looking at it.',
+ 'You will find the exact mug you broke in 2019. Buy two. The universe owes you.',
+ 'Comfort is calling. The soft flannel is on the left. The itchy one is the one you grab. Go left.']},
+{n:'Gemini',s:'♊',d:'May 21 to Jun 20',f:[
+ 'Two bargains, one cart. Do the math at the end, not the start.',
+ 'You will talk yourself into and out of a bread maker. The second you is right.',
+ 'A stranger will say "I saw it first." You did not see it first. Smile and leave with the better one.']},
+{n:'Cancer',s:'♋',d:'Jun 21 to Jul 22',f:[
+ 'A cardigan holds a memory that is not yours. Wear it anyway.',
+ 'You will find a dish set with six plates and a story. Buy a seventh plate to be safe.',
+ 'Home is calling. Check the linens bin. The good towels are always at the bottom.']},
+{n:'Leo',s:'♌',d:'Jul 23 to Aug 22',f:[
+ 'The spotlight finds you at the jewelry case. It is costume. It is also perfect.',
+ 'You will haggle and win. Do not tell anyone how low you went. Pride costs more than tags.',
+ 'A velvet blazer is waiting for you. Size is a suggestion.']},
+{n:'Virgo',s:'♍',d:'Aug 23 to Sep 22',f:[
+ 'Your list helps. The best find this week is not on it.',
+ 'Check every seam, every zipper, every smell. The one that passes is yours.',
+ 'You will sort your cart into piles at the register. The cashier will fall in love.']},
+{n:'Libra',s:'♎',d:'Sep 23 to Oct 22',f:[
+ 'Two lamps, one decision. Buy neither, come back Tuesday. The price drops.',
+ 'Balance is found in a pair: matching candlesticks, $2 for both.',
+ 'You will refuse a deal to be polite. Do not. Politeness is free. The deal is not.']},
+{n:'Scorpio',s:'♏',d:'Oct 23 to Nov 21',f:[
+ 'Something hidden in a bin is yours. Dig. Wear the gloves.',
+ 'You will read a price tag and know the story behind it. You are right. Offer half.',
+ 'Secrets live in the housewares aisle. One of them is a cast iron pan for $6.']},
+{n:'Sagittarius',s:'♐',d:'Nov 22 to Dec 21',f:[
+ 'Adventure is two towns over. The thrift store there has no line and a better couch.',
+ 'You will walk in for "one minute." It will be an hour. It will be worth it.',
+ 'A map, a globe, a suitcase. The universe says go somewhere cheap.']},
+{n:'Capricorn',s:'♑',d:'Dec 22 to Jan 19',f:[
+ 'Discipline pays. Skip the first three booths. The good stuff is behind the fourth.',
+ 'Quality beats quantity: one wool coat for $14 outlasts six $5 ones.',
+ 'You will find a briefcase that outranks your whole week. Do not mention it.']},
+{n:'Aquarius',s:'♒',d:'Jan 20 to Feb 18',f:[
+ 'Weird is the plan. The oddest thing on the shelf is the best price per laugh.',
+ 'A gadget with no manual wants a home. Ask to plug it in at the store. Most will let you.',
+ 'Your future is in the cord bin. Cords are $1 and you need three.']},
+{n:'Pisces',s:'♓',d:'Feb 19 to Mar 20',f:[
+ 'Dreamy vibes at the book table. Take the one with the inscription.',
+ 'You will buy a painting for the frame. The painting was the good part.',
+ 'The tide favors the back shelf. Go slow and look low.']}
+];
+const AISLES=['Housewares, left side, past the single ski','The book wall, third shelf from the bottom','Linens, bottom bin, under the good towels','Coats, the rack closest to the door','The glass case by the register (ask to see the shiny one)','Furniture, back corner, behind the lamp that is also a clock','Kitchen gadgets, where the fondue sets go to retire','Records, the crate marked "misc"','Picture frames, the pile leaning on the wall','Toys, the bin nobody else will dig in','Luggage, the one with the broken wheel and a good lock','Holiday, in any month but December'];
+const PRICES=['$0.99','$1.99','$2.50','$3.00','$4.25','$5.00','$6.50','$7.77','$9.99','$12.00','50 cents','$0.25','$3.33'];
+const HUNT=['A cast iron pan with a flat bottom','Wool anything. Check the tag, not the color','Glass jars with lids. They are free storage','A leather belt. Rare, cheap and always your size','A wooden frame. Toss the art, keep the frame','Real silverware by the pound','A coat with a good lining','A lamp that works. Plug it in first','Paperbacks you already meant to read','A rug small enough to carry and big enough to brag about','Anything with the tag still on it','Cookware with a heavy bottom'];
+const AVOID=['Anything labeled "rare" by someone who is not a collector','The 12th pair of identical cargo shorts','Electronics with no cord and a big dream','A "vintage" sign that has a barcode','Perfume without a cap','Furniture you cannot carry out in one trip','Anything that smells like a basement and a secret','Mattresses. Always. Forever.','A bargain that is only a bargain if you buy two','Mystery boxes with a mystery price'];
+const TIPS=['Go on the day the store marks a color half off. Ask at the register which color it is.','Bring a tote bag and wear shoes you can stand in for an hour. Your feet are part of the budget.','Check the tag, then check the seam. Tags lie. Seams do not.','Go Tuesday or Wednesday morning, after the weekend donations get shelved.','Hold your cart in one hand and your phone in the other. Look up the real price before you celebrate.','Test everything with a plug. Most stores have an outlet and will let you.','Smell first, buy second. Fabric holds onto smoke and basements.','Haggle once, kindly, and only at estate sales. Stores with price tags do not haggle.','Walk the whole store before you buy anything. The best find is always at the far end.','Wash everything when you get home, then admire it. Not before.','Check the pockets. Check the jacket lining. Check the bottom of the bag.','Ask when the new stuff goes out. Employees will often tell you.'];
+const NAMES=SIGNS.map(x=>x.n);
+
+/* seeded picks: same sign + same week = same fortune */
+function weekKey(d=new Date()){
+  const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  const day=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+1-day); /* back to Monday */
+  return {key:t.getUTCFullYear()+'-'+(t.getUTCMonth()+1)+'-'+t.getUTCDate(),monday:new Date(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate())};
+}
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function rng(seed){let a=seed;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const pick=(r,arr)=>arr[Math.floor(r()*arr.length)];
+
+const signsEl=document.getElementById('signs');
+signsEl.innerHTML=SIGNS.map((x,i)=>`<button type="button" data-i="${i}" aria-pressed="false" class="sign bg-paper border-4 border-black shadow-pop p-2 text-center">
+  <span class="block text-3xl leading-none text-night" aria-hidden="true">${x.s}</span>
+  <span class="block font-display text-[13px] sm:text-sm leading-tight mt-1">${x.n}</span>
+  <span class="block font-zine text-[10px] opacity-70">${x.d}</span></button>`).join('');
+
+let cur=-1,lastText='';
+function show(i){
+  cur=i;
+  const x=SIGNS[i],w=weekKey(),r=rng(hash(w.key+'|'+x.n));
+  document.querySelectorAll('.sign').forEach((b,j)=>b.setAttribute('aria-pressed',j===i));
+  const fort=pick(r,x.f),aisle=pick(r,AISLES),price=pick(r,PRICES),hunt=pick(r,HUNT),avoid=pick(r,AVOID),tip=pick(r,TIPS);
+  const stars=1+Math.floor(r()*5);
+  let b=Math.floor(r()*12);if(b===i)b=(b+5)%12;
+  const wk=w.monday.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+  document.getElementById('osym').textContent=x.s;
+  document.getElementById('oh').textContent=x.n;
+  document.getElementById('odates').textContent=x.d;
+  document.getElementById('oweek').textContent='Reading for the week of '+wk+'. Resets Monday.';
+  document.getElementById('ofort').textContent=fort;
+  document.getElementById('oaisle').textContent=aisle;
+  document.getElementById('oprice').textContent=price;
+  document.getElementById('ohunt').textContent=hunt;
+  document.getElementById('oavoid').textContent=avoid;
+  document.getElementById('otip').textContent=tip;
+  const st=document.getElementById('ostars');
+  st.innerHTML='<i class="fa-solid fa-tag"></i> '.repeat(stars)+'<i class="fa-regular fa-tag opacity-40"></i> '.repeat(5-stars);
+  st.setAttribute('aria-label',stars+' of 5 price tags');
+  document.getElementById('obuddy').textContent=SIGNS[b].s+' '+SIGNS[b].n;
+  const out=document.getElementById('out');out.classList.remove('hidden');
+  const card=out.firstElementChild;card.classList.remove('fadein');void card.offsetWidth;card.classList.add('fadein');
+  lastText=`${x.n} thrift horoscope, week of ${wk}\n${fort}\nLucky aisle: ${aisle}\nLucky price: ${price}\nHunt for: ${hunt}\nWalk past: ${avoid}\nTC's tip: ${tip}\n${stars} of 5 price tags. Best thrift buddy: ${SIGNS[b].n}.`;
+  document.getElementById('copied').textContent='';
+  out.scrollIntoView({behavior:'smooth',block:'start'});
+}
+signsEl.addEventListener('click',e=>{const b=e.target.closest('.sign');if(b)show(+b.dataset.i)});
+document.getElementById('rand').addEventListener('click',()=>{
+  const d=document.getElementById('dice');d.classList.remove('spin');void d.offsetWidth;d.classList.add('spin');
+  let n;do{n=Math.floor(Math.random()*12)}while(n===cur);show(n);
+});
+document.getElementById('copy').addEventListener('click',async()=>{
+  const m=document.getElementById('copied');
+  try{await navigator.clipboard.writeText(lastText);m.textContent='Copied. Go forth and haggle.'}
+  catch{const t=document.createElement('textarea');t.value=lastText;document.body.appendChild(t);t.select();try{document.execCommand('copy');m.textContent='Copied. Go forth and haggle.'}catch{m.textContent='Could not copy. Select the text and copy it by hand.'}t.remove()}
+});
+</script>
+</body></html>

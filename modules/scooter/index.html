@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Price Check Slot Machine - TC McThrifty</title>
+<meta name="description" content="Pull the lever. Three reels land on an item, a store and a price. TC McThrifty says STEAL or SKIP.">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Archivo+Narrow:wght@500;700&family=Special+Elite&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<script>tailwind.config={theme:{extend:{colors:{ad:'#D7322A',adark:'#a61e18',news:'#F6F0DC',ink:'#17140f',sun:'#FFD23F',leaf:'#2E7D4F'},fontFamily:{slab:['"Alfa Slab One"','serif'],narrow:['"Archivo Narrow"','sans-serif'],type:['"Special Elite"','monospace'],hand:['Caveat','cursive']}}}}</script>
+<style>
+body{background:#e9e1c6;color:#17140f;font-family:"Archivo Narrow",system-ui,sans-serif;font-size:18px;line-height:1.45;overflow-x:hidden}
+.cab{background:linear-gradient(180deg,#D7322A,#a61e18);border:5px solid #17140f;box-shadow:8px 8px 0 #17140f}
+.window{background:#fffaf0;border:5px solid #17140f;box-shadow:inset 0 0 0 4px #FFD23F}
+.reelwrap{height:112px;overflow:hidden;background:#fff;border:4px solid #17140f;position:relative}
+.reelwrap::before,.reelwrap::after{content:"";position:absolute;left:0;right:0;height:22px;z-index:2;pointer-events:none}
+.reelwrap::before{top:0;background:linear-gradient(#17140f55,transparent)}.reelwrap::after{bottom:0;background:linear-gradient(transparent,#17140f55)}
+.cell{height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4px;line-height:1.1}
+.spinning .cell{filter:blur(1.2px)}
+.btn{min-height:52px;border:4px solid #17140f;box-shadow:4px 4px 0 #17140f;font-family:"Alfa Slab One";text-transform:uppercase}
+.btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 #17140f}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn:focus-visible,.hold:focus-visible{outline:4px solid #2E7D4F;outline-offset:3px}
+.lever{width:26px;height:120px;background:#17140f;border-radius:13px;position:relative;transform-origin:50% 100%;transition:transform .25s}
+.lever::before{content:"";position:absolute;top:-22px;left:-12px;width:50px;height:50px;border-radius:50%;background:#FFD23F;border:4px solid #17140f}
+.lever.pull{transform:scaleY(.45)}
+.burst{clip-path:polygon(50% 0%,61% 12%,76% 6%,80% 22%,96% 24%,90% 40%,100% 52%,88% 62%,93% 79%,77% 79%,70% 94%,56% 86%,44% 98%,36% 84%,20% 90%,18% 74%,3% 68%,10% 52%,0% 40%,13% 30%,10% 14%,26% 14%,34% 2%)}
+@keyframes pop{0%{transform:scale(.4) rotate(-12deg);opacity:0}60%{transform:scale(1.15) rotate(3deg);opacity:1}100%{transform:scale(1) rotate(-3deg)}}
+.pop{animation:pop .5s ease-out forwards}
+@keyframes flash{50%{background:#FFD23F}}
+.flash{animation:flash .5s 4}
+@media (prefers-reduced-motion:reduce){.pop,.flash{animation:none}.lever{transition:none}}
+</style></head>
+<body>
+<a href="#machine" class="sr-only focus:not-sr-only bg-sun p-2 absolute z-50">Skip to the machine</a>
+<div class="bg-ink text-sun font-type text-sm py-2 px-3 text-center tracking-wide">TC McTHRIFTY PRICE CHECK * PULL THE LEVER * NO REAL MONEY WAS HARMED</div>
+
+<main class="max-w-3xl mx-auto px-3 py-6">
+  <header class="flex items-center gap-4">
+    <img src="mascot.png" alt="TC McThrifty mascot" class="w-20 h-20 sm:w-28 sm:h-28 border-4 border-ink bg-white object-cover" width="112" height="112">
+    <div>
+      <h1 class="font-slab text-3xl sm:text-5xl text-ad leading-none" style="text-shadow:2px 2px 0 #17140f">PRICE CHECK<br>SLOT MACHINE</h1>
+      <p class="font-type text-sm sm:text-base mt-1">Three reels. One verdict. STEAL or SKIP.</p>
+    </div>
+  </header>
+
+  <section id="machine" class="cab mt-6 p-4 sm:p-6" aria-labelledby="mh">
+    <h2 id="mh" class="sr-only">The machine</h2>
+    <div class="flex items-center justify-between text-news font-slab text-sm sm:text-base">
+      <span>SPINS: <span id="spins">0</span></span>
+      <span>STEALS: <span id="steals">0</span></span>
+      <span>BANKED: $<span id="bank">0.00</span></span>
+    </div>
+
+    <div class="mt-4 grid grid-cols-[1fr_auto] gap-4 items-center">
+      <div class="window p-3 sm:p-4">
+        <div class="grid grid-cols-3 gap-2 sm:gap-3" id="reels">
+          <div><p class="font-type text-[11px] sm:text-xs text-center mb-1">ITEM</p><div class="reelwrap" id="w0" aria-hidden="true"><div class="cell"><span class="text-4xl">?</span></div></div></div>
+          <div><p class="font-type text-[11px] sm:text-xs text-center mb-1">STORE</p><div class="reelwrap" id="w1" aria-hidden="true"><div class="cell"><span class="text-4xl">?</span></div></div></div>
+          <div><p class="font-type text-[11px] sm:text-xs text-center mb-1">PRICE</p><div class="reelwrap" id="w2" aria-hidden="true"><div class="cell"><span class="text-4xl">?</span></div></div></div>
+        </div>
+      </div>
+      <button id="lever" class="hold flex flex-col items-center justify-end h-40 w-16 bg-transparent" aria-label="Pull the lever to spin" type="button"><span class="lever" id="leverbar"></span></button>
+    </div>
+
+    <div class="mt-4 flex flex-wrap gap-3">
+      <button id="spin" class="btn bg-sun px-6 flex-1 min-w-[10rem]" type="button"><i class="fa-solid fa-hand-point-down"></i> Pull the lever</button>
+      <button id="snd" class="btn bg-news px-4" type="button" aria-pressed="false" aria-label="Sound off"><i class="fa-solid fa-volume-xmark"></i></button>
+    </div>
+  </section>
+
+  <section class="mt-6" aria-labelledby="vh">
+    <h2 id="vh" class="sr-only">Verdict</h2>
+    <div id="verdict" class="window p-4 sm:p-5 min-h-[10rem]" role="status" aria-live="polite">
+      <p class="font-type text-sm tracking-widest text-ad">VERDICT</p>
+      <p class="font-slab text-2xl mt-1">Pull the lever to find out.</p>
+      <p class="mt-2">Any item, any store, any price. TC McThrifty tells you if it is a steal or a skip, and what you should have paid.</p>
+    </div>
+  </section>
+
+  <section class="mt-6" aria-labelledby="lh">
+    <h2 id="lh" class="font-slab text-xl text-ad">LAST FIVE PULLS</h2>
+    <ol id="log" class="mt-2 space-y-2 list-none p-0"><li class="font-type text-sm">Nothing yet. The reels are bored.</li></ol>
+  </section>
+
+  <p class="font-type text-xs mt-8 text-center">Prices are made up for fun. Fair prices are rough secondhand guesses, not appraisals. Not financial advice. Not paying full price.</p>
+</main>
+
+<script>
+/* fair = typical secondhand price in dollars */
+const ITEMS=[
+{e:'🛋️',n:'Mid-century couch',fair:180,tip:'Flip a cushion and check the frame for wobble before you haggle.'},
+{e:'🦌',n:'Taxidermy owl',fair:60,tip:'Nobody has ever had a second offer on an owl. Use that.'},
+{e:'📀',n:'Box of vinyl records',fair:35,tip:'Check the first and last record. Sellers put the good ones in the middle.'},
+{e:'🧥',n:'Wool overcoat',fair:40,tip:'Smell the lining and check the pockets for holes before you pay.'},
+{e:'🍳',n:'Cast iron skillet',fair:25,tip:'Rust is fine. Cracks are not. Rust comes off in ten minutes.'},
+{e:'🎸',n:'Acoustic guitar',fair:90,tip:'Look down the neck like a pool cue. A bowed neck is a $90 mistake.'},
+{e:'📚',n:'Set of encyclopedias',fair:20,tip:'These are worth more as shelf decor than as facts. Pay accordingly.'},
+{e:'💡',n:'Lava lamp',fair:15,tip:'Plug it in at the sale. If it does not glow, it is a paperweight.'},
+{e:'🚲',n:'Ten-speed bike',fair:70,tip:'Squeeze the tires and spin the pedals. Rust on the chain is a bargaining chip.'},
+{e:'🖼️',n:'Velvet painting',fair:30,tip:'Anything with a matador or a wolf is priced by vibes. Offer half.'},
+{e:'🧵',n:'Sewing machine',fair:55,tip:'Ask if it still turns by hand. If yes, it is probably a good one.'},
+{e:'🎿',n:'Single ski',fair:5,tip:'There is no matching pair. Buy it for the wall, not the slope.'}];
+const STORES=[
+{e:'⛪',n:'Church basement sale',bias:.85},{e:'🏚️',n:'Estate sale, day two',bias:.7},{e:'🛍️',n:'Roseville bin store',bias:.8},
+{e:'🏷️',n:'Fancy vintage boutique',bias:1.5},{e:'🚗',n:'Garage sale on a corner',bias:.9},{e:'🏬',n:'Big-box thrift chain',bias:1.05},
+{e:'🌐',n:'Online marketplace',bias:1.1},{e:'🪧',n:'Flyer on a pole',bias:.75}];
+const MULTS=[.15,.25,.4,.55,.7,.85,1,1.2,1.5,2,3];
+const money=x=>'$'+(Math.round(x*100)/100).toFixed(2).replace(/\.00$/,'');
+const $=id=>document.getElementById(id);
+const rand=a=>a[Math.floor(Math.random()*a.length)];
+const STEAL=['Take my wallet.','Grab it before a stranger does.','The owl would approve.','This is why you carry cash.','Do not tell anyone about this.','Pay it, then walk away fast.'];
+const SKIP=['Hard pass.','Even the owl is embarrassed.','You can do better in a bin.','Close, but we do not do close.','Walk away. Come back Sunday.','That is a full-price energy.'];
+let spinning=false,spins=0,steals=0,bank=0,sound=false,ac;
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function beep(f,d,t='square',v=.05){if(!sound)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d)}catch(e){}}
+function cell(top,bot){return `<div class="cell"><span class="text-4xl">${top}</span><span class="font-bold text-[13px] sm:text-sm mt-1">${bot}</span></div>`}
+function fillReel(i,final,pool){const w=$('w'+i);const cells=[];const n=reduce?0:18;for(let k=0;k<n;k++)cells.push(pool());cells.push(final);w.innerHTML='<div class="strip" style="transition:transform 0s">'+cells.join('')+'</div>';const s=w.firstChild;s.style.transform=`translateY(0)`;return {s,steps:cells.length-1}}
+function runReel(i,final,pool,dur){return new Promise(res=>{const {s,steps}=fillReel(i,final,pool);const w=$('w'+i);if(reduce||!steps){res();return}
+w.classList.add('spinning');requestAnimationFrame(()=>requestAnimationFrame(()=>{s.style.transition=`transform ${dur}ms cubic-bezier(.12,.7,.18,1)`;s.style.transform=`translateY(${-steps*112}px)`}));
+setTimeout(()=>{s.style.transition='none';s.style.transform=`translateY(${-steps*112}px)`;w.classList.remove('spinning');beep(300+i*120,.08);res()},dur+30)})}
+const itemCell=it=>cell(it.e,it.n),storeCell=s=>cell(s.e,s.n),priceCell=p=>cell('<span class="font-slab text-2xl text-ad">'+money(p)+'</span>','');
+async function pull(){if(spinning)return;spinning=true;$('spin').disabled=true;$('lever').disabled=true;
+const lv=$('leverbar');lv.classList.add('pull');setTimeout(()=>lv.classList.remove('pull'),300);beep(180,.15,'sawtooth');
+const it=rand(ITEMS),st=rand(STORES);const mult=rand(MULTS);let price=it.fair*mult*st.bias;price=price<1?Math.max(.25,Math.round(price*4)/4):Math.round(price)-(price>20?0.01:0);if(price<=0)price=.5;
+$('verdict').innerHTML='<p class="font-type text-sm tracking-widest text-ad">VERDICT</p><p class="font-slab text-2xl mt-1">Reels are spinning...</p>';
+const ip=()=>itemCell(rand(ITEMS)),sp=()=>storeCell(rand(STORES)),pp=()=>priceCell(rand(ITEMS).fair*rand(MULTS));
+await Promise.all([runReel(0,itemCell(it),ip,1500),runReel(1,storeCell(st),sp,2100),runReel(2,priceCell(price),pp,2700)]);
+const ratio=price/it.fair;const steal=ratio<=0.75;spins++;
+$('spins').textContent=spins;let line;
+if(steal){steals++;const sv=it.fair-price;bank+=sv;$('steals').textContent=steals;$('bank').textContent=bank.toFixed(2);
+line=`<div class="flex items-start gap-4"><div class="burst bg-leaf text-white w-28 h-28 shrink-0 flex items-center justify-center font-slab text-2xl pop" aria-hidden="true">STEAL!</div><div><p class="font-type text-sm tracking-widest text-leaf">VERDICT: STEAL</p><p class="font-slab text-xl mt-1">${esc(rand(STEAL))}</p><p class="mt-2">A ${esc(it.n.toLowerCase())} runs about ${money(it.fair)} secondhand. At ${esc(st.n)} for ${money(price)}, you keep <strong>${money(sv)}</strong>.</p><p class="font-hand text-2xl text-ad mt-1">${esc(it.tip)}</p></div></div>`;
+$('verdict').classList.add('flash');setTimeout(()=>$('verdict').classList.remove('flash'),2200);beep(660,.12);setTimeout(()=>beep(880,.2),130);
+}else{const over=price-it.fair;
+line=`<div class="flex items-start gap-4"><div class="burst bg-ad text-white w-28 h-28 shrink-0 flex items-center justify-center font-slab text-2xl pop" aria-hidden="true">SKIP</div><div><p class="font-type text-sm tracking-widest text-ad">VERDICT: SKIP</p><p class="font-slab text-xl mt-1">${esc(rand(SKIP))}</p><p class="mt-2">A ${esc(it.n.toLowerCase())} runs about ${money(it.fair)} secondhand. ${money(price)} at ${esc(st.n)} ${over>0?`overpays by <strong>${money(over)}</strong>`:'is not enough of a discount'}. Offer ${money(it.fair*.6)} and see what happens.</p><p class="font-hand text-2xl text-ad mt-1">${esc(it.tip)}</p></div></div>`;beep(140,.25,'sawtooth')}
+$('verdict').innerHTML=line;
+const li=document.createElement('li');li.className='font-type text-sm bg-news border-2 border-ink px-3 py-2 flex justify-between gap-2';li.innerHTML=`<span>${it.e} ${esc(it.n)} at ${esc(st.n)} for ${money(price)}</span><strong class="${steal?'text-leaf':'text-ad'}">${steal?'STEAL':'SKIP'}</strong>`;
+const log=$('log');if(log.firstElementChild&&!log.firstElementChild.classList.contains('bg-news'))log.innerHTML='';log.prepend(li);while(log.children.length>5)log.lastChild.remove();
+spinning=false;$('spin').disabled=false;$('lever').disabled=false;$('spin').focus({preventScroll:true})}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+$('spin').addEventListener('click',pull);$('lever').addEventListener('click',pull);
+$('snd').addEventListener('click',()=>{sound=!sound;$('snd').setAttribute('aria-pressed',sound);$('snd').setAttribute('aria-label',sound?'Sound on':'Sound off');$('snd').innerHTML=`<i class="fa-solid ${sound?'fa-volume-high':'fa-volume-xmark'}"></i>`;beep(500,.1)});
+document.addEventListener('keydown',e=>{if(e.code==='Space'&&document.activeElement===document.body){e.preventDefault();pull()}});
+</script>
+</body></html>

@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en"><head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haggle Simulator | TC McThrifty</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=Bowlby+One+SC&family=Press+Start+2P&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F4E7C5;--paper2:#EAD9AE;--ink:#151515;--mustard:#F2B705;--hunter:#1F5B3A;--orange:#EE7A1E;--red:#D7322A;--sky:#7FC6D9}
+html,body{overflow-x:hidden}body{background:var(--paper);background-image:radial-gradient(rgba(21,21,21,.08) 1px,transparent 1.4px);background-size:8px 8px;color:var(--ink);font-family:Archivo,system-ui,sans-serif;font-size:17px;line-height:1.55}
+.bowl{font-family:"Bowlby One SC",Impact,sans-serif;line-height:1.05;text-transform:uppercase}
+.px{font-family:"Press Start 2P",monospace;font-size:11px;line-height:1.6}
+.typ{font-family:"Special Elite",monospace}
+.card{border:4px solid #000;box-shadow:4px 4px 0 #000;background:#fff}
+.btn{border:4px solid #000;box-shadow:4px 4px 0 #000;transition:transform .08s,box-shadow .08s;min-height:48px;text-align:left}
+.btn:hover:not(:disabled){transform:translate(2px,2px);box-shadow:2px 2px 0 #000}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.bubble{border:3px solid #000;padding:10px 14px;max-width:88%;animation:pop .18s ease-out}
+@keyframes pop{from{transform:scale(.95);opacity:0}to{transform:none;opacity:1}}
+.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.tagprice{transform:rotate(-3deg)}
+@media(max-width:380px){.card,.btn{box-shadow:3px 3px 0 #000}}
+</style></head>
+<body>
+<div class="bg-[var(--mustard)] border-b-4 border-black py-2 px-3 text-center px" style="font-size:9px">HAGGLE SIMULATOR · NO FULL PRICE EVER</div>
+<main class="max-w-xl mx-auto px-4 py-6">
+  <h1 class="bowl text-4xl sm:text-5xl">Haggle<br>Simulator</h1>
+  <p class="mt-2 font-semibold">Three rounds against an estate sale seller with a cash box and cold coffee. Win it, or walk.</p>
+
+  <section id="itemCard" class="card mt-5 p-4 flex flex-wrap items-center gap-4">
+    <div id="emoji" class="text-6xl" aria-hidden="true">🦉</div>
+    <div class="flex-1 min-w-[160px]">
+      <div class="px text-[10px]">TODAY'S ITEM</div>
+      <div id="itemName" class="bowl text-xl">Item</div>
+      <div id="itemNote" class="typ text-sm"></div>
+    </div>
+    <div class="tagprice bg-[var(--mustard)] border-4 border-black px-3 py-2 text-center">
+      <div class="px text-[9px]">PRICE NOW</div>
+      <div id="price" class="bowl text-3xl">$0</div>
+    </div>
+  </section>
+
+  <div class="flex flex-wrap items-center justify-between gap-2 mt-4 px"><span id="roundLbl">ROUND 1 / 3</span><span id="moodLbl">SELLER MOOD: ??</span></div>
+
+  <section id="chat" class="mt-3 space-y-3" aria-live="polite"></section>
+
+  <section id="choices" class="mt-5 grid gap-3"></section>
+
+  <section id="result" class="hidden card mt-6 p-4" style="background:var(--paper2)">
+    <div id="verdict" class="bowl text-3xl"></div>
+    <p id="verdictText" class="mt-2"></p>
+    <div class="mt-3 p-3 border-4 border-black bg-white"><span class="px text-[10px]">REAL TIP</span><p id="takeaway" class="mt-1 font-semibold"></p></div>
+    <button id="again" class="btn mt-4 px-4 py-3 bg-[var(--hunter)] text-[var(--paper)] font-extrabold w-full"><i class="fa-solid fa-rotate-right mr-2"></i>Haggle again</button>
+  </section>
+
+  <p class="typ text-xs mt-8 text-center opacity-70">Fictional seller, fictional prices, real haggling habits. Not financial advice. Not paying full price.</p>
+</main>
+
+<script>
+/* ---------- game logic (pure, no DOM) ---------- */
+const ITEMS=[
+ {e:'🦉',name:'Taxidermy owl, slightly judgmental',note:'Glass eyes. One of them follows you.',ask:120,fair:45,floor:38},
+ {e:'🖼️',name:'Velvet painting of a sad clown',note:'Frame is worth more than the clown.',ask:85,fair:30,floor:24},
+ {e:'🫕',name:'Avocado-green fondue set, 1974',note:'Missing two forks and a plot.',ask:60,fair:18,floor:14},
+ {e:'📚',name:'Forty years of travel magazines',note:'Tied with twine. Smells like a basement vacation.',ask:50,fair:10,floor:7},
+ {e:'🎿',name:'A single ski',note:'Lonely. Optimistic. One owner.',ask:40,fair:8,floor:5}
+];
+/* tactic -> share of the gap (price minus seller floor) that the seller gives up */
+const TACTICS={
+ rapport:{label:'Be friendly first',desc:'Ask about the item. Ask about their day.',k:()=>0.2,mood:+1},
+ bundle:{label:'Bundle it',desc:'"I will take this and that box of cords."',k:()=>0.45,mood:0},
+ cash:{label:'Cash, and it is late',desc:'"Cash in hand. Sale ends soon, right?"',k:(s)=>s.round>=3?0.6:(s.round>=2?0.45:0.25),mood:0},
+ low:{label:'Lowball',desc:'Offer about 40 percent of the price.',k:(s)=>s.mood>=1?0.8:0.1,mood:-1}
+};
+function newGame(rng=Math.random){const it=ITEMS[Math.floor(rng()*ITEMS.length)];return{it,price:it.ask,round:1,mood:0,done:false,log:[]}}
+function counter(s,key,rng=Math.random){
+  const t=TACTICS[key];const gap=Math.max(0,s.price-s.it.floor);
+  let k=t.k(s)+(rng()-0.5)*0.08;k=Math.max(0.05,Math.min(0.9,k));
+  const np=Math.max(s.it.floor,Math.round(s.price-gap*k));
+  const dropped=s.price-np;
+  s.mood=Math.max(-2,Math.min(2,s.mood+t.mood));
+  s.price=np;s.log.push(key);
+  return{dropped,price:np};
+}
+function finish(s,action,rng=Math.random){
+  const it=s.it;
+  if(action==='take'){
+    const saved=it.ask-s.price;
+    const grade=s.price<=it.fair?'steal':(s.price<=it.fair*1.35?'fair':'sucker');
+    return{grade,price:s.price,saved};
+  }
+  /* walk away */
+  if(s.price>it.fair*1.35){const p=Math.round(it.floor+(it.fair-it.floor)*0.3);return{grade:'walk-win',price:p,saved:it.ask-p}}
+  return{grade:'walk-loss',price:s.price,saved:0};
+}
+/* ---------- seller voice ---------- */
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const SAY={
+ open:["Everything is priced to move. That one is {p}. Cash only.","Oh, you have a good eye. That is {p}, and I am being generous.","Found it in an attic. {p}. Do not make that face."],
+ rapport:["Well, aren't you nice. Fine, I can do {p} for someone who asks about my day.","Nobody asks about my day. {p}. Do not tell the others.","You have manners. That is worth a little. {p}."],
+ bundle:["Both? Okay, now we are talking. {p} for the pair.","You will take the cords too? Sold, {p}. Please take the cords.","A bundle, huh. {p}, and the twine is free."],
+ cash:["Cash, I like cash. {p}, and it is nearly closing, so let me clear the table.","You have the look of a person with exact change. {p}.","{p}. Last call. I am tired and the cold coffee has gone colder."],
+ lowOk:["Hm. You did warm me up first. Okay. {p}, and I am only doing this because you were polite.","That is rude, but you were nice earlier, so... {p}.","Fine. {p}. You win that one."],
+ lowBad:["Forty percent?! I would rather keep it. {p}, and I want you to think about what you said.","Insulting. {p}. Take it or take a hike.","You walked in here and said that to my face. {p}."]
+};
+const TIP={
+ rapport:"Warming the seller up is not wasted time. A friendly first minute makes the next ask land softer.",
+ bundle:"Grouping items is the easiest discount. Sellers would rather move a box than carry it back inside.",
+ cash:"Cash and a late hour are real leverage. Ask on the last day or the last hour, not at opening.",
+ lowOk:"A lowball works after rapport, not before it. Order matters.",
+ lowBad:"A lowball with no warm-up just makes people dig in. Try being friendly or bundling first."
+};
+const WRAP={
+ steal:{h:'STEAL',t:"You got it at or under fair price. The seller is quietly impressed and loudly annoyed.",r:"Fair price here was {f}. You paid {p}. Always know the number you would pay before you start talking."},
+ fair:{h:'DECENT',t:"Not a steal, not a sucker. You walked off with a reasonable deal and your dignity.",r:"Fair price was {f}. You paid {p}. Next time, bundle earlier or wait until closing."},
+ sucker:{h:'OUCH',t:"You paid more than a fair price. The seller is already telling a story about you.",r:"Fair price was {f}. You paid {p}. When the price is too high, the walk is your best move."},
+ 'walk-win':{h:'GOOD WALK',t:"You started for the door and the seller chased you with a better price. That is the oldest trick and it still works.",r:"The walk got you to {p}. Fair price was {f}. Being willing to leave is the whole game."},
+ 'walk-loss':{h:'REGRET',t:"You walked and nobody chased you. That price was already close to fair, and now someone else has the owl.",r:"Price was {p}, fair was {f}. Walk when the price is wrong, not when it is nearly right."}
+};
+/* ---------- UI ---------- */
+const $=id=>document.getElementById(id);
+let S;
+const money=n=>'$'+n;
+function bubble(who,text){
+  const d=document.createElement('div');d.className='flex '+(who==='me'?'justify-end':'justify-start');
+  const b=document.createElement('div');b.className='bubble '+(who==='me'?'bg-[var(--mustard)]':'bg-[var(--sky)]');b.textContent=text;d.appendChild(b);$('chat').appendChild(d);
+  d.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+function moodText(){return ['PRICKLY','GRUMPY','NEUTRAL','WARM','MELTING'][S.mood+2]||'NEUTRAL'}
+function render(){
+  $('price').textContent=money(S.price);$('roundLbl').textContent='ROUND '+Math.min(S.round,3)+' / 3';$('moodLbl').textContent='SELLER MOOD: '+moodText();
+}
+function setChoices(list){
+  const c=$('choices');c.innerHTML='';
+  list.forEach(o=>{const b=document.createElement('button');b.className='btn px-4 py-3 '+(o.cls||'bg-white');b.innerHTML='<div class="font-extrabold">'+o.label+'</div><div class="text-sm">'+o.desc+'</div>';b.onclick=()=>{[...c.children].forEach(x=>x.disabled=true);o.fn()};c.appendChild(b)});
+}
+function offer(){
+  const choices=Object.keys(TACTICS).map(key=>({label:TACTICS[key].label,desc:TACTICS[key].desc,fn:()=>play(key)}));
+  setChoices(choices);
+}
+function play(key){
+  const used=S.log.includes('rapport');
+  const wasMood=S.mood;
+  const c=counter(S,key);
+  const ok=key==='low'?(wasMood>=1?'lowOk':'lowBad'):key;
+  bubble('me',TACTICS[key].label==='Lowball'?'How about '+money(Math.max(1,Math.round((S.price+c.dropped)*0.4)))+'?':TACTICS[key].label);
+  setTimeout(()=>{
+    bubble('seller',pick(SAY[ok]).replace('{p}',money(c.price)));
+    if(key==='low'&&ok==='lowBad'){$('itemCard').classList.add('shake');setTimeout(()=>$('itemCard').classList.remove('shake'),400)}
+    S.lastTip=TIP[ok];render();
+    setTimeout(()=>{
+      bubble('seller','(Real tip: '+TIP[ok]+')');
+      if(S.round>=3){endChoices()}else{S.round++;render();offer()}
+    },500);
+  },450);
+}
+function endChoices(){
+  setChoices([
+    {label:'Take it for '+money(S.price),desc:'Hand over the cash.',cls:'bg-[var(--hunter)] text-[var(--paper)]',fn:()=>end('take')},
+    {label:'Walk away',desc:'Head for the door. Do not look back. Maybe look back a little.',cls:'bg-[var(--orange)]',fn:()=>end('walk')}
+  ]);
+}
+function end(action){
+  const r=finish(S,action);
+  const w=WRAP[r.grade];
+  if(action==='walk'){bubble('me','I will think about it.');if(r.grade==='walk-win')bubble('seller','Wait! Fine, '+money(r.price)+'. Just take it.');else bubble('seller','Okay, bye.');}
+  else bubble('me','Deal. '+money(S.price)+'.');
+  $('choices').innerHTML='';
+  const fill=s=>s.replace('{f}',money(S.it.fair)).replace('{p}',money(r.price));
+  $('verdict').textContent=w.h;$('verdict').style.color=({steal:'#1F5B3A',fair:'#EE7A1E',sucker:'#D7322A','walk-win':'#1F5B3A','walk-loss':'#D7322A'})[r.grade];
+  $('verdictText').textContent=w.t+(r.saved>0?' You saved '+money(r.saved)+' off the sticker.':'');
+  $('takeaway').textContent=fill(w.r);
+  $('price').textContent=money(r.price);
+  $('result').classList.remove('hidden');
+  $('result').scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+function start(){
+  S=newGame();$('chat').innerHTML='';$('result').classList.add('hidden');
+  $('emoji').textContent=S.it.e;$('itemName').textContent=S.it.name;$('itemNote').textContent=S.it.note;
+  render();
+  bubble('seller',pick(SAY.open).replace('{p}',money(S.price)));
+  offer();
+}
+$('again').onclick=start;
+if(typeof document!=='undefined'&&document.getElementById('chat'))start();
+</script>
+</body></html>

@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TC McThrifty Shopping Network</title>
+<meta name="description" content="Minnesota's premier anonymous cheapskate, live on the shopping channel.">
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Archivo:wght@400;700;800&family=VT323&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{colors:{navy:'#0A1A5C',navy2:'#122A8A',tvred:'#E3122B',gold:'#FFD400',cream:'#FFF6D6',ink:'#0B0B14',crt:'#2BFF88'},
+fontFamily:{bungee:['Bungee','Impact','sans-serif'],body:['Archivo','system-ui','sans-serif'],vt:['VT323','monospace']}}}}
+</script>
+<style>
+html{scroll-behavior:smooth}
+body{font-family:Archivo,system-ui,sans-serif;background:#0A1A5C;color:#fff;overflow-x:hidden;padding-bottom:64px}
+.scan::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px);mix-blend-mode:multiply}
+.rays{background:repeating-conic-gradient(from 0deg at 50% 120%,#122A8A 0 8deg,#0A1A5C 8deg 16deg)}
+.burst{clip-path:polygon(50% 0,61% 12%,76% 6%,80% 21%,95% 25%,89% 40%,100% 50%,89% 60%,95% 75%,80% 79%,76% 94%,61% 88%,50% 100%,39% 88%,24% 94%,20% 79%,5% 75%,11% 60%,0 50%,11% 40%,5% 25%,20% 21%,24% 6%,39% 12%)}
+@keyframes blink{50%{opacity:0}}.blink{animation:blink 1s steps(1) infinite}
+@keyframes crawl{from{transform:translateX(0)}to{transform:translateX(-50%)}}.crawl{display:flex;width:max-content;animation:crawl 36s linear infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}.pulse{animation:pulse 1.2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.blink,.crawl,.pulse{animation:none}html{scroll-behavior:auto}}
+.chbtn[aria-pressed="true"]{background:#FFD400;color:#0B0B14}
+:focus-visible{outline:4px solid #FFD400;outline-offset:2px}
+.lt{clip-path:polygon(0 0,calc(100% - 18px) 0,100% 100%,0 100%)}
+</style>
+</head>
+<body>
+
+<!-- CALL NOW banner -->
+<div class="bg-tvred text-white text-center font-bungee text-sm sm:text-lg py-2 border-b-4 border-gold">
+  <span class="blink"><i class="fa-solid fa-phone"></i></span> CALL NOW! OPERATORS ARE STANDING BY! <span class="hidden sm:inline">&middot; NO FULL PRICE, EVER</span>
+</div>
+
+<!-- nav as channel guide -->
+<nav class="sticky top-0 z-40 bg-ink border-b-4 border-gold" aria-label="Channels">
+  <div class="max-w-6xl mx-auto px-3 py-2 flex items-center justify-between gap-2">
+    <a href="#top" class="font-bungee text-gold text-sm sm:text-lg leading-none">TC McTHRIFTY <span class="text-tvred">SHOPPING NETWORK</span></a>
+    <div class="flex gap-1 text-[13px] font-bold">
+      <a class="min-h-[44px] px-2 grid place-items-center bg-navy2 border-2 border-gold" href="#specials">CH 1</a>
+      <a class="min-h-[44px] px-2 grid place-items-center bg-navy2 border-2 border-gold" href="#mail">CH 2</a>
+      <a class="min-h-[44px] px-2 grid place-items-center bg-navy2 border-2 border-gold" href="#meter">CH 3</a>
+      <a class="min-h-[44px] px-2 grid place-items-center bg-tvred border-2 border-gold" href="#call">CALL</a>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+
+<!-- HERO: the broadcast -->
+<header class="rays border-b-4 border-gold">
+  <div class="max-w-6xl mx-auto px-4 py-8 lg:py-12 grid lg:grid-cols-2 gap-8 items-center">
+    <div class="order-2 lg:order-1">
+      <p class="inline-flex items-center gap-2 bg-tvred font-bungee text-sm px-3 py-1"><span class="w-3 h-3 rounded-full bg-white blink"></span> LIVE &middot; <span id="clock" class="font-vt text-2xl leading-none">--:--</span></p>
+      <h1 class="font-bungee leading-[.95] text-5xl sm:text-7xl mt-4 text-gold" style="text-shadow:4px 4px 0 #E3122B">TC<br>McTHRIFTY</h1>
+      <p class="mt-3 font-bungee text-xl sm:text-2xl">Minnesota's Premier Anonymous Cheapskate &amp; Thrift Thrill-Seeker</p>
+      <p class="mt-4 text-lg sm:text-xl font-semibold max-w-xl">Squeezing every penny out of the Twin Cities (and beyond) so you don't have to.</p>
+      <div class="mt-5 flex flex-wrap gap-3">
+        <a href="#specials" class="pulse min-h-[48px] px-5 grid place-items-center bg-tvred font-bungee border-4 border-gold text-lg">See today's specials</a>
+        <a href="#meter" class="min-h-[48px] px-5 grid place-items-center bg-gold text-ink font-bungee border-4 border-ink text-lg">Rate my cheap</a>
+      </div>
+      <div class="mt-6 border-4 border-gold bg-ink/70 p-4 max-w-xl">
+        <p class="font-vt text-2xl text-crt leading-snug">&gt; Yes, I have a day job. Yes, it pays fine. No, I will not pay full price for anything, ever. Names stay out of this. Savings stay in.</p>
+      </div>
+    </div>
+    <div class="order-1 lg:order-2">
+      <div class="relative border-8 border-ink rounded-[22px] bg-ink shadow-[0_0_0_4px_#FFD400] overflow-hidden scan">
+        <img src="mascot.png" width="1200" height="896" alt="TC McThrifty, a breakfast-sandwich-headed thrift king in shades, a ball cap, a green flannel and gold chains, holding a coupon book and a peace sign" class="w-full h-auto block">
+        <span class="absolute top-2 left-2 bg-tvred font-bungee text-xs px-2 py-1">LIVE</span>
+        <span class="absolute top-2 right-2 font-vt text-xl text-crt bg-ink/70 px-2">CH 03</span>
+        <!-- lower third -->
+        <div class="absolute left-0 bottom-3 lt bg-navy2 border-l-8 border-gold pl-3 pr-8 py-1">
+          <p class="font-bungee text-sm sm:text-lg leading-tight">YOUR HOST: TC McTHRIFTY</p>
+          <p class="font-vt text-lg sm:text-xl text-gold leading-none">Thrift Thrill-Seeker &middot; Anonymous</p>
+        </div>
+      </div>
+      <!-- countdown -->
+      <div class="mt-4 flex items-center justify-between gap-3 bg-ink border-4 border-gold px-4 py-2">
+        <span class="font-bungee text-sm sm:text-base text-gold">THIS OFFER ENDS IN</span>
+        <span id="count" class="font-vt text-4xl sm:text-5xl text-tvred leading-none">14:59</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- CH 1: specials -->
+<section id="specials" class="bg-navy border-b-4 border-gold" aria-labelledby="sp-h">
+  <div class="max-w-6xl mx-auto px-4 py-12">
+    <p class="font-vt text-2xl text-crt">CHANNEL 1</p>
+    <h2 id="sp-h" class="font-bungee text-4xl sm:text-6xl text-gold" style="text-shadow:3px 3px 0 #E3122B">Today's Special Values</h2>
+    <p class="mt-1 text-lg">Scraped fresh. Verified by nobody. But wait, there's more.</p>
+    <div class="mt-5 flex flex-wrap items-center gap-2" role="group" aria-label="Filter the specials">
+      <button class="chbtn min-h-[44px] px-4 font-bungee text-sm border-4 border-gold bg-navy2" data-f="all" aria-pressed="true">All</button>
+      <button class="chbtn min-h-[44px] px-4 font-bungee text-sm border-4 border-gold bg-navy2" data-f="thrifts" aria-pressed="false">Thrifts</button>
+      <button class="chbtn min-h-[44px] px-4 font-bungee text-sm border-4 border-gold bg-navy2" data-f="food" aria-pressed="false">Food &amp; Freebies</button>
+      <button class="chbtn min-h-[44px] px-4 font-bungee text-sm border-4 border-gold bg-navy2" data-f="travels" aria-pressed="false">Travels</button>
+      <button class="chbtn min-h-[44px] px-4 font-bungee text-sm border-4 border-gold bg-navy2" data-f="weird" aria-pressed="false">Weird Junk</button>
+      <span id="found" class="font-vt text-2xl text-crt ml-1" aria-live="polite">5 FOUND</span>
+    </div>
+    <ul id="feed" class="mt-6 grid md:grid-cols-2 gap-5 list-none p-0"></ul>
+    <p id="empty" class="hidden mt-6 font-bold">Nothing in this pile. Either you are too picky or the good stuff is already in someone's trunk.</p>
+  </div>
+</section>
+
+<!-- CH 2: viewer mail -->
+<section id="mail" class="bg-ink border-b-4 border-gold" aria-labelledby="mail-h">
+  <div class="max-w-6xl mx-auto px-4 py-12">
+    <p class="font-vt text-2xl text-crt">CHANNEL 2</p>
+    <h2 id="mail-h" class="font-bungee text-4xl sm:text-6xl text-gold" style="text-shadow:3px 3px 0 #E3122B">Texts From Last Night</h2>
+    <p class="mt-1 text-lg">Viewer mail, lightly redacted.</p>
+    <div class="mt-8 grid md:grid-cols-2 gap-8 items-start">
+      <figure class="border-4 border-gold bg-navy rounded-xl overflow-hidden max-w-md w-full mx-auto">
+        <figcaption class="bg-tvred px-4 py-2 font-bungee text-sm flex items-center gap-2"><span aria-hidden="true">&#127913;</span> Top Hat Pal <span class="font-vt text-lg ml-auto">typing...</span></figcaption>
+        <div class="p-4 space-y-3 text-[15px]">
+          <p class="max-w-[85%] bg-white text-ink rounded-2xl rounded-bl-sm px-3 py-2">Coupons in hand? 🎩</p>
+          <p class="ml-auto max-w-[85%] bg-gold text-ink rounded-2xl rounded-br-sm px-3 py-2">Back at it with the game pieces, they hate to see me coming! 🍔🎩</p>
+          <p class="max-w-[85%] bg-white text-ink rounded-2xl rounded-bl-sm px-3 py-2">How many free fries is that</p>
+          <p class="ml-auto max-w-[85%] bg-gold text-ink rounded-2xl rounded-br-sm px-3 py-2">Enough that the app knows my name</p>
+        </div>
+      </figure>
+      <figure class="border-4 border-gold bg-navy rounded-xl overflow-hidden max-w-md w-full mx-auto">
+        <figcaption class="bg-tvred px-4 py-2 font-bungee text-sm flex items-center gap-2"><span aria-hidden="true">&#128220;</span> Group Chat <span class="font-vt text-lg ml-auto">read 11:42 PM</span></figcaption>
+        <div class="p-4 space-y-3 text-[15px]">
+          <p class="max-w-[85%] bg-white text-ink rounded-2xl rounded-bl-sm px-3 py-2">Wait, you still get both?</p>
+          <p class="ml-auto max-w-[92%] bg-gold text-ink rounded-2xl rounded-br-sm px-3 py-2">I fought a subscription that tried to cut me off, kept print AND digital forever. SUE ME (literally).</p>
+          <p class="max-w-[85%] bg-white text-ink rounded-2xl rounded-bl-sm px-3 py-2">huh huh. "literally."</p>
+        </div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- CH 3: meter -->
+<section id="meter" class="bg-navy border-b-4 border-gold" aria-labelledby="m-h">
+  <div class="max-w-6xl mx-auto px-4 py-12">
+    <p class="font-vt text-2xl text-crt">CHANNEL 3</p>
+    <h2 id="m-h" class="font-bungee text-4xl sm:text-6xl text-gold" style="text-shadow:3px 3px 0 #E3122B">The Thrift-O-Meter</h2>
+    <p class="mt-1 text-lg">Five questions. No wrong answers, only wrong prices.</p>
+    <div class="mt-6 grid lg:grid-cols-5 gap-6">
+      <form id="quiz" class="lg:col-span-3 bg-cream text-ink border-4 border-gold p-4 sm:p-6 space-y-6" novalidate></form>
+      <div class="lg:col-span-2 space-y-4">
+        <div id="result" class="bg-ink border-4 border-gold p-5 scroll-mt-20" role="status" aria-live="polite">
+          <p class="font-vt text-2xl text-crt">YOUR THRIFT LEVEL</p>
+          <p class="font-bungee text-xl text-gold mt-1" id="r-level">LEVEL ? / 5</p>
+          <div class="mt-2 h-6 bg-navy border-2 border-gold"><div id="gauge" class="h-full bg-tvred" style="width:0%;transition:width .6s"></div></div>
+          <p class="font-bungee text-3xl mt-4" id="r-title">Answer all five</p>
+          <p class="mt-2 italic" id="r-text">Your tier shows up here. TC McThrifty will rate it. Dryly.</p>
+          <p class="mt-3 font-semibold hidden" id="r-help"></p>
+          <button type="button" id="r-again" class="hidden min-h-[44px] px-4 mt-4 bg-gold text-ink font-bungee text-sm border-4 border-ink">Rate me again. I might lie this time.</button>
+        </div>
+        <ol id="ladder" class="list-none p-0 space-y-2"></ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- finds -->
+<section id="finds" class="bg-ink border-b-4 border-gold" aria-labelledby="f-h">
+  <div class="max-w-6xl mx-auto px-4 py-12">
+    <h2 id="f-h" class="font-bungee text-4xl sm:text-6xl text-gold" style="text-shadow:3px 3px 0 #E3122B">Testimonials &amp; Tributes</h2>
+    <p class="mt-1 text-lg">Photos coming. For now, imagine the smell.</p>
+    <div class="mt-6 grid sm:grid-cols-2 gap-5">
+      <div class="relative bg-tvred border-4 border-gold p-5">
+        <p class="font-vt text-2xl">ESTIMATED LIFETIME SAVINGS</p>
+        <p class="font-bungee text-4xl sm:text-6xl mt-1 break-all">$84,911.43</p>
+      </div>
+      <div class="bg-gold text-ink border-4 border-ink p-5">
+        <p class="font-vt text-2xl">SPENT TODAY</p>
+        <p class="font-bungee text-4xl sm:text-6xl mt-1">$0.75</p>
+      </div>
+    </div>
+    <div class="mt-6 grid sm:grid-cols-3 gap-5">
+      <article class="bg-navy2 border-4 border-gold p-4"><div class="aspect-[4/3] bg-ink border-2 border-gold grid place-items-center text-gold"><i class="fa-solid fa-bag-shopping text-5xl"></i></div><h3 class="font-bungee text-lg mt-3 leading-tight">The Japanese Store Haul</h3><p class="mt-1 text-sm">"Many tiny erasers. Zero regrets." &#9733;&#9733;&#9733;&#9733;&#9733;</p></article>
+      <article class="bg-navy2 border-4 border-gold p-4"><div class="aspect-[4/3] bg-ink border-2 border-gold grid place-items-center text-gold"><i class="fa-solid fa-tree text-5xl"></i></div><h3 class="font-bungee text-lg mt-3 leading-tight">The MN Pridefest Nature Thrifting Special</h3><p class="mt-1 text-sm">"Rainbow flannel, found in the wild." &#9733;&#9733;&#9733;&#9733;&#9733;</p></article>
+      <article class="bg-navy2 border-4 border-gold p-4"><div class="aspect-[4/3] bg-ink border-2 border-gold grid place-items-center text-gold"><i class="fa-solid fa-dove text-5xl"></i></div><h3 class="font-bungee text-lg mt-3 leading-tight">The Late Great Cockatiel Memorial Thrift Find</h3><p class="mt-1 text-sm">"A small tribute, found secondhand, kept forever."</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- CALL IN -->
+<section id="call" class="bg-tvred border-b-4 border-gold" aria-labelledby="c-h">
+  <div class="max-w-3xl mx-auto px-4 py-12">
+    <h2 id="c-h" class="font-bungee text-4xl sm:text-6xl text-gold" style="text-shadow:3px 3px 0 #0B0B14">Got a Tip? Call In Now!</h2>
+    <p class="mt-1 text-lg">Submit a steal. Anonymous is fine. Cheap is required. Free is better.</p>
+    <form id="tipform" class="mt-6 bg-cream text-ink border-4 border-ink p-5 sm:p-7 space-y-4" novalidate>
+      <div><label class="font-extrabold block mb-1" for="t-what">What's the steal?</label>
+        <textarea id="t-what" rows="3" class="w-full border-4 border-ink p-2 bg-white text-base" placeholder="Estate sale, coupon glitch, error fare..."></textarea>
+        <p id="t-err" class="hidden font-bold text-tvred" role="alert">A steal needs a steal. What did you find?</p></div>
+      <div><label class="font-extrabold block mb-1" for="t-where">Where?</label>
+        <input id="t-where" type="text" class="w-full min-h-[44px] border-4 border-ink p-2 bg-white text-base">
+        <p id="w-err" class="hidden font-bold text-tvred" role="alert">Where is it? Cross streets are fine. "By the big tree" is not.</p></div>
+      <button class="pulse min-h-[48px] px-6 bg-gold font-bungee text-lg border-4 border-ink" type="submit" title="Be the reason someone else pays less."><i class="fa-solid fa-phone-volume"></i> Submit the steal</button>
+    </form>
+  </div>
+</section>
+</main>
+
+<!-- ticker -->
+<div class="fixed bottom-0 left-0 right-0 z-40 bg-tvred border-t-4 border-gold overflow-hidden" aria-hidden="true">
+  <div class="flex items-stretch">
+    <span class="shrink-0 bg-gold text-ink font-bungee text-sm px-3 py-2">LIVE</span>
+    <div class="overflow-hidden flex-1"><div class="crawl font-bungee text-sm py-2 gap-12 whitespace-nowrap">
+      <span>BREAKING: SPENT TODAY $0.75 &#9733; LIFETIME SAVINGS $84,911.43 &#9733; NO FULL PRICE EVER &#9733; GAS STATION COFFEE BOGO IN MAPLEWOOD &#9733; ESTATE SALE SUNDAY: ASK ABOUT THE OWL &#9733; MSP TO LISBON $412 ERROR FARE &#9733;</span>
+      <span>BREAKING: SPENT TODAY $0.75 &#9733; LIFETIME SAVINGS $84,911.43 &#9733; NO FULL PRICE EVER &#9733; GAS STATION COFFEE BOGO IN MAPLEWOOD &#9733; ESTATE SALE SUNDAY: ASK ABOUT THE OWL &#9733; MSP TO LISBON $412 ERROR FARE &#9733;</span>
+    </div></div>
+  </div>
+</div>
+
+<!-- call receipt popup -->
+<div id="modal" class="hidden fixed inset-0 z-[70] bg-black/80 grid place-items-center p-4" role="dialog" aria-modal="true" aria-labelledby="mh">
+  <div class="bg-cream text-ink border-4 border-ink max-w-sm w-full p-6 text-center">
+    <p class="font-vt text-2xl text-tvred">RECEIPT #0075</p>
+    <h3 id="mh" class="font-bungee text-2xl mt-1">Tip received</h3>
+    <p class="mt-3 border-t-2 border-dashed border-ink pt-3">Filed under "might be a steal." Reviewed by nobody until I have had coffee.</p>
+    <p class="mt-2">If it checks out, it ends up on the radar. If it does not, I will pretend I never saw it.</p>
+    <p class="mt-3 text-sm opacity-80">Anonymous is fine. Cheap is required. Free is better.</p>
+    <p class="font-vt text-2xl mt-3">TOTAL: $0.00</p>
+    <button id="m-close" class="min-h-[44px] px-5 mt-4 bg-tvred text-white font-bungee border-4 border-ink">Back to saving</button>
+  </div>
+</div>
+
+<script>
+/* clock and countdown */
+function tick(){const d=new Date();document.getElementById('clock').textContent=d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}
+tick();setInterval(tick,15000);
+let left=14*60+59;const cEl=document.getElementById('count');
+setInterval(()=>{left=left<=0?14*60+59:left-1;cEl.textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0')},1000);
+
+/* data */
+const DEALS=[
+ {tags:['thrifts','weird'],price:'70% OFF',badge:'Estate Sale',title:'South Mpls estate sale: 70% off retro taxidermy, Sunday only',meta:'Sat and Sun, 9am. Cash only. Bring a van and zero shame.',src:'scraped from: a flyer stapled to a pole',rating:'5 of 5 pelts',tip:'Go Sunday, not Saturday. Day two is when "firm" prices get negotiable and the owl starts looking like a bargain.'},
+ {tags:['food'],price:'$0.00',badge:'Free Fries',title:'Free fries with a burger-chain game-piece trick',meta:'Any drive-thru, any week the game is on. Peel, stack, redeem.',src:'scraped from: a very long comment thread',rating:'5 of 5 fries',tip:'Check the app before you order. The free item is usually hiding under "rewards," not "menu." Read the fine print once, then never again.'},
+ {tags:['thrifts'],price:'$5 BAG',badge:'Thrift Store',title:'Roseville bin store: fill-a-bag Tuesday, $5 a bag',meta:'Doors at 8. Elbows out by 8:01.',src:'scraped from: the bin store newsletter',rating:'4 of 5 flannels',tip:'Wear gloves and bring your own bag. A bag you packed like a puzzle holds twice what theirs does.'},
+ {tags:['travels'],price:'$412 RT',badge:'Flight Find',title:'MSP to Lisbon, $412 round trip, possible error fare',meta:'Fares like this last hours. Fully refundable for 24 hours, so you can book first and panic later.',src:'scraped from: a fare alert at 3am',rating:'5 of 5 layovers',tip:'Book it, then check the 24-hour cancel rule on that airline before you tell anyone. The tip is the cancel button, not the fare.'},
+ {tags:['food','thrifts'],price:'BOGO',badge:'Cheap Eats',title:'Gas station coffee, buy one get one, with the app and a stern look',meta:'St. Paul, Maplewood and a suspicious Cottage Grove.',src:'scraped from: the app, reluctantly',rating:'3 of 5 refills',tip:'The second cup is for later. Put it in the fridge. Cold coffee is a personality, not a problem.'}
+];
+const LABEL={thrifts:'Thrifts',food:'Food & Freebies',travels:'Travels',weird:'Weird Junk'};
+const LEVELS=[
+ {n:1,name:'Coupon Clipper',text:'2 out of 10 cheapskates. He is only being polite.',help:'Stack the paper coupon with the store app deal. Two small wins beat one big one, and you already do the clipping.'},
+ {n:2,name:'The Cruise Ship Milkman',text:'4 out of 10. Would share a buffet with you. Would also count the plates.',help:'Free things are only free if you do not buy the upgrade. Take the buffet, skip the drink package, keep the receipt for nothing.'},
+ {n:3,name:'The Monopoly Maestro',text:'6 out of 10. Huh huh. You said "peel."',help:'Treat every game piece like a coupon with a deadline. Photograph them, check the expiry, and trade the extras before they turn into stickers.'},
+ {n:4,name:'Muppet-Tier Estate Graverobber',text:'8 out of 10, with a footnote. The footnote is that the coffee was still warm.',help:'Arrive on the last day, ask for the bundle price, and be kind. The family remembers who was polite, and politeness gets the extra box.'},
+ {n:5,name:'The DIY Doctor',text:'10 out of 10 for savings, and a respectful note that actual professionals exist and are very good at their jobs.',help:'Watch the video twice, buy the part second-hand, and know the line where YouTube ends and a trained person begins. That line is the cheapest thing you will ever save.'}
+];
+const QS=[
+ {q:'You see a $4 shirt that is almost your size.',a:[['Walk past, it is not a bargain.',1],['Buy it, hem it, call it vintage.',3],['Buy six, resell five, wear one.',5]]},
+ {q:'Fast food and you:',a:[['I use the app coupons.',1],['I play the game pieces.',3],['I have a spreadsheet of every promo since 2009.',5]]},
+ {q:'A company offers you a refund. You:',a:[['Take the refund.',1],['Ask for the refund AND a coupon.',3],['Join the class action out of sheer principle.',5]]},
+ {q:'A weekend plan:',a:[['Brunch, full price, at a place with a line.',1],['Estate sale hop, then free samples.',3],['Estate sale hop, fix the thing myself, sell it back.',5]]},
+ {q:'Something at home breaks:',a:[['Call someone and pay them.',1],['Watch a video, then call someone.',3],['Watch a video, find the part at a thrift store, fix it.',5]]}
+];
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* specials */
+const feed=document.getElementById('feed');
+function render(f){
+  const list=DEALS.filter(d=>f==='all'||d.tags.includes(f));
+  feed.innerHTML=list.map((d,i)=>`
+  <li class="bg-cream text-ink border-4 border-gold flex">
+    <div class="shrink-0 w-28 sm:w-32 bg-tvred text-white grid place-items-center text-center p-2 relative">
+      <span class="absolute top-1 left-1 font-vt text-lg text-gold leading-none">ONLY</span>
+      <span class="font-bungee text-2xl sm:text-3xl leading-tight ${i%2?'rotate-3':'-rotate-3'}">${esc(d.price)}</span>
+    </div>
+    <div class="min-w-0 p-4">
+      <p class="flex flex-wrap gap-1 mb-2"><span class="font-bungee text-[10px] bg-ink text-gold px-2 py-1">${esc(d.badge)}</span>${d.tags.map(t=>`<span class="text-[11px] font-extrabold border border-ink px-2 py-1 uppercase">${LABEL[t]}</span>`).join('')}</p>
+      <h3 class="font-extrabold text-lg leading-snug">${esc(d.title)}</h3>
+      <p class="text-[15px] mt-1">${esc(d.meta)}</p>
+      <p class="text-sm font-bold text-navy2 mt-2"><i class="fa-solid fa-star"></i> Viewer rating: ${esc(d.rating)}</p>
+      <p class="font-vt text-xl opacity-70 leading-none mt-1">${esc(d.src)}</p>
+      <details class="mt-2"><summary class="cursor-pointer font-bungee text-[11px] bg-gold border-2 border-ink inline-flex items-center px-2 min-h-[28px]">BUT WAIT, THERE'S MORE</summary><p class="mt-2 text-[15px]">${esc(d.tip)}</p></details>
+      <p class="mt-2 font-bungee text-[11px] text-tvred"><i class="fa-solid fa-phone"></i> CALL NOW! OPERATORS ARE STANDING BY!</p>
+    </div></li>`).join('');
+  document.getElementById('empty').classList.toggle('hidden',list.length>0);
+  document.getElementById('found').textContent=list.length===1?"1 FOUND. Lonely, but it's yours.":list.length+' FOUND';
+}
+document.querySelectorAll('.chbtn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.chbtn').forEach(x=>x.setAttribute('aria-pressed',x===b));render(b.dataset.f)}));
+render('all');
+
+/* meter */
+const quiz=document.getElementById('quiz'),ladder=document.getElementById('ladder');
+quiz.innerHTML=QS.map((x,i)=>`<fieldset><legend class="font-bungee text-lg mb-2">${i+1}. ${esc(x.q)}</legend><div class="grid gap-2">${x.a.map(o=>`<label class="flex items-start gap-3 border-4 border-ink bg-white p-3 min-h-[44px] cursor-pointer has-[:checked]:bg-gold"><input class="mt-1 w-5 h-5 accent-[#E3122B]" type="radio" name="q${i}" value="${o[1]}"><span>${esc(o[0])}</span></label>`).join('')}</div></fieldset>`).join('');
+ladder.innerHTML=LEVELS.map(l=>`<li data-l="${l.n}" class="flex items-center gap-3 border-2 border-gold px-3 py-2"><span class="font-vt text-xl w-8">L${l.n}</span><span class="font-bold text-[15px]">${esc(l.name)}</span></li>`).join('');
+quiz.addEventListener('change',()=>{
+  const p=QS.map((_,i)=>quiz.querySelector(`input[name=q${i}]:checked`)).filter(Boolean);
+  if(p.length<QS.length)return;
+  const sum=p.reduce((s,x)=>s+Number(x.value),0);
+  const lv=sum<=9?1:sum<=13?2:sum<=17?3:sum<=21?4:5,L=LEVELS[lv-1];
+  r('r-level').textContent='LEVEL '+lv+' / 5';r('r-title').textContent=L.name;r('r-text').textContent=L.text;
+  const h=r('r-help');h.textContent=L.help;h.classList.remove('hidden');r('r-again').classList.remove('hidden');
+  r('gauge').style.width=(lv*20)+'%';
+  ladder.querySelectorAll('li').forEach(li=>{const on=Number(li.dataset.l)===lv;li.style.background=on?'#E3122B':'transparent'});
+  if(matchMedia('(max-width: 1023px)').matches){r('result').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}
+});
+function r(id){return document.getElementById(id)}
+r('r-again').addEventListener('click',()=>{quiz.reset();r('r-level').textContent='LEVEL ? / 5';r('r-title').textContent='Answer all five';r('r-text').textContent='Your tier shows up here. TC McThrifty will rate it. Dryly.';r('r-help').classList.add('hidden');r('r-again').classList.add('hidden');r('gauge').style.width='0%';ladder.querySelectorAll('li').forEach(li=>li.style.background='transparent');quiz.scrollIntoView({behavior:'smooth',block:'start'})});
+
+/* call in */
+const modal=r('modal'),form=r('tipform');
+form.addEventListener('submit',e=>{e.preventDefault();
+  const a=r('t-what').value.trim().length>0,b=r('t-where').value.trim().length>0;
+  r('t-err').classList.toggle('hidden',a);r('w-err').classList.toggle('hidden',b);
+  if(!a||!b)return;modal.classList.remove('hidden');r('m-close').focus();form.reset()});
+r('m-close').addEventListener('click',()=>modal.classList.add('hidden'));
+modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.add('hidden')});
+addEventListener('keydown',e=>{if(e.key==='Escape')modal.classList.add('hidden')});
+</script>
+</body>
+</html>

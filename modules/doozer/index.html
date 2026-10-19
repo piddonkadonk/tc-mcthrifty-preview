@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Estate Sale Bingo - T.C. McThrifty</title>
+<meta name="description" content="A 5x5 card of things you will absolutely see at an estate sale. Tap to mark. Yell BINGO quietly.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Figtree:wght@500;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{hunter:'#1F5A3A',mustard:'#F2B705',tagred:'#D7322A',paper:'#F4E7C5',paper2:'#EAD9AE',ink:'#151515'},fontFamily:{display:['"Bowlby One"','Impact','sans-serif'],sans:['Figtree','system-ui','sans-serif'],hand:['Caveat','cursive']}}}}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" crossorigin="anonymous" defer></script>
+<style>
+body{background:#1F5A3A;font-family:Figtree,system-ui,sans-serif;color:#151515}
+.plaid{background-image:repeating-linear-gradient(0deg,rgba(0,0,0,.12) 0 14px,transparent 14px 28px),repeating-linear-gradient(90deg,rgba(0,0,0,.12) 0 14px,transparent 14px 28px)}
+.cell{position:relative;aspect-ratio:1/1;display:grid;place-items:center;padding:3px;border:3px solid #151515;background:#F4E7C5;color:#151515;font-weight:800;line-height:1.1;text-align:center;font-size:clamp(9px,2.55vw,14px);overflow-wrap:anywhere;hyphens:auto;cursor:pointer;transition:transform .08s;overflow:hidden}
+@media(min-width:640px){.cell{font-size:15px;padding:6px;border-width:4px}}
+.cell:active{transform:scale(.95)}
+.cell:focus-visible{outline:4px solid #F2B705;outline-offset:2px;z-index:2}
+.cell.on{background:#D7322A;color:#F4E7C5}
+.cell.on::after{content:"";position:absolute;inset:4px;border:3px dashed rgba(244,231,197,.4);border-radius:50%;pointer-events:none}
+.cell.free{background:#F2B705;color:#151515}
+.cell.free::after{display:none}
+.cell.win{background:#F2B705;color:#151515;animation:pulse .7s ease-in-out infinite alternate}
+.cell.win::after{display:none}
+@keyframes pulse{to{transform:scale(1.06)}}
+.stamp{font-family:'Bowlby One',sans-serif;animation:slam .5s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes slam{from{transform:scale(4) rotate(-14deg);opacity:0}to{transform:scale(1) rotate(-4deg);opacity:1}}
+.conf{position:fixed;top:-20px;width:10px;height:14px;z-index:70;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+.btn{font-family:'Bowlby One',sans-serif;border:4px solid #151515;box-shadow:4px 4px 0 #151515;min-height:48px;padding:8px 14px;font-size:14px;background:#F4E7C5;color:#151515}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 #151515}
+.btn:focus-visible{outline:4px solid #F2B705;outline-offset:2px}
+#win{overflow:hidden}
+main{overflow-x:clip}
+@media (prefers-reduced-motion:reduce){.stamp,.cell.win{animation:none}.conf{display:none}}
+</style>
+</head>
+<body class="plaid min-h-screen">
+<main class="max-w-xl mx-auto px-3 py-5 sm:py-8">
+  <header class="flex items-center gap-3">
+    <img src="mascot.png" alt="TC McThrifty mascot" class="w-16 h-16 sm:w-20 sm:h-20 object-cover border-4 border-ink bg-paper" width="80" height="80">
+    <div>
+      <p class="font-display text-mustard text-xs tracking-widest">T.C. McTHRIFTY PRESENTS</p>
+      <h1 class="font-display text-paper text-3xl sm:text-5xl leading-none" style="text-shadow:3px 3px 0 #151515">Estate Sale<br>Bingo</h1>
+    </div>
+  </header>
+  <p class="mt-3 text-paper font-semibold text-[17px]">Go to the sale. Tap what you spot. Five in a row wins nothing, except the right to say "I called it" in the parking lot.</p>
+
+  <div class="mt-4 flex items-center justify-between gap-2 flex-wrap" role="status" aria-live="polite">
+    <p class="font-display text-paper text-sm"><span id="marked">0</span> SPOTTED &middot; <span id="lines">0</span> BINGO<span id="plural">S</span></p>
+    <p class="font-hand text-mustard text-2xl leading-none" id="seedLabel"></p>
+  </div>
+
+  <div id="board" class="mt-3 grid grid-cols-5 gap-1.5 sm:gap-2" role="grid" aria-label="Estate sale bingo card"></div>
+
+  <div id="quip" class="mt-4 min-h-[64px] bg-paper2 border-4 border-ink p-3 shadow-[4px_4px_0_#151515]" aria-live="polite">
+    <p class="font-hand text-2xl leading-tight" id="quipText">Tap a square when you see it in the wild. I will have thoughts.</p>
+  </div>
+
+  <div id="win" class="hidden mt-5 text-center bg-mustard border-4 border-ink p-4 shadow-[6px_6px_0_#151515]" role="alert">
+    <p class="stamp text-tagred text-5xl sm:text-6xl" id="winTitle">BINGO!</p>
+    <p class="mt-2 font-bold text-lg" id="winText"></p>
+  </div>
+
+  <div class="mt-5 grid grid-cols-2 gap-3">
+    <button class="btn" id="newCard"><i class="fa-solid fa-shuffle"></i> New card</button>
+    <button class="btn" id="clearBtn"><i class="fa-solid fa-eraser"></i> Clear marks</button>
+    <button class="btn col-span-2" id="shareBtn"><i class="fa-solid fa-link"></i> <span id="shareTxt">Copy a link to this card</span></button>
+  </div>
+
+  <details class="mt-6 bg-paper border-4 border-ink p-3">
+    <summary class="font-display cursor-pointer">The rules, such as they are</summary>
+    <ul class="mt-2 list-disc pl-5 space-y-1 font-semibold">
+      <li>Spotted it with your own eyes? Tap it. Hearsay does not count.</li>
+      <li>Rows, columns and both diagonals win. The gold square is free: someone always says "everything must go."</li>
+      <li>Fill the whole card for a BLACKOUT. That makes you me.</li>
+      <li>Send the card link to a friend. Same card, same sale, more arguing.</li>
+    </ul>
+  </details>
+  <p class="mt-6 text-center text-paper/80 text-sm font-semibold">Est. in a Twin Cities thrift aisle. Not financial advice. Not paying full price.</p>
+</main>
+
+<script>
+const $=(s,e=document)=>e.querySelector(s), $$=(s,e=document)=>[...e.querySelectorAll(s)];
+const POOL=[
+ ['Velvet Elvis','It is always a velvet Elvis. Somewhere a velvet Elvis is waiting for you.'],
+ ['40 years of National Geographic','Yellow spines. Zero will ever be read. Priced per pound by a hopeful soul.'],
+ ['A single ski','Where is the other one. The seller does not know. The seller has never known.'],
+ ['Taxidermy owl','Judging you for the whole walk-through. Negotiable on day two.'],
+ ['Fondue set, still boxed','Nobody has ever finished a fondue party. Take it anyway.'],
+ ['A box of mystery cords','One of these charges something. Probably.'],
+ ['Lamp with no shade','A lamp is just a conversation starter with a bulb.'],
+ ['Encyclopedia set, 1987','Learn everything about the world as it was in 1987.'],
+ ['Wicker everything','Wicker chair, wicker basket, wicker feelings.'],
+ ['Bowling ball in a bag','Why is there always one. Who is bowling.'],
+ ['Fur coat in July','Seven dollars. Sweating is free.'],
+ ['Pyrex with no lid','The lid is in a different estate sale. Possibly yours.'],
+ ['Someone who knows what everything is worth','Smile politely. Wait for them to leave. Then offer half.'],
+ ['First-in-line lawn chair','They arrived at 5 a.m. with a thermos. Respect.'],
+ ['"50% off after noon" sign','The sign is the whole strategy. Come back at 12:01.'],
+ ['Cuckoo clock, cuckoos wrong','It is correct twice a day, like all of us.'],
+ ['Sign that says FIRM','Firm means "ask politely on Sunday."'],
+ ['A box marked MISC','Best box. Always the best box.'],
+ ['Stack of VHS tapes','Half are taped-off-TV. One is a wedding. Do not watch the wedding.'],
+ ['Treadmill used as a coat rack','The most-used treadmill function.'],
+ ['A lonely accordion','You cannot unbuy an accordion. Ask me how I know. Do not ask.'],
+ ['Tupperware, zero matching lids','The lids went where socks go.'],
+ ['Hutch that will not fit in your car','It will not. You will try anyway.'],
+ ['Basement dehumidifier','Full of a mystery liquid. Walk away calmly.'],
+ ['Ceramic cat','Staring. Always staring. Three dollars.'],
+ ['Crocheted toilet-paper cover','A skirt for a roll. Somehow a classic.'],
+ ['CASH ONLY sign','Bring ones. Ones are power.'],
+ ['The free pile at the curb','The best price. Check it before you walk in, and again on the way out.'],
+ ['A faint smell of mothballs','That is the smell of quality, or of a closet.'],
+ ['Vinyl records, all Christmas','Eighty carols and one polka.'],
+ ['A wall of clocks, all different times','Time is a suggestion in this house.'],
+ ['A bag of orphaned keys','Every key opens a door that is gone.'],
+ ['An empty waterbed (hopefully)','Do not ask. Do not check.'],
+ ['Garage fridge, full of nothing','Humming proudly. Contains one ancient ketchup.'],
+ ['Couch tied to a sedan','The universal sign of victory.'],
+ ['Board game missing one piece','Now it is a different, harder game.'],
+ ['400 fishing lures','Four hundred dreams of one fish.'],
+ ['Sewing machine older than color TV','It will outlive us all and also your hem.'],
+ ['Price tag: "make offer"','Make a rude one. Politely.'],
+ ['Cassettes labeled in cursive','Mixtapes from a person in love in 1991. Handle gently.'],
+ ['Brass animal collection','A brass elephant, a brass duck, a lot of polishing.'],
+ ['A tool nobody can name','It is either a garden tool or a crime.'],
+ ['Set of 7 folding chairs','Always seven. Nobody knows why.'],
+ ['The dog guarding the garage','Supervising, mostly. Say hello. Do not haggle with the dog.'],
+ ['Snow blower in August','Best price of the year. Mark it and weep with joy.'],
+ ['Sewing basket of buttons','Ten thousand buttons. Zero matching.'],
+ ['A wall of framed plates','Plates for hanging, not eating, a rule nobody explained.'],
+ ['Lawn jockey of unclear origin','Leave it. Keep walking. Next table.']
+];
+const FREE=['"Everything must go!"','Someone always says it. Free square.'];
+function rng(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+let seed=0,card=[],marks=new Set(),done=new Set();
+const store={get(k){try{return JSON.parse(localStorage.getItem('mct-bingo:'+k))}catch{return null}},set(k,v){try{localStorage.setItem('mct-bingo:'+k,JSON.stringify(v))}catch{}}};
+function build(s){
+  const r=rng(s),idx=POOL.map((_,i)=>i);
+  for(let i=idx.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]]}
+  card=idx.slice(0,24).map(i=>POOL[i]); card.splice(12,0,FREE);
+}
+const LINES=(()=>{const L=[];for(let i=0;i<5;i++){L.push([0,1,2,3,4].map(c=>i*5+c));L.push([0,1,2,3,4].map(r=>r*5+i))}L.push([0,6,12,18,24]);L.push([4,8,12,16,20]);return L})();
+function winLines(){return LINES.filter(l=>l.every(i=>marks.has(i)))}
+function draw(){
+  const b=$('#board'); b.innerHTML='';
+  const wl=winLines(), win=new Set(wl.flat());
+  card.forEach((c,i)=>{
+    const el=document.createElement('button');
+    el.className='cell'+(i===12?' free':'')+(marks.has(i)?' on':'')+(win.has(i)?' win':'');
+    el.type='button'; el.dataset.i=i; el.setAttribute('role','gridcell'); el.setAttribute('aria-pressed',marks.has(i));
+    el.setAttribute('aria-label',c[0]+(marks.has(i)?', spotted':', not spotted yet'));
+    el.textContent=c[0]; b.append(el);
+  });
+  $('#marked').textContent=[...marks].filter(i=>i!==12).length;
+  $('#lines').textContent=wl.length; $('#plural').textContent=wl.length===1?'':'S';
+  $('#seedLabel').textContent='Card #'+seed;
+}
+function confetti(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const cols=['#F2B705','#D7322A','#F4E7C5','#1F5A3A'];
+  for(let i=0;i<70;i++){const c=document.createElement('i');c.className='conf';c.style.left=Math.random()*100+'vw';c.style.background=cols[i%4];c.style.animationDuration=(2+Math.random()*2.2)+'s';c.style.animationDelay=Math.random()*.5+'s';c.style.transform='rotate('+Math.random()*360+'deg)';document.body.append(c);setTimeout(()=>c.remove(),5200)}
+}
+const WIN_TEXT=[
+ 'One line. Now go haggle like you mean it.',
+ 'Two lines. You are not shopping, you are hunting.',
+ 'Three lines. The sellers know your name and your car.',
+ 'Four lines. Please drink some water.'
+];
+let lastLines=0;
+function tap(i){
+  if(i===12)return;
+  const on=!marks.has(i); on?marks.add(i):marks.delete(i);
+  store.set('marks:'+seed,[...marks]);
+  $('#quipText').textContent=on?card[i][1]:'Un-spotted. It was probably a different owl.';
+  draw();
+  const n=winLines().length;
+  const blackout=marks.size===25;
+  if(blackout){showWin('BLACKOUT!','Every square. You are me. Seek help, and then a coupon.');confetti();confetti()}
+  else if(n>lastLines&&n>0){showWin(n>1?'BINGO x'+n+'!':'BINGO!',WIN_TEXT[Math.min(n,4)-1]);confetti()}
+  else if(n===0)$('#win').classList.add('hidden');
+  lastLines=n;
+  const cell=$(`.cell[data-i="${i}"]`); if(cell)cell.focus({preventScroll:true});
+}
+function showWin(t,x){const w=$('#win');w.classList.remove('hidden');$('#winTitle').textContent=t;$('#winText').textContent=x;const s=$('#winTitle');s.style.animation='none';void s.offsetWidth;s.style.animation='';w.scrollIntoView({block:'nearest',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}
+function load(s){
+  seed=s; build(s); marks=new Set(store.get('marks:'+s)||[]); marks.add(12); lastLines=winLines().length;
+  $('#win').classList.add('hidden');
+  $('#quipText').textContent='Tap a square when you see it in the wild. I will have thoughts.';
+  draw(); try{history.replaceState(null,'','#card='+s)}catch{}
+}
+$('#board').addEventListener('click',e=>{const c=e.target.closest('.cell');if(c)tap(Number(c.dataset.i))});
+$('#newCard').onclick=()=>load(1+Math.floor(Math.random()*99998));
+$('#clearBtn').onclick=()=>{marks=new Set([12]);store.set('marks:'+seed,[]);lastLines=0;$('#win').classList.add('hidden');$('#quipText').textContent='Clean slate. Fresh eyes. Same owl.';draw()};
+$('#shareBtn').onclick=async()=>{const url=location.href.split('#')[0]+'#card='+seed;const ok=()=>{$('#shareTxt').textContent='Link copied. Same card, more arguing.';setTimeout(()=>$('#shareTxt').textContent='Copy a link to this card',2200)};try{await navigator.clipboard.writeText(url);ok()}catch{const t=document.createElement('textarea');t.value=url;document.body.append(t);t.select();try{document.execCommand('copy');ok()}catch{$('#shareTxt').textContent=url}t.remove()}};
+const m=location.hash.match(/card=(\d+)/); load(m?Number(m[1]):(store.get('last')||1+Math.floor(Math.random()*99998)));
+addEventListener('beforeunload',()=>store.set('last',seed));
+</script>
+</body>
+</html>

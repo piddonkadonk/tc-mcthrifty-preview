@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T.C. McThrifty - Insert Coin</title>
+<meta name="description" content="Minnesota's premier anonymous cheapskate. The arcade edition.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{ink:'#0a0a24',ink2:'#14143c',neon:'#00f0ff',hot:'#ff2e97',coin:'#ffe600',lime:'#39ff14',paper:'#f4f0ff'},fontFamily:{px:['"Press Start 2P"','monospace'],vt:['VT323','monospace']}}}}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" crossorigin="anonymous" defer></script>
+<style>
+html,body{background:#0a0a24;color:#f4f0ff}
+body{font-family:'VT323',monospace;font-size:22px;line-height:1.25;min-height:100vh;overflow-x:hidden}
+.px{font-family:'Press Start 2P',monospace;letter-spacing:.02em}
+.crt::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px);mix-blend-mode:multiply}
+.crt::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:59;background:radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,.45) 100%)}
+.box{border:4px solid #f4f0ff;box-shadow:0 0 0 4px #0a0a24,0 0 0 8px #00f0ff;background:#14143c}
+.box-hot{border-color:#ff2e97;box-shadow:0 0 0 4px #0a0a24,0 0 0 8px #ff2e97}
+.blink{animation:blink 1s steps(2,start) infinite}
+@keyframes blink{to{visibility:hidden}}
+.bob{animation:bob 1.2s steps(2,end) infinite}
+@keyframes bob{50%{transform:translateY(-6px)}}
+@keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.marq{display:flex;width:max-content;animation:marq 28s linear infinite}
+@media (prefers-reduced-motion:reduce){.blink,.bob,.marq{animation:none}.marq{width:auto;flex-wrap:wrap}}
+.menu-item{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 12px;min-height:56px;border:0;background:transparent;color:#f4f0ff;cursor:pointer}
+.menu-item .arrow{visibility:hidden;color:#ffe600}
+.menu-item:hover,.menu-item.on,.menu-item:focus-visible{background:#00f0ff22;outline:none}
+.menu-item:hover .arrow,.menu-item.on .arrow,.menu-item:focus-visible .arrow{visibility:visible}
+.btn{font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.4;padding:14px 14px;min-height:48px;border:4px solid #f4f0ff;background:#14143c;color:#f4f0ff;cursor:pointer;box-shadow:4px 4px 0 #000}
+.btn:hover,.btn:focus-visible{background:#ffe600;color:#0a0a24;outline:none}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 #000}
+.btn.on{background:#00f0ff;color:#0a0a24;border-color:#00f0ff}
+.btn.hot{background:#ff2e97;border-color:#ff2e97;color:#0a0a24}
+.field{width:100%;background:#0a0a24;border:4px solid #f4f0ff;color:#ffe600;padding:12px;font:22px 'VT323',monospace;min-height:48px}
+.field:focus{outline:none;border-color:#ffe600;box-shadow:0 0 0 4px #ffe60055}
+.pix{image-rendering:pixelated;image-rendering:crisp-edges}
+.row{border-bottom:2px dashed #3a3a80}
+.screen{display:none}.screen.show{display:block}
+.skip{position:absolute;left:-999px}.skip:focus{left:8px;top:8px;z-index:100;background:#ffe600;color:#000;padding:8px}
+.typing::after{content:"_";animation:blink 1s steps(2,start) infinite}
+:focus-visible{outline:3px solid #ffe600;outline-offset:2px}
+</style>
+</head>
+<body class="crt">
+<a class="skip px text-[10px]" href="#stage">Skip to the game</a>
+
+<!-- HUD -->
+<header class="sticky top-0 z-40 bg-ink border-b-4 border-neon">
+  <div class="max-w-5xl mx-auto px-3 py-2 flex items-center justify-between gap-2 px text-[9px] sm:text-[11px]">
+    <div><span class="text-hot">1UP</span> <span class="text-coin" id="hud-score">0000000</span></div>
+    <div class="hidden sm:block text-neon">HI-SCORE <span class="text-coin">$84,911.43</span></div>
+    <div class="flex items-center gap-3"><span aria-label="3 lives" class="text-hot"><i class="fa-solid fa-heart"></i><i class="fa-solid fa-heart"></i><i class="fa-solid fa-heart"></i></span>
+      <button id="snd" class="btn !min-h-[44px] !py-2 !px-2 !text-[9px]" aria-pressed="false" title="Toggle sound"><i class="fa-solid fa-volume-xmark"></i> SND OFF</button></div>
+  </div>
+  <div class="bg-hot text-ink overflow-hidden border-t-4 border-ink" aria-label="Ticker">
+    <div class="marq px text-[10px] py-1.5"><span class="pr-10">INSERT COIN &bull; SPENT TODAY $0.75 &bull; LIFETIME SAVED $84,911.43 &bull; NO FULL PRICE EVER &bull; ASK ABOUT THE FLOOR MODEL &bull;</span><span class="pr-10" aria-hidden="true">INSERT COIN &bull; SPENT TODAY $0.75 &bull; LIFETIME SAVED $84,911.43 &bull; NO FULL PRICE EVER &bull; ASK ABOUT THE FLOOR MODEL &bull;</span></div>
+  </div>
+</header>
+
+<main id="stage" class="max-w-5xl mx-auto px-3 sm:px-5 py-6 sm:py-10">
+
+<!-- TITLE -->
+<section id="s-title" class="screen show text-center" aria-labelledby="t-h">
+  <div class="box p-4 sm:p-8 max-w-2xl mx-auto">
+    <p class="px text-[10px] sm:text-xs text-neon">PLAYER 1 &middot; TWIN CITIES &middot; LVL 99</p>
+    <canvas id="mascot" width="96" height="72" class="pix mx-auto my-4 bob w-[192px] h-[144px] sm:w-[288px] sm:h-[216px]" role="img" aria-label="TC McThrifty mascot in 8-bit pixels"></canvas>
+    <h1 id="t-h" class="px text-coin leading-[1.5] text-2xl sm:text-4xl" style="text-shadow:4px 4px 0 #ff2e97">T.C.<br>McTHRIFTY</h1>
+    <p class="mt-4 text-2xl sm:text-3xl">Minnesota's Premier Anonymous Cheapskate &amp; Thrift Thrill-Seeker</p>
+    <p class="mt-2 text-xl text-neon">Squeezing every penny out of the Twin Cities (and beyond) so you don't have to.</p>
+    <button id="start" class="btn hot blink mt-6 !text-sm sm:!text-base !px-6 !py-4">PRESS START</button>
+    <p class="px text-[9px] mt-5 text-paper/70">&copy; ANONYMOUS &middot; CREDIT 00 &middot; ENTER OR TAP</p>
+  </div>
+  <p class="mt-8 max-w-xl mx-auto text-xl text-paper/90">Yes, I have a day job. Yes, it pays fine. No, I will not pay full price for anything, ever. Names stay out of this. Savings stay in.</p>
+  <ul class="mt-6 flex flex-wrap justify-center gap-3 px text-[10px]">
+    <li class="box !shadow-none !border-2 px-3 py-2 text-coin">$0.99</li><li class="box !shadow-none !border-2 px-3 py-2 text-lime">FREE FRIES</li><li class="box !shadow-none !border-2 px-3 py-2 text-hot">100% PRE-LOVED</li>
+  </ul>
+</section>
+
+<!-- LEVEL SELECT -->
+<section id="s-menu" class="screen" aria-labelledby="m-h">
+  <h2 id="m-h" class="px text-coin text-lg sm:text-2xl text-center mb-2" style="text-shadow:3px 3px 0 #ff2e97">SELECT LEVEL</h2>
+  <p class="text-center text-neon text-xl mb-5">Use &uarr; &darr; and Enter, or just tap.</p>
+  <div class="box max-w-xl mx-auto p-2 sm:p-4" role="menu" id="menu">
+    <button class="menu-item" role="menuitem" data-go="radar"><span class="arrow px text-xs">&#9654;</span><i class="fa-solid fa-satellite-dish w-7 text-neon"></i><span><span class="px text-[11px] sm:text-xs block text-coin">LEVEL 1</span><span class="text-2xl">Radar: the High-Score Table</span></span></button>
+    <button class="menu-item" role="menuitem" data-go="texts"><span class="arrow px text-xs">&#9654;</span><i class="fa-solid fa-comment-dots w-7 text-neon"></i><span><span class="px text-[11px] sm:text-xs block text-coin">LEVEL 2</span><span class="text-2xl">Texts From Last Night</span></span></button>
+    <button class="menu-item" role="menuitem" data-go="meter"><span class="arrow px text-xs">&#9654;</span><i class="fa-solid fa-gauge-high w-7 text-neon"></i><span><span class="px text-[11px] sm:text-xs block text-coin">LEVEL 3</span><span class="text-2xl">The Thrift-Level Meter (Boss)</span></span></button>
+    <button class="menu-item" role="menuitem" data-go="finds"><span class="arrow px text-xs">&#9654;</span><i class="fa-solid fa-gem w-7 text-neon"></i><span><span class="px text-[11px] sm:text-xs block text-coin">LEVEL 4</span><span class="text-2xl">Crazy Finds &amp; Tributes</span></span></button>
+    <button class="menu-item" role="menuitem" data-go="tip"><span class="arrow px text-xs">&#9654;</span><i class="fa-solid fa-envelope-open-text w-7 text-neon"></i><span><span class="px text-[11px] sm:text-xs block text-coin">BONUS</span><span class="text-2xl">Got a Tip? Submit a Steal</span></span></button>
+  </div>
+  <p class="text-center mt-5 px text-[9px] text-paper/70">PRESS ESC ANYTIME TO COME BACK HERE</p>
+</section>
+
+<!-- LEVEL 1 RADAR -->
+<section id="s-radar" class="screen" aria-labelledby="r-h">
+  <div class="flex items-center justify-between gap-3 mb-3"><button class="btn back" data-go="menu">&larr; MENU</button><span class="px text-[10px] text-coin">LEVEL 1</span></div>
+  <h2 id="r-h" class="px text-lg sm:text-2xl text-coin leading-[1.5]">DEALS &amp; ESTATE SALES<br><span class="text-hot">WEEKLY RADAR</span></h2>
+  <p class="text-xl text-neon mt-2">Scraped fresh. Verified by nobody. Go anyway.</p>
+  <div class="flex flex-wrap gap-2 my-4" role="group" aria-label="Filter the radar" id="filters"></div>
+  <p class="px text-[10px] text-lime mb-2" id="count"></p>
+  <div class="box p-2 sm:p-4">
+    <div class="hidden sm:grid grid-cols-[64px_1fr_130px_150px] gap-3 px text-[9px] text-neon pb-2 border-b-4 border-neon"><span>RANK</span><span>DEAL</span><span>SCORE</span><span>RATING</span></div>
+    <div id="board" aria-live="polite"></div>
+    <p id="empty" class="hidden p-6 text-center text-2xl text-hot">Nothing in this pile. Either you are too picky or the good stuff is already in someone's trunk.</p>
+  </div>
+</section>
+
+<!-- LEVEL 2 TEXTS -->
+<section id="s-texts" class="screen" aria-labelledby="x-h">
+  <div class="flex items-center justify-between gap-3 mb-3"><button class="btn back" data-go="menu">&larr; MENU</button><span class="px text-[10px] text-coin">LEVEL 2</span></div>
+  <h2 id="x-h" class="px text-lg sm:text-2xl text-coin leading-[1.5]">TEXTS FROM LAST NIGHT</h2>
+  <p class="text-xl text-neon mt-2">Screenshots, lightly redacted.</p>
+  <div class="grid md:grid-cols-2 gap-8 mt-6">
+    <article class="box" aria-label="Chat with Top Hat Pal">
+      <div class="bg-neon text-ink px px-3 py-2 text-[10px] flex justify-between"><span>&#127913; TOP HAT PAL</span><span class="blink">TYPING...</span></div>
+      <div class="p-4 space-y-4 text-2xl" data-type>
+        <p class="bg-ink2 border-2 border-neon p-3 max-w-[90%]" data-line>Coupons in hand? &#127913;</p>
+        <p class="bg-hot text-ink p-3 ml-auto max-w-[90%]" data-line>Back at it with the game pieces, they hate to see me coming! &#127828;&#127913;</p>
+        <p class="bg-ink2 border-2 border-neon p-3 max-w-[90%]" data-line>How many free fries is that</p>
+        <p class="bg-hot text-ink p-3 ml-auto max-w-[90%]" data-line>Enough that the app knows my name</p>
+      </div><div class="px text-[9px] text-right px-4 pb-3 text-paper/70">11:38 PM</div>
+    </article>
+    <article class="box box-hot" aria-label="Group chat">
+      <div class="bg-hot text-ink px px-3 py-2 text-[10px] flex justify-between"><span>&#128220; GROUP CHAT</span><span>READ 11:42 PM</span></div>
+      <div class="p-4 space-y-4 text-2xl" data-type>
+        <p class="bg-ink2 border-2 border-hot p-3 max-w-[90%]" data-line>Wait, you still get both?</p>
+        <p class="bg-neon text-ink p-3 ml-auto max-w-[90%]" data-line>I fought a subscription that tried to cut me off, kept print AND digital forever. SUE ME (literally).</p>
+        <p class="bg-ink2 border-2 border-hot p-3 max-w-[90%]" data-line>huh huh. "literally."</p>
+      </div>
+    </article>
+  </div>
+  <div class="text-center mt-8"><button class="btn" id="replayTexts"><i class="fa-solid fa-rotate-right"></i> REPLAY TEXTS</button></div>
+</section>
+
+<!-- LEVEL 3 METER -->
+<section id="s-meter" class="screen" aria-labelledby="q-h">
+  <div class="flex items-center justify-between gap-3 mb-3"><button class="btn back" data-go="menu">&larr; MENU</button><span class="px text-[10px] text-coin">LEVEL 3 &middot; BOSS</span></div>
+  <h2 id="q-h" class="px text-lg sm:text-2xl text-coin leading-[1.5]">THE THRIFT-LEVEL METER</h2>
+  <p class="text-xl text-neon mt-2">Five questions. No wrong answers, only wrong prices.</p>
+  <div class="grid lg:grid-cols-[1fr_340px] gap-8 mt-6 items-start">
+    <div class="box p-4 sm:p-6" id="quizBox">
+      <div class="flex items-center justify-between px text-[10px] mb-3"><span class="text-hot" id="qno">QUESTION 1 / 5</span><span id="qbar" class="flex gap-1" aria-hidden="true"></span></div>
+      <p class="text-3xl sm:text-4xl leading-tight" id="qtext" aria-live="polite"></p>
+      <div class="mt-5 grid gap-3" id="qans"></div>
+    </div>
+    <aside class="box box-hot p-4" aria-live="polite">
+      <p class="px text-[10px] text-neon">YOUR THRIFT LEVEL</p>
+      <p class="px text-3xl text-coin my-3" id="r-level">LEVEL ? / 5</p>
+      <p class="text-3xl text-hot" id="r-title">Answer all five</p>
+      <p class="text-xl mt-2" id="r-text">Your tier shows up here. TC McThrifty will rate it. Dryly.</p>
+      <p class="text-xl mt-3 text-lime hidden" id="r-help"></p>
+      <div class="flex gap-1 mt-4" id="r-bar" aria-hidden="true"></div>
+      <ol class="mt-4 space-y-1 text-xl" id="ladder"></ol>
+      <button class="btn hot mt-5 hidden" id="again">CONTINUE? Rate me again. I might lie this time.</button>
+    </aside>
+  </div>
+</section>
+
+<!-- LEVEL 4 FINDS -->
+<section id="s-finds" class="screen" aria-labelledby="f-h">
+  <div class="flex items-center justify-between gap-3 mb-3"><button class="btn back" data-go="menu">&larr; MENU</button><span class="px text-[10px] text-coin">LEVEL 4</span></div>
+  <h2 id="f-h" class="px text-lg sm:text-2xl text-coin leading-[1.5]">CRAZY FINDS &amp; TRIBUTES</h2>
+  <p class="text-xl text-neon mt-2">Photos coming. For now, imagine the smell.</p>
+  <div class="grid sm:grid-cols-2 gap-6 mt-6">
+    <div class="box p-4 text-center"><p class="px text-[10px] text-neon">ESTIMATED LIFETIME SAVINGS</p><p class="px text-xl sm:text-2xl text-coin mt-3" id="savings" aria-live="off">$84,911.43</p></div>
+    <div class="box box-hot p-4 text-center"><p class="px text-[10px] text-hot">SPENT TODAY</p><p class="px text-xl sm:text-2xl text-lime mt-3">$0.75</p></div>
+  </div>
+  <h3 class="px text-[11px] text-neon mt-8 mb-3">INVENTORY</h3>
+  <ul class="grid md:grid-cols-3 gap-6">
+    <li class="box p-4"><div class="w-14 h-14 grid place-items-center border-4 border-paper bg-ink text-coin text-2xl mb-3" aria-hidden="true"><i class="fa-solid fa-eraser"></i></div><h4 class="px text-[11px] leading-[1.6] text-coin">The Japanese Store Haul</h4><p class="text-xl mt-2">Many tiny erasers. Zero regrets.</p><p class="px text-[9px] mt-3 text-lime">RARITY: COMMON &times; 40</p></li>
+    <li class="box p-4"><div class="w-14 h-14 grid place-items-center border-4 border-paper bg-ink text-hot text-2xl mb-3" aria-hidden="true"><i class="fa-solid fa-shirt"></i></div><h4 class="px text-[11px] leading-[1.6] text-coin">The MN Pridefest Nature Thrifting Special</h4><p class="text-xl mt-2">Rainbow flannel, found in the wild.</p><p class="px text-[9px] mt-3 text-neon">RARITY: RARE</p></li>
+    <li class="box p-4"><div class="w-14 h-14 grid place-items-center border-4 border-paper bg-ink text-neon text-2xl mb-3" aria-hidden="true"><i class="fa-solid fa-dove"></i></div><h4 class="px text-[11px] leading-[1.6] text-coin">The Late Great Cockatiel Memorial Thrift Find</h4><p class="text-xl mt-2">A small tribute, found secondhand, kept forever.</p><p class="px text-[9px] mt-3 text-hot">RARITY: SENTIMENTAL</p></li>
+  </ul>
+</section>
+
+<!-- BONUS TIP -->
+<section id="s-tip" class="screen" aria-labelledby="p-h">
+  <div class="flex items-center justify-between gap-3 mb-3"><button class="btn back" data-go="menu">&larr; MENU</button><span class="px text-[10px] text-coin">BONUS STAGE</span></div>
+  <h2 id="p-h" class="px text-lg sm:text-2xl text-coin leading-[1.5]">GOT A TIP?</h2>
+  <p class="text-xl text-neon mt-2">Submit a steal. Anonymous is fine. Cheap is required.</p>
+  <form id="tipForm" class="box p-4 sm:p-6 mt-6 max-w-2xl" novalidate>
+    <label for="steal" class="px text-[10px] text-coin block mb-2">What's the steal?</label>
+    <textarea id="steal" class="field" rows="3" aria-describedby="stealErr"></textarea>
+    <p id="stealErr" class="text-hot text-xl mt-1 hidden" role="alert">A steal needs a steal. What did you find?</p>
+    <label for="where" class="px text-[10px] text-coin block mt-5 mb-2">Where? (city, link or cross streets)</label>
+    <input id="where" class="field" type="text" autocomplete="off">
+    <p class="text-xl text-paper/80 mt-1">Where is it? Cross streets are fine. "By the big tree" is not.</p>
+    <button type="submit" class="btn hot mt-6">SUBMIT THE STEAL</button>
+  </form>
+  <div id="receipt" class="hidden mt-8 max-w-sm mx-auto bg-paper text-ink p-5 text-center" style="font-family:'VT323',monospace;clip-path:polygon(0 0,100% 0,100% calc(100% - 10px),95% 100%,90% calc(100% - 10px),85% 100%,80% calc(100% - 10px),75% 100%,70% calc(100% - 10px),65% 100%,60% calc(100% - 10px),55% 100%,50% calc(100% - 10px),45% 100%,40% calc(100% - 10px),35% 100%,30% calc(100% - 10px),25% 100%,20% calc(100% - 10px),15% 100%,10% calc(100% - 10px),5% 100%,0 calc(100% - 10px))" role="status">
+    <p class="px text-[11px]">RECEIPT #0075</p>
+    <p class="px text-[12px] mt-3 text-hot">TIP RECEIVED</p>
+    <p class="text-xl mt-3">Filed under "might be a steal." Reviewed by nobody until I have had coffee.</p>
+    <p class="text-xl mt-2">If it checks out, it ends up on the radar. If it does not, I will pretend I never saw it.</p>
+    <p class="text-xl mt-2">Anonymous is fine. Cheap is required. Free is better.</p>
+    <p class="px text-[11px] mt-4">TOTAL: $0.00</p>
+    <button type="button" class="btn !text-ink !border-ink !bg-coin mt-5 !shadow-none" data-go="menu">Back to saving</button>
+  </div>
+</section>
+
+</main>
+
+<footer class="border-t-4 border-neon bg-ink mt-10">
+  <div class="max-w-5xl mx-auto px-4 py-6 text-center">
+    <p class="px text-[11px] text-coin">T.C. McTHRIFTY</p>
+    <p class="text-xl mt-2 text-paper/80">Est. in a Twin Cities thrift aisle. Not financial advice. Not paying full price.</p>
+    <p class="px text-[9px] mt-3 text-hot blink">GAME OVER? NEVER.</p>
+  </div>
+</footer>
+
+<script>
+const $=(s,e=document)=>e.querySelector(s), $$=(s,e=document)=>[...e.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const DEALS=[
+ {tags:['thrifts','weird'],price:'70% OFF',badge:'Estate Sale',title:'South Mpls estate sale: 70% off retro taxidermy, Sunday only',meta:'Sat and Sun, 9am. Cash only. Bring a van and zero shame.',src:'scraped from: a flyer stapled to a pole',rating:'5 of 5 pelts',tip:'Go Sunday, not Saturday. Day two is when "firm" prices get negotiable and the owl starts looking like a bargain.'},
+ {tags:['food'],price:'$0.00',badge:'Free Fries',title:'Free fries with a burger-chain game-piece trick',meta:'Any drive-thru, any week the game is on. Peel, stack, redeem.',src:'scraped from: a very long comment thread',rating:'5 of 5 fries',tip:'Check the app before you order. The free item is usually hiding under "rewards," not "menu." Read the fine print once, then never again.'},
+ {tags:['thrifts'],price:'$5 BAG',badge:'Thrift Store',title:'Roseville bin store: fill-a-bag Tuesday, $5 a bag',meta:'Doors at 8. Elbows out by 8:01.',src:'scraped from: the bin store newsletter',rating:'4 of 5 flannels',tip:'Wear gloves and bring your own bag. A bag you packed like a puzzle holds twice what theirs does.'},
+ {tags:['travels'],price:'$412 RT',badge:'Flight Find',title:'MSP to Lisbon, $412 round trip, possible error fare',meta:'Fares like this last hours. Fully refundable for 24 hours, so you can book first and panic later.',src:'scraped from: a fare alert at 3am',rating:'5 of 5 layovers',tip:'Book it, then check the 24-hour cancel rule on that airline before you tell anyone. The tip is the cancel button, not the fare.'},
+ {tags:['food','thrifts'],price:'BOGO',badge:'Cheap Eats',title:'Gas station coffee, buy one get one, with the app and a stern look',meta:'St. Paul, Maplewood and a suspicious Cottage Grove.',src:'scraped from: the app, reluctantly',rating:'3 of 5 refills',tip:'The second cup is for later. Put it in the fridge. Cold coffee is a personality, not a problem.'}
+];
+const LABEL={all:'All',thrifts:'Thrifts',food:'Food & Freebies',travels:'Travels',weird:'Weird Junk'};
+const LEVELS=[
+ {n:1,name:'Coupon Clipper',color:'#F4E7C5',text:'2 out of 10 cheapskates. He is only being polite.',help:'Stack the paper coupon with the store app deal. Two small wins beat one big one, and you already do the clipping.'},
+ {n:2,name:'The Cruise Ship Milkman',color:'#F2B705',text:'4 out of 10. Would share a buffet with you. Would also count the plates.',help:'Free things are only free if you do not buy the upgrade. Take the buffet, skip the drink package, keep the receipt for nothing.'},
+ {n:3,name:'The Monopoly Maestro',color:'#EE7A1E',text:'6 out of 10. Huh huh. You said "peel."',help:'Treat every game piece like a coupon with a deadline. Photograph them, check the expiry, and trade the extras before they turn into stickers.'},
+ {n:4,name:'Muppet-Tier Estate Graverobber',color:'#D7322A',text:'8 out of 10, with a footnote. The footnote is that the coffee was still warm.',help:'Arrive on the last day, ask for the bundle price, and be kind. The family remembers who was polite, and politeness gets the extra box.'},
+ {n:5,name:'The DIY Doctor',color:'#2E7D4F',text:'10 out of 10 for savings, and a respectful note that actual professionals exist and are very good at their jobs.',help:'Watch the video twice, buy the part second-hand, and know the line where YouTube ends and a trained person begins. That line is the cheapest thing you will ever save.'}
+];
+const QUESTIONS=[
+ {q:'You see a $4 shirt that is almost your size.',a:[['Walk past, it is not a bargain.',1],['Buy it, hem it, call it vintage.',3],['Buy six, resell five, wear one.',5]]},
+ {q:'Fast food and you:',a:[['I use the app coupons.',1],['I play the game pieces.',3],['I have a spreadsheet of every promo since 2009.',5]]},
+ {q:'A company offers you a refund. You:',a:[['Take the refund.',1],['Ask for the refund AND a coupon.',3],['Join the class action out of sheer principle.',5]]},
+ {q:'A weekend plan:',a:[['Brunch, full price, at a place with a line.',1],['Estate sale hop, then free samples.',3],['Estate sale hop, fix the thing myself, sell it back.',5]]},
+ {q:'Something at home breaks:',a:[['Call someone and pay them.',1],['Watch a video, then call someone.',3],['Watch a video, find the part at a thrift store, fix it.',5]]}
+];
+
+/* ---- sound (tiny beeps, off until you turn it on) ---- */
+let sndOn=false, ac=null;
+function beep(f=660,d=.07,t='square',v=.05){ if(!sndOn) return; try{ ac=ac||new (window.AudioContext||window.webkitAudioContext)(); const o=ac.createOscillator(),g=ac.createGain(); o.type=t;o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+d);o.stop(ac.currentTime+d);}catch(e){} }
+const coin=()=>{beep(988,.06);setTimeout(()=>beep(1319,.18),70)};
+$('#snd').onclick=e=>{sndOn=!sndOn;e.currentTarget.setAttribute('aria-pressed',sndOn);e.currentTarget.innerHTML=sndOn?'<i class="fa-solid fa-volume-high"></i> SND ON':'<i class="fa-solid fa-volume-xmark"></i> SND OFF';if(sndOn)coin()};
+
+/* ---- 8-bit mascot: shrink the art to 96px and let CSS keep the pixels ---- */
+(function(){const im=new Image();im.onload=()=>{const c=$('#mascot'),x=c.getContext('2d');x.imageSmoothingEnabled=true;const r=Math.min(96/im.width,72/im.height),w=im.width*r,h=im.height*r;x.drawImage(im,(96-w)/2,(72-h)/2,w,h);
+ try{const d=x.getImageData(0,0,96,72),p=d.data;for(let i=0;i<p.length;i+=4){for(let k=0;k<3;k++)p[i+k]=Math.min(255,Math.round(p[i+k]/64)*64);}x.putImageData(d,0,0)}catch(e){/* opened straight from disk: keep the plain pixels */}};im.src='mascot.png'})();
+
+/* ---- screens ---- */
+let cur='title', menuIdx=0;
+const score=$('#hud-score'); let pts=0;
+function addPts(n){pts+=n;score.textContent=String(pts).padStart(7,'0')}
+function go(name){
+  $$('.screen').forEach(s=>s.classList.remove('show')); $('#s-'+name).classList.add('show'); cur=name; window.scrollTo({top:0,behavior:'auto'});
+  history.replaceState(null,'', name==='title'?location.pathname:'#'+name);
+  if(name==='menu'){menuIdx=Math.min(menuIdx,4);markMenu();}
+  if(name==='texts')typeTexts();
+  if(name==='finds')countUp();
+  if(name==='meter'&&!qState.started)startQuiz();
+  if(name==='radar')drawBoard();
+  const h=$('#s-'+name+' h1,#s-'+name+' h2'); if(h){h.setAttribute('tabindex','-1');}
+}
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]'); if(g){coin();addPts(100);go(g.dataset.go)}});
+$('#start').onclick=()=>{coin();go('menu')};
+const items=()=>$$('#menu .menu-item');
+function markMenu(){items().forEach((b,i)=>b.classList.toggle('on',i===menuIdx))}
+items().forEach((b,i)=>b.addEventListener('mouseenter',()=>{menuIdx=i;markMenu()}));
+document.addEventListener('keydown',e=>{
+  if(/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){ if(e.key==='Escape')document.activeElement.blur(); return; }
+  if(e.key==='Escape'&&cur!=='title'&&cur!=='menu'){go('menu');return}
+  if(cur==='title'&&(e.key==='Enter'||e.key===' ')){e.preventDefault();coin();go('menu');return}
+  if(cur==='menu'){
+    if(e.key==='ArrowDown'){e.preventDefault();menuIdx=(menuIdx+1)%5;markMenu();beep(440,.05)}
+    if(e.key==='ArrowUp'){e.preventDefault();menuIdx=(menuIdx+4)%5;markMenu();beep(523,.05)}
+    if(e.key==='Enter'){e.preventDefault();coin();addPts(100);go(items()[menuIdx].dataset.go)}
+    const n=Number(e.key); if(n>=1&&n<=5){coin();go(items()[n-1].dataset.go)}
+  }
+  if(cur==='meter'&&['1','2','3'].includes(e.key)){const b=$$('#qans button')[Number(e.key)-1]; if(b)b.click()}
+});
+window.addEventListener('hashchange',()=>{const h=location.hash.slice(1); if(h&&$('#s-'+h)&&h!==cur)go(h)});
+
+/* ---- radar ---- */
+let filt='all';
+$('#filters').innerHTML=Object.keys(LABEL).map(k=>`<button class="btn ${k==='all'?'on':''}" data-f="${k}" aria-pressed="${k==='all'}">${esc(LABEL[k])}</button>`).join('');
+$('#filters').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(!b)return;filt=b.dataset.f;beep(740,.05);$$('#filters .btn').forEach(x=>{const on=x===b;x.classList.toggle('on',on);x.setAttribute('aria-pressed',on)});drawBoard()});
+const ORD=['1ST','2ND','3RD','4TH','5TH'];
+function drawBoard(){
+  const list=DEALS.filter(d=>filt==='all'||d.tags.includes(filt));
+  $('#count').textContent=list.length+' FOUND';
+  $('#empty').classList.toggle('hidden',list.length>0);
+  $('#board').innerHTML=list.map((d,i)=>`<div class="row py-3">
+   <button class="w-full text-left grid grid-cols-[48px_1fr] sm:grid-cols-[64px_1fr_130px_150px] gap-x-3 gap-y-1 items-center menu-item !px-1 !py-2" aria-expanded="false" data-row>
+     <span class="px text-[10px] text-hot">${ORD[i]}</span>
+     <span class="text-2xl leading-tight"><span class="px text-[8px] text-neon block mb-1">${esc(d.badge.toUpperCase())}</span>${esc(d.title)}</span>
+     <span class="px text-sm text-coin col-start-2 sm:col-start-auto">${esc(d.price)}</span>
+     <span class="px text-[9px] text-lime col-start-2 sm:col-start-auto leading-[1.6]">${esc(d.rating.toUpperCase())}</span></button>
+   <div class="hidden pl-1 sm:pl-[76px] pr-2 pb-2" data-more><p class="text-xl">${esc(d.meta)}</p><p class="text-lg text-paper/70 mt-1">${esc(d.src)}</p><p class="text-xl mt-2 bg-ink border-2 border-coin p-3"><span class="px text-[9px] text-coin block mb-1">CHEAT CODE</span>${esc(d.tip)}</p></div></div>`).join('');
+}
+$('#board').addEventListener('click',e=>{const b=e.target.closest('[data-row]');if(!b)return;const m=b.nextElementSibling,open=m.classList.toggle('hidden')===false;b.setAttribute('aria-expanded',open);beep(open?880:520,.05);if(open)addPts(50)});
+
+/* ---- texts: typed one bubble at a time ---- */
+let typeTok=0;
+function typeTexts(){
+  const tok=++typeTok, calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const lines=$$('[data-line]'); lines.forEach(l=>{l.dataset.full=l.dataset.full||l.textContent;l.textContent='';l.style.visibility='hidden'});
+  if(calm){lines.forEach(l=>{l.textContent=l.dataset.full;l.style.visibility='visible'});return}
+  (async()=>{for(const l of lines){if(tok!==typeTok)return;l.style.visibility='visible';l.classList.add('typing');for(const ch of l.dataset.full){if(tok!==typeTok)return;l.firstChild?l.firstChild.nodeValue+=ch:l.append(ch);if(ch!==' ')beep(300+Math.random()*60,.015,'square',.02);await new Promise(r=>setTimeout(r,16))}l.classList.remove('typing');await new Promise(r=>setTimeout(r,260))}})();
+}
+$('#replayTexts').onclick=()=>typeTexts();
+
+/* ---- meter: boss fight ---- */
+const qState={started:false,i:0,sum:0};
+function paintBar(lvl){ $('#r-bar').innerHTML=LEVELS.map(l=>`<span class="h-6 flex-1 border-2 border-paper" style="background:${l.n<=lvl?l.color:'transparent'}"></span>`).join('') }
+$('#ladder').innerHTML=LEVELS.map(l=>`<li data-l="${l.n}" class="flex items-center gap-3 border-2 border-paper px-3 py-1"><span class="px text-[10px] w-8">L${l.n}</span><span>${esc(l.name)}</span></li>`).join('');
+paintBar(0);
+function startQuiz(){qState.started=true;qState.i=0;qState.sum=0;$('#quizBox').classList.remove('hidden');$('#again').classList.add('hidden');$('#r-level').textContent='LEVEL ? / 5';$('#r-title').textContent='Answer all five';$('#r-text').textContent='Your tier shows up here. TC McThrifty will rate it. Dryly.';$('#r-help').classList.add('hidden');paintBar(0);$$('#ladder li').forEach(li=>{li.style.background='';li.style.color=''});showQ()}
+function showQ(){
+  const Q=QUESTIONS[qState.i];
+  $('#qno').textContent=`QUESTION ${qState.i+1} / 5`;
+  $('#qbar').innerHTML=QUESTIONS.map((_,i)=>`<i class="fa-solid fa-heart ${i<qState.i?'text-hot':'text-paper/30'}"></i>`).join('');
+  $('#qtext').textContent=Q.q;
+  $('#qans').innerHTML=Q.a.map((a,i)=>`<button class="btn !text-[12px] sm:!text-[13px] text-left leading-[1.7]" data-v="${a[1]}"><span class="text-coin">${'ABC'[i]}.</span> ${esc(a[0])}</button>`).join('');
+}
+$('#qans').addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(!b)return;beep(880,.05);addPts(200);qState.sum+=Number(b.dataset.v);qState.i++;if(qState.i<QUESTIONS.length)showQ();else finishQuiz()});
+function finishQuiz(){
+  const s=qState.sum, lvl=s<=9?1:s<=13?2:s<=17?3:s<=21?4:5, L=LEVELS[lvl-1];
+  $('#qno').textContent='STAGE CLEAR!'; $('#qbar').innerHTML=QUESTIONS.map(()=>'<i class="fa-solid fa-heart text-hot"></i>').join('');
+  $('#qtext').textContent='Boss defeated. Your rating is on the right.'; $('#qans').innerHTML='';
+  $('#r-level').textContent='LEVEL '+lvl+' / 5'; $('#r-title').textContent=L.name; $('#r-text').textContent=L.text;
+  const hp=$('#r-help'); hp.textContent=L.help; hp.classList.remove('hidden'); $('#again').classList.remove('hidden'); paintBar(lvl);
+  $$('#ladder li').forEach(li=>{const on=Number(li.dataset.l)===lvl;li.style.background=on?L.color:'';li.style.color=on?(lvl<=2?'#151515':'#F4E7C5'):''});
+  [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,.15),i*110)); addPts(1000);
+  if(matchMedia('(max-width: 1023px)').matches)$('#r-level').scrollIntoView({behavior:'auto',block:'center'});
+}
+$('#again').onclick=()=>{coin();startQuiz();$('#quizBox').scrollIntoView({block:'center'})};
+
+/* ---- finds: coin counter ---- */
+function countUp(){const el=$('#savings'),end=84911.43,calm=matchMedia('(prefers-reduced-motion: reduce)').matches;const fmt=n=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});if(calm){el.textContent=fmt(end);return}let t0=null;const step=t=>{t0=t0||t;const p=Math.min(1,(t-t0)/1200);el.textContent=fmt(end*p);if(p<1)requestAnimationFrame(step)};requestAnimationFrame(step)}
+
+/* ---- tip form ---- */
+$('#tipForm').addEventListener('submit',e=>{e.preventDefault();const v=$('#steal').value.trim();if(!v){$('#stealErr').classList.remove('hidden');$('#steal').focus();beep(160,.2,'sawtooth');return}
+  $('#stealErr').classList.add('hidden');coin();addPts(500);$('#tipForm').classList.add('hidden');$('#receipt').classList.remove('hidden');$('#receipt').scrollIntoView({block:'center'})});
+
+/* ---- boot: deep links like #radar work ---- */
+const first=location.hash.slice(1); if(first&&$('#s-'+first))go(first);
+</script>
+</body>
+</html>

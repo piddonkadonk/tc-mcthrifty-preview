@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Thrift Fit Builder | TC McThrifty</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=Bowlby+One+SC&family=Special+Elite&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{colors:{paper:'#F4E7C5',paper2:'#EAD9AE',ink:'#151515',mustard:'#F2B705',hunter:'#1F5B3A',orange:'#EE7A1E',tagred:'#D7322A',sky:'#7FC6D9'},fontFamily:{display:['"Bowlby One SC"','Impact','sans-serif'],body:['Archivo','system-ui','sans-serif'],zine:['"Special Elite"','"Courier New"','monospace']},boxShadow:{pop:'4px 4px 0 0 #000',popl:'8px 8px 0 0 #000'}}}}
+</script>
+<style>
+body{background:#F4E7C5;color:#151515;font-family:Archivo,system-ui,sans-serif;overflow-x:hidden;font-size:16px}
+.halftone{background-image:radial-gradient(rgba(21,21,21,.08) 1.2px,transparent 1.4px);background-size:9px 9px}
+.lift{transition:transform .1s,box-shadow .1s}.lift:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 0 #000}.lift:active{transform:translate(4px,4px);box-shadow:0 0 0 0 #000}
+.tab[aria-pressed="true"]{background:#F2B705}
+.item[aria-pressed="true"]{background:#F2B705;box-shadow:2px 2px 0 0 #000;transform:translate(2px,2px)}
+.pop{animation:pop .3s ease-out}@keyframes pop{0%{transform:scale(.8)}60%{transform:scale(1.06)}100%{transform:none}}
+:focus-visible{outline:4px solid #D7322A;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.pop{animation:none}.lift{transition:none}}
+</style>
+</head>
+<body>
+<header class="bg-hunter border-b-4 border-black">
+  <div class="max-w-5xl mx-auto px-4 py-4 flex items-center gap-3">
+    <img src="mascot.png" alt="" class="w-14 h-14 object-cover border-4 border-black shadow-pop bg-paper" width="56" height="56">
+    <div>
+      <h1 class="font-display uppercase text-paper text-2xl sm:text-4xl leading-none" style="text-shadow:3px 3px 0 #151515">Thrift Fit Builder</h1>
+      <p class="font-zine text-paper text-sm sm:text-base">Dress the guy. Spend almost nothing. Brag about it.</p>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-4 py-6 grid md:grid-cols-5 gap-6 items-start">
+  <!-- figure + totals -->
+  <section class="md:col-span-2 md:sticky md:top-4" aria-label="Your outfit">
+    <div class="halftone border-4 border-black shadow-popl bg-sky">
+      <svg id="fig" viewBox="0 0 300 470" class="w-full h-auto block max-h-[60vh] mx-auto" role="img" aria-label="A drawn figure wearing the chosen pieces"></svg>
+    </div>
+    <div class="mt-4 grid grid-cols-2 gap-3 text-center">
+      <div class="bg-mustard border-4 border-black shadow-pop p-3"><p class="font-zine text-xs">OUTFIT COST (THRIFT)</p><p id="tot-thrift" class="font-display text-3xl">$0.00</p></div>
+      <div class="bg-paper2 border-4 border-black shadow-pop p-3"><p class="font-zine text-xs">RETAIL, FOR SUCKERS</p><p id="tot-retail" class="font-display text-3xl line-through decoration-tagred decoration-4">$0</p></div>
+    </div>
+    <div class="mt-3 bg-ink text-paper border-4 border-black shadow-pop p-3 text-center" role="status" aria-live="polite">
+      <p class="font-zine text-xs text-mustard">YOU SAVED</p>
+      <p id="tot-saved" class="font-display text-3xl text-mustard">$0</p>
+      <p id="roast" class="mt-1 text-sm italic">Pick a piece. Any piece. Not the full price one.</p>
+    </div>
+    <div class="mt-3 flex gap-3">
+      <button id="rand" class="lift flex-1 font-display bg-orange border-4 border-black shadow-pop min-h-[48px] px-3"><i class="fa-solid fa-dice" aria-hidden="true"></i> Surprise me</button>
+      <button id="reset" class="lift flex-1 font-display bg-paper border-4 border-black shadow-pop min-h-[48px] px-3"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Strip down</button>
+    </div>
+  </section>
+
+  <!-- picker -->
+  <section class="md:col-span-3" aria-label="Pick pieces">
+    <div id="tabs" class="flex flex-wrap gap-2" role="group" aria-label="Piece type"></div>
+    <div id="items" class="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+    <p class="mt-5 font-zine text-sm opacity-80">Prices are what a thrift tag or a lucky Tuesday gets you. Retail is what the same thing costs new, in a store with a candle smell.</p>
+  </section>
+</main>
+
+<script>
+const SKIN='#E8B48A';
+const plaid=(id,a,b,c)=>`<pattern id="${id}" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="${a}"/><rect width="14" height="5" y="2" fill="${b}" opacity=".7"/><rect width="5" height="14" x="2" fill="${c}" opacity=".7"/></pattern>`;
+/* each piece: draw() returns svg string for the figure, icon is a tiny preview */
+const SLOTS=[
+ {key:'hat',label:'Hat',icon:'fa-hat-cowboy',items:[
+  {id:'cap',name:'Faded ball cap',thrift:2,retail:35,line:'Sun-bleached and loved.',draw:()=>`<path d="M108 82c0-34 84-34 84 0z" fill="#F4E7C5" stroke="#151515" stroke-width="4"/><path d="M104 82h58c20 0 34 6 40 14-30-6-68-6-98-4z" fill="#1F5B3A" stroke="#151515" stroke-width="4"/>`},
+  {id:'bucket',name:'Fishing bucket hat',thrift:3,retail:42,line:'Smells like a lake. Good.',draw:()=>`<path d="M112 80c0-26 76-26 76 0z" fill="#7B8F4F" stroke="#151515" stroke-width="4"/><ellipse cx="150" cy="82" rx="58" ry="10" fill="#6a7d41" stroke="#151515" stroke-width="4"/>`},
+  {id:'beanie',name:'Hand-knit beanie',thrift:1.5,retail:28,line:'Made by someone who loved you. Not you.',draw:()=>`<path d="M110 82c-4-48 84-48 80 0z" fill="#D7322A" stroke="#151515" stroke-width="4"/><rect x="108" y="72" width="84" height="14" rx="5" fill="#a52620" stroke="#151515" stroke-width="4"/><circle cx="150" cy="38" r="9" fill="#F4E7C5" stroke="#151515" stroke-width="4"/>`},
+  {id:'tophat',name:'Tiny top hat',thrift:4,retail:60,line:'Do not ask where it came from.',draw:()=>`<rect x="124" y="30" width="52" height="50" fill="#151515"/><rect x="124" y="64" width="52" height="8" fill="#F2B705"/><ellipse cx="150" cy="82" rx="46" ry="8" fill="#151515"/>`}
+ ]},
+ {key:'shades',label:'Shades',icon:'fa-glasses',items:[
+  {id:'tort',name:'Tortoise rounds',thrift:2.5,retail:140,line:'Prescription not included. Neither is a clue.',draw:()=>`<circle cx="133" cy="97" r="15" fill="#2a1f10" fill-opacity=".85" stroke="#8a5a1f" stroke-width="5"/><circle cx="167" cy="97" r="15" fill="#2a1f10" fill-opacity=".85" stroke="#8a5a1f" stroke-width="5"/><path d="M148 97h4" stroke="#8a5a1f" stroke-width="5"/>`},
+  {id:'avi',name:'Gas station aviators',thrift:3,retail:160,line:'Cop movie energy for $3.',draw:()=>`<path d="M114 90h30l-4 22c-3 8-22 8-26-2z" fill="#3a4a3a" stroke="#c9a227" stroke-width="4"/><path d="M156 90h30l-2 20c-4 10-23 10-26 2z" fill="#3a4a3a" stroke="#c9a227" stroke-width="4"/>`},
+  {id:'wrap',name:'Wraparound visor',thrift:1,retail:75,line:'Sees the future. Sees it in black.',draw:()=>`<path d="M104 92h92c4 0 4 10 0 14-16 6-36 6-46 0-10 6-30 6-46 0-4-4-4-14 0-14z" fill="#151515" stroke="#151515" stroke-width="4"/>`},
+  {id:'star',name:'Star-shaped party shades',thrift:1,retail:20,line:'Peak confidence.',draw:()=>`<path d="M133 80l5 11 12 1-9 8 3 12-11-6-11 6 3-12-9-8 12-1z" fill="#F2B705" stroke="#151515" stroke-width="3"/><path d="M167 80l5 11 12 1-9 8 3 12-11-6-11 6 3-12-9-8 12-1z" fill="#F2B705" stroke="#151515" stroke-width="3"/>`}
+ ]},
+ {key:'jacket',label:'Jacket',icon:'fa-shirt',items:[
+  {id:'flannel',name:'Green flannel',thrift:4,retail:90,line:'Required by Minnesota law.',draw:()=>`<defs>${plaid('pf','#1F5B3A','#0f3a22','#2E7D4F')}</defs><g stroke="#151515" stroke-width="4"><path d="M104 150L70 258" stroke="#151515" stroke-width="34" stroke-linecap="round"/><path d="M196 150L230 258" stroke="#151515" stroke-width="34" stroke-linecap="round"/><path d="M104 150L70 258" stroke="url(#pf)" stroke-width="26" stroke-linecap="round"/><path d="M196 150L230 258" stroke="url(#pf)" stroke-width="26" stroke-linecap="round"/><rect x="100" y="138" width="100" height="140" rx="8" fill="url(#pf)"/></g><path d="M150 140v138" stroke="#151515" stroke-width="3"/>`},
+  {id:'denim',name:'Cropped denim jacket',thrift:6,retail:120,line:'Previously owned by a better decade.',draw:()=>`<g stroke="#151515" stroke-width="4"><path d="M104 150L70 258" stroke-width="34" stroke-linecap="round"/><path d="M196 150L230 258" stroke-width="34" stroke-linecap="round"/><path d="M104 150L70 258" stroke="#4f78a8" stroke-width="26" stroke-linecap="round"/><path d="M196 150L230 258" stroke="#4f78a8" stroke-width="26" stroke-linecap="round"/><rect x="100" y="138" width="100" height="120" rx="8" fill="#4f78a8"/></g><path d="M150 140v118" stroke="#151515" stroke-width="3"/><rect x="112" y="170" width="24" height="18" fill="none" stroke="#2c4a70" stroke-width="3"/><rect x="164" y="170" width="24" height="18" fill="none" stroke="#2c4a70" stroke-width="3"/>`},
+  {id:'puffer',name:'Mustard puffer',thrift:8,retail:220,line:'Warm enough to forgive the color.',draw:()=>`<g stroke="#151515" stroke-width="4"><path d="M104 150L70 258" stroke-width="36" stroke-linecap="round"/><path d="M196 150L230 258" stroke-width="36" stroke-linecap="round"/><path d="M104 150L70 258" stroke="#F2B705" stroke-width="28" stroke-linecap="round"/><path d="M196 150L230 258" stroke="#F2B705" stroke-width="28" stroke-linecap="round"/><rect x="98" y="138" width="104" height="132" rx="14" fill="#F2B705"/></g><path d="M100 172h100M100 204h100M100 236h100" stroke="#151515" stroke-width="3"/><path d="M150 140v130" stroke="#151515" stroke-width="3"/>`},
+  {id:'track',name:'Velour tracksuit top',thrift:5,retail:110,line:'Business casual for a different business.',draw:()=>`<g stroke="#151515" stroke-width="4"><path d="M104 150L70 258" stroke-width="34" stroke-linecap="round"/><path d="M196 150L230 258" stroke-width="34" stroke-linecap="round"/><path d="M104 150L70 258" stroke="#8a2d6b" stroke-width="26" stroke-linecap="round"/><path d="M196 150L230 258" stroke="#8a2d6b" stroke-width="26" stroke-linecap="round"/><rect x="100" y="138" width="100" height="130" rx="10" fill="#8a2d6b"/></g><path d="M150 140v130" stroke="#F4E7C5" stroke-width="3"/><path d="M104 150L72 250M196 150L228 250" stroke="#F4E7C5" stroke-width="3" opacity=".8"/>`}
+ ]},
+ {key:'chain',label:'Chain',icon:'fa-link',items:[
+  {id:'gold',name:'Big gold chain',thrift:2,retail:480,line:'Costume jewelry. Real confidence.',draw:()=>`<path d="M122 132c6 50 50 50 56 0" fill="none" stroke="#c9a227" stroke-width="7" stroke-dasharray="1 8" stroke-linecap="round"/><path d="M122 132c6 50 50 50 56 0" fill="none" stroke="#F2B705" stroke-width="5" stroke-dasharray="10 5"/><circle cx="150" cy="182" r="11" fill="#F2B705" stroke="#151515" stroke-width="3"/><text x="150" y="187" text-anchor="middle" font-size="14" font-weight="800" fill="#151515">$</text>`},
+  {id:'pearl',name:'Pearl strand',thrift:1,retail:150,line:'Grandma approved. Grandma sold it.',draw:()=>`<path d="M122 132c6 44 50 44 56 0" fill="none" stroke="#f3efe6" stroke-width="8" stroke-dasharray="1 7" stroke-linecap="round"/><path d="M122 132c6 44 50 44 56 0" fill="none" stroke="#151515" stroke-width="1" opacity=".3"/>`},
+  {id:'key',name:'Mystery key on a cord',thrift:.5,retail:25,line:'Opens nothing. Opens everything.',draw:()=>`<path d="M122 132c6 34 50 34 56 0" fill="none" stroke="#151515" stroke-width="3"/><circle cx="150" cy="170" r="7" fill="none" stroke="#c9a227" stroke-width="4"/><path d="M150 177v22m0 0h8m-8-8h6" stroke="#c9a227" stroke-width="4" fill="none"/>`},
+  {id:'coupon',name:'Coupon lanyard',thrift:0,retail:15,line:'Free, obviously.',draw:()=>`<path d="M122 132c6 40 50 40 56 0" fill="none" stroke="#D7322A" stroke-width="5"/><rect x="134" y="168" width="32" height="22" fill="#F4E7C5" stroke="#151515" stroke-width="3" transform="rotate(-6 150 179)"/><text x="150" y="183" text-anchor="middle" font-size="9" font-weight="800" fill="#D7322A" transform="rotate(-6 150 179)">SAVE</text>`}
+ ]},
+ {key:'shoes',label:'Shoes',icon:'fa-shoe-prints',items:[
+  {id:'sneak',name:'White court sneakers',thrift:5,retail:110,line:'Scuffs are free character.',draw:()=>`<path d="M104 432c0-14 26-18 44-8v22h-44z" fill="#F4F4F4" stroke="#151515" stroke-width="4"/><path d="M196 432c0-14-26-18-44-8v22h44z" fill="#F4F4F4" stroke="#151515" stroke-width="4"/><path d="M104 446h44M152 446h44" stroke="#D7322A" stroke-width="5"/>`},
+  {id:'boots',name:'Steel-toe work boots',thrift:9,retail:180,line:'Broken in by someone who worked.',draw:()=>`<path d="M108 404h38v42h-52v-16c0-12 8-16 14-26z" fill="#7a4a1c" stroke="#151515" stroke-width="4"/><path d="M192 404h-38v42h52v-16c0-12-8-16-14-26z" fill="#7a4a1c" stroke="#151515" stroke-width="4"/><path d="M94 442h52M154 442h52" stroke="#151515" stroke-width="6"/>`},
+  {id:'loafer',name:'Penny loafers',thrift:4,retail:130,line:'Heads up, one penny is still in there.',draw:()=>`<path d="M104 436c0-12 24-14 44-6v16h-44z" fill="#5b2a14" stroke="#151515" stroke-width="4"/><path d="M196 436c0-12-24-14-44-6v16h44z" fill="#5b2a14" stroke="#151515" stroke-width="4"/>`},
+  {id:'bowl',name:'Bowling shoes',thrift:2,retail:90,line:'Size 9 on the heel, in marker.',draw:()=>`<path d="M104 432c0-14 26-18 44-8v22h-44z" fill="#D7322A" stroke="#151515" stroke-width="4"/><path d="M196 432c0-14-26-18-44-8v22h44z" fill="#F2B705" stroke="#151515" stroke-width="4"/><path d="M104 446h44M152 446h44" stroke="#151515" stroke-width="5"/>`}
+ ]}
+];
+const VB={hat:'90 22 120 72',shades:'100 76 100 44',jacket:'56 132 188 150',chain:'108 124 84 82',shoes:'86 396 128 62'};
+const state={};let activeTab=SLOTS[0].key;
+const $=id=>document.getElementById(id);
+const money=n=>'$'+(Math.round(n*100)/100).toFixed(n%1?2:2);
+
+function base(){return `
+ <ellipse cx="150" cy="454" rx="70" ry="9" fill="#151515" opacity=".18"/>
+ <rect x="112" y="268" width="34" height="156" rx="6" fill="#3a4a6b" stroke="#151515" stroke-width="4"/>
+ <rect x="154" y="268" width="34" height="156" rx="6" fill="#3a4a6b" stroke="#151515" stroke-width="4"/>
+ <path d="M104 150L70 258" stroke="#151515" stroke-width="30" stroke-linecap="round"/><path d="M104 150L70 258" stroke="${SKIN}" stroke-width="22" stroke-linecap="round"/>
+ <path d="M196 150L230 258" stroke="#151515" stroke-width="30" stroke-linecap="round"/><path d="M196 150L230 258" stroke="${SKIN}" stroke-width="22" stroke-linecap="round"/>
+ <rect x="100" y="138" width="100" height="136" rx="10" fill="#F4E7C5" stroke="#151515" stroke-width="4"/>
+ <path d="M122 160h56" stroke="#D7322A" stroke-width="4" opacity=".6"/>
+ <rect x="138" y="118" width="24" height="26" fill="${SKIN}" stroke="#151515" stroke-width="4"/>
+ <circle cx="150" cy="92" r="40" fill="${SKIN}" stroke="#151515" stroke-width="4"/>
+ <circle cx="136" cy="94" r="4" fill="#151515"/><circle cx="164" cy="94" r="4" fill="#151515"/>
+ <path d="M134 112q16 12 32 0" fill="none" stroke="#151515" stroke-width="4" stroke-linecap="round"/>
+ <path d="M112 78c8-22 68-22 76 0" fill="#3b2a1a" stroke="#151515" stroke-width="3" opacity=".9"/>`}
+function hands(){return `<circle cx="68" cy="262" r="13" fill="${SKIN}" stroke="#151515" stroke-width="4"/><circle cx="232" cy="262" r="13" fill="${SKIN}" stroke="#151515" stroke-width="4"/>`}
+function drawFig(){
+  const get=k=>{const s=SLOTS.find(x=>x.key===k),it=s.items.find(i=>i.id===state[k]);return it?it.draw():''};
+  /* bare feet when no shoes */
+  const feet=state.shoes?'':`<ellipse cx="129" cy="436" rx="20" ry="9" fill="${SKIN}" stroke="#151515" stroke-width="4"/><ellipse cx="171" cy="436" rx="20" ry="9" fill="${SKIN}" stroke="#151515" stroke-width="4"/>`;
+  $('fig').innerHTML=base()+feet+get('shoes')+get('jacket')+hands()+get('chain')+get('shades')+get('hat');
+}
+function totals(){
+  let t=0,r=0,n=0;
+  SLOTS.forEach(s=>{const it=s.items.find(i=>i.id===state[s.key]);if(it){t+=it.thrift;r+=it.retail;n++}});
+  $('tot-thrift').textContent=money(t);$('tot-retail').textContent='$'+Math.round(r);$('tot-saved').textContent='$'+Math.round(r-t);
+  let m;
+  if(!n)m='Pick a piece. Any piece. Not the full price one.';
+  else if(n<5)m=`${n} of 5 pieces. Keep going, there is more to underpay for.`;
+  else if(t<=15)m=`Full fit for ${money(t)}. A single latte costs more than this whole personality.`;
+  else if(t<=30)m=`Head to toe for ${money(t)}. Retail would have been $${Math.round(r)}. Mention it casually, often.`;
+  else m=`${money(t)} total. You went a little fancy. TC McThrifty is disappointed and also impressed.`;
+  $('roast').textContent=m;
+}
+function renderTabs(){
+  $('tabs').innerHTML=SLOTS.map(s=>`<button class="tab lift font-display text-sm bg-paper border-4 border-black shadow-pop px-3 min-h-[44px]" data-k="${s.key}" aria-pressed="${s.key===activeTab}"><i class="fa-solid ${s.icon}" aria-hidden="true"></i> ${s.label}${state[s.key]?' <i class="fa-solid fa-check" aria-hidden="true"></i>':''}</button>`).join('');
+  $('tabs').querySelectorAll('.tab').forEach(b=>b.onclick=()=>{activeTab=b.dataset.k;renderTabs();renderItems()});
+}
+function renderItems(){
+  const s=SLOTS.find(x=>x.key===activeTab);
+  $('items').innerHTML=s.items.map(i=>`<button class="item lift text-left bg-paper border-4 border-black shadow-pop p-3 min-h-[44px]" data-id="${i.id}" aria-pressed="${state[s.key]===i.id}">
+    <svg viewBox="${VB[s.key]}" class="w-full h-24 bg-sky/40 border-2 border-black mb-2" aria-hidden="true">${i.draw()}</svg>
+    <p class="font-extrabold leading-tight">${i.name}</p>
+    <p class="text-xs italic mt-1">${i.line}</p>
+    <p class="mt-2 flex items-baseline gap-2"><span class="font-display text-xl text-hunter">${i.thrift===0?'FREE':money(i.thrift)}</span><span class="text-xs line-through text-tagred">$${i.retail}</span></p></button>`).join('')+
+    `<button class="item lift text-left bg-paper2 border-4 border-black shadow-pop p-3 min-h-[44px] grid place-items-center" data-id="" aria-pressed="${!state[s.key]}"><span class="font-display">None</span><span class="text-xs">Go bare. Brave.</span></button>`;
+  $('items').querySelectorAll('.item').forEach(b=>b.onclick=()=>{state[s.key]=b.dataset.id||null;update(true)});
+}
+function update(pop){drawFig();totals();renderTabs();renderItems();if(pop&&!matchMedia('(prefers-reduced-motion:reduce)').matches){$('fig').classList.remove('pop');void $('fig').offsetWidth;$('fig').classList.add('pop')}}
+$('rand').onclick=()=>{SLOTS.forEach(s=>state[s.key]=s.items[Math.floor(Math.random()*s.items.length)].id);update(true)};
+$('reset').onclick=()=>{SLOTS.forEach(s=>state[s.key]=null);update(true)};
+SLOTS.forEach(s=>state[s.key]=null);
+state.jacket='flannel';state.hat='cap';
+update();
+</script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T.C. McThrifty | The $3 Collection</title>
+<meta name="description" content="Minnesota's premier anonymous cheapskate. The Autumn issue: the $3 collection.">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;1,6..96,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{colors:{ivory:'#FAF8F3',ink:'#0E0E0E',gold:'#A8863B',mist:'#E9E5DA'},fontFamily:{serif:['"Bodoni Moda"','Didot','Georgia','serif'],sans:['Jost','system-ui','sans-serif']}}}}
+</script>
+<style>
+html{scroll-behavior:smooth}
+body{background:#FAF8F3;color:#0E0E0E;font-family:Jost,system-ui,sans-serif;font-weight:300;font-size:17px;line-height:1.7;overflow-x:hidden}
+.cap{font-size:11px;letter-spacing:.28em;text-transform:uppercase;font-weight:400}
+.rule{border-top:1px solid #0E0E0E}
+.chip{font-size:11px;letter-spacing:.22em;text-transform:uppercase;border-bottom:1px solid transparent;padding:10px 2px;min-height:44px}
+.chip[aria-pressed="true"]{border-bottom-color:#0E0E0E;font-weight:500}
+.fade{animation:f .5s ease both}@keyframes f{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.fade{animation:none}html{scroll-behavior:auto}}
+:focus-visible{outline:2px solid #A8863B;outline-offset:3px}
+input[type=radio]{accent-color:#0E0E0E;width:18px;height:18px}
+.opt{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #E9E5DA;cursor:pointer;min-height:44px}
+.opt:has(:checked){background:linear-gradient(90deg,#E9E5DA,transparent)}
+.btn{display:inline-block;border:1px solid #0E0E0E;padding:14px 28px;font-size:11px;letter-spacing:.28em;text-transform:uppercase;min-height:44px;transition:background .2s,color .2s}
+.btn:hover{background:#0E0E0E;color:#FAF8F3}
+</style>
+</head>
+<body>
+
+<div class="cap text-center py-2 bg-ink text-ivory px-3">Spent today $0.75 &nbsp;&middot;&nbsp; Lifetime saved $84,911.43 &nbsp;&middot;&nbsp; No full price. Ever.</div>
+
+<header class="max-w-6xl mx-auto px-5 pt-8 pb-4">
+  <div class="flex items-center justify-between cap">
+    <span>Autumn Issue &nbsp;No. 3</span>
+    <span class="hidden sm:inline">Minneapolis &middot; St. Paul</span>
+    <span>Price: $0.00</span>
+  </div>
+  <h1 class="font-serif text-center leading-[.9] mt-6 text-[clamp(52px,15vw,168px)] tracking-tight">T.C. <em class="font-normal">McThrifty</em></h1>
+  <p class="cap text-center mt-4 text-gold">The magazine of pre-loved living</p>
+  <nav class="rule mt-8 flex flex-wrap justify-center gap-x-6 sm:gap-x-10 cap" aria-label="Sections">
+    <a class="py-3 min-h-[44px]" href="#collection">The $3 Collection</a>
+    <a class="py-3 min-h-[44px]" href="#letters">Letters</a>
+    <a class="py-3 min-h-[44px]" href="#fitting">The Fitting</a>
+    <a class="py-3 min-h-[44px]" href="#editors">Editor's Finds</a>
+    <a class="py-3 min-h-[44px]" href="#submit">Submit</a>
+  </nav>
+</header>
+
+<main>
+<!-- cover -->
+<section class="max-w-6xl mx-auto px-5 py-10 grid md:grid-cols-12 gap-8 items-end">
+  <figure class="md:col-span-7 bg-mist">
+    <img src="mascot.png" width="1200" height="896" class="w-full h-auto block" alt="T.C. McThrifty: a breakfast-sandwich-headed thrift king in shades, a ball cap, a green flannel and gold chains, holding a coupon book and a peace sign, with the Minneapolis skyline behind">
+  </figure>
+  <div class="md:col-span-5 pb-2">
+    <p class="cap text-gold">On the cover</p>
+    <h2 class="font-serif italic text-4xl sm:text-5xl leading-[1.05] mt-3">Quietly, nothing was full price.</h2>
+    <p class="mt-5 max-w-md">Minnesota's premier anonymous cheapskate and thrift thrill-seeker on the season's only rule: if it costs more than three dollars, it was a mistake. Names stay out of this. Savings stay in.</p>
+    <a href="#collection" class="btn mt-6">Enter the collection</a>
+  </div>
+</section>
+
+<!-- collection (radar) -->
+<section id="collection" class="max-w-6xl mx-auto px-5 py-16 rule" aria-labelledby="c-h">
+  <p class="cap text-gold">Section I</p>
+  <h2 id="c-h" class="font-serif text-5xl sm:text-7xl leading-none mt-2">The $3 <em>Collection</em></h2>
+  <p class="mt-4 max-w-xl">This week's deals and estate sales, scraped fresh and verified by nobody. Go anyway.</p>
+  <div class="mt-8 flex flex-wrap gap-x-6 items-center" role="group" aria-label="Filter the collection">
+    <button class="chip" data-f="all" aria-pressed="true">All</button>
+    <button class="chip" data-f="thrifts" aria-pressed="false">Thrifts</button>
+    <button class="chip" data-f="food" aria-pressed="false">Food &amp; Freebies</button>
+    <button class="chip" data-f="travels" aria-pressed="false">Travels</button>
+    <button class="chip" data-f="weird" aria-pressed="false">Weird Junk</button>
+    <span id="count" class="cap ml-auto text-gold" aria-live="polite"></span>
+  </div>
+  <ol id="feed" class="mt-8 list-none p-0"></ol>
+  <p id="empty" class="hidden mt-8 font-serif italic text-2xl">Nothing in this pile. Either you are too picky or the good stuff is already in someone's trunk.</p>
+</section>
+
+<!-- letters (texts) -->
+<section id="letters" class="bg-mist py-16" aria-labelledby="l-h">
+  <div class="max-w-6xl mx-auto px-5">
+    <p class="cap text-gold">Section II</p>
+    <h2 id="l-h" class="font-serif text-5xl sm:text-7xl leading-none mt-2">Letters <em>from last night</em></h2>
+    <p class="mt-4">Screenshots, lightly redacted.</p>
+    <div class="mt-10 grid md:grid-cols-2 gap-10">
+      <figure class="bg-ivory p-6 sm:p-8">
+        <figcaption class="cap border-b border-ink pb-3">&#127913; Top Hat Pal</figcaption>
+        <div class="mt-5 space-y-4 font-serif text-lg leading-snug">
+          <p>Coupons in hand? 🎩</p>
+          <p class="text-right italic">Back at it with the game pieces, they hate to see me coming! 🍔🎩</p>
+          <p>How many free fries is that</p>
+          <p class="text-right italic">Enough that the app knows my name</p>
+        </div>
+        <p class="cap text-right mt-5 text-gold">11:38 PM</p>
+      </figure>
+      <figure class="bg-ivory p-6 sm:p-8">
+        <figcaption class="cap border-b border-ink pb-3">&#128220; Group Chat</figcaption>
+        <div class="mt-5 space-y-4 font-serif text-lg leading-snug">
+          <p>Wait, you still get both?</p>
+          <p class="text-right italic">I fought a subscription that tried to cut me off, kept print AND digital forever. SUE ME (literally).</p>
+          <p>huh huh. "literally."</p>
+        </div>
+        <p class="cap text-right mt-5 text-gold">Read 11:42 PM</p>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- fitting (meter) -->
+<section id="fitting" class="max-w-6xl mx-auto px-5 py-16" aria-labelledby="f-h">
+  <p class="cap text-gold">Section III</p>
+  <h2 id="f-h" class="font-serif text-5xl sm:text-7xl leading-none mt-2">The <em>Fitting</em></h2>
+  <p class="mt-4 max-w-xl">The thrift-level meter. Five questions. No wrong answers, only wrong prices.</p>
+  <div class="mt-10 grid lg:grid-cols-5 gap-12">
+    <form id="quiz" class="lg:col-span-3" novalidate></form>
+    <aside id="result" class="lg:col-span-2 lg:sticky lg:top-6 self-start border border-ink p-7 scroll-mt-6" role="status" aria-live="polite">
+      <p class="cap text-gold" id="r-level">Level ? of 5</p>
+      <div class="flex gap-1 mt-3" id="bar" aria-hidden="true"></div>
+      <p class="font-serif text-4xl leading-tight mt-5" id="r-title">Answer all five</p>
+      <p class="mt-3 italic" id="r-text">Your tier appears here. T.C. McThrifty will rate it. Dryly.</p>
+      <p class="mt-4 hidden" id="r-help"></p>
+      <button type="button" id="r-again" class="btn mt-6 hidden">Try another fitting</button>
+    </aside>
+  </div>
+</section>
+
+<!-- editors finds -->
+<section id="editors" class="rule max-w-6xl mx-auto px-5 py-16" aria-labelledby="e-h">
+  <p class="cap text-gold">Section IV</p>
+  <h2 id="e-h" class="font-serif text-5xl sm:text-7xl leading-none mt-2">Editor's <em>Finds</em></h2>
+  <p class="mt-4">Photos coming. For now, imagine the smell.</p>
+  <div class="mt-10 grid sm:grid-cols-2 gap-10 text-center">
+    <div class="py-8 border-y border-ink"><p class="cap text-gold">Estimated lifetime savings</p><p class="font-serif text-6xl sm:text-7xl mt-2">$84,911.43</p></div>
+    <div class="py-8 border-y border-ink"><p class="cap text-gold">Spent today</p><p class="font-serif text-6xl sm:text-7xl mt-2">$0.75</p></div>
+  </div>
+  <div class="mt-12 grid md:grid-cols-3 gap-10">
+    <article><i class="fa-solid fa-eraser text-2xl text-gold" aria-hidden="true"></i><h3 class="font-serif text-2xl mt-3 leading-tight">The Japanese Store Haul</h3><p class="mt-2">Many tiny erasers. Zero regrets.</p></article>
+    <article><i class="fa-solid fa-shirt text-2xl text-gold" aria-hidden="true"></i><h3 class="font-serif text-2xl mt-3 leading-tight">The MN Pridefest Nature Thrifting Special</h3><p class="mt-2">Rainbow flannel, found in the wild.</p></article>
+    <article><i class="fa-solid fa-feather text-2xl text-gold" aria-hidden="true"></i><h3 class="font-serif text-2xl mt-3 leading-tight">The Late Great Cockatiel Memorial Thrift Find</h3><p class="mt-2">A small tribute, found secondhand, kept forever.</p></article>
+  </div>
+</section>
+
+<!-- submit -->
+<section id="submit" class="bg-ink text-ivory py-16" aria-labelledby="s-h">
+  <div class="max-w-2xl mx-auto px-5">
+    <p class="cap text-gold">Section V</p>
+    <h2 id="s-h" class="font-serif text-5xl sm:text-7xl leading-none mt-2">Submit <em>a steal</em></h2>
+    <p class="mt-4">Anonymous is fine. Cheap is required.</p>
+    <form id="tipform" class="mt-8 space-y-6" novalidate>
+      <div><label for="t-what" class="cap block mb-2">What's the steal?</label>
+        <textarea id="t-what" rows="3" required placeholder="Estate sale, coupon glitch, error fare..." class="w-full bg-transparent border border-ivory/60 p-3 text-ivory placeholder:text-ivory/40"></textarea></div>
+      <div><label for="t-where" class="cap block mb-2">Where? (city, link or cross streets)</label>
+        <input id="t-where" type="text" class="w-full bg-transparent border border-ivory/60 p-3 text-ivory">
+        <p id="w-err" role="alert" class="hidden mt-2 text-sm text-gold">Where is it? Cross streets are fine. "By the big tree" is not.</p></div>
+      <button class="btn border-ivory text-ivory hover:bg-ivory hover:text-ink" type="submit">Send it in</button>
+      <p id="thanks" class="hidden font-serif italic text-2xl" role="status">Received. Anonymous, and appreciated. We will pretend we did not see you.</p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="max-w-6xl mx-auto px-5 py-10 cap text-center">
+  T.C. McThrifty &middot; Minnesota's premier anonymous cheapskate &middot; Not responsible for estate sale elbows
+</footer>
+
+<script>
+const DEALS=[
+{tags:['thrifts','weird'],price:'70% off',badge:'Estate Sale',title:'South Mpls estate sale: 70% off retro taxidermy, Sunday only',meta:'Sat and Sun, 9am. Cash only. Bring a van and zero shame.',src:'Scraped from: a flyer stapled to a pole',rating:'5 of 5 pelts',tip:'Go Sunday, not Saturday. Day two is when "firm" prices get negotiable and the owl starts looking like a bargain.'},
+{tags:['food'],price:'$0.00',badge:'Free Fries',title:'Free fries with a burger-chain game-piece trick',meta:'Any drive-thru, any week the game is on. Peel, stack, redeem.',src:'Scraped from: a very long comment thread',rating:'5 of 5 fries',tip:'Check the app before you order. The free item is usually hiding under "rewards," not "menu." Read the fine print once, then never again.'},
+{tags:['thrifts'],price:'$5 a bag',badge:'Thrift Store',title:'Roseville bin store: fill-a-bag Tuesday, $5 a bag',meta:'Doors at 8. Elbows out by 8:01.',src:'Scraped from: the bin store newsletter',rating:'4 of 5 flannels',tip:'Wear gloves and bring your own bag. A bag you packed like a puzzle holds twice what theirs does.'},
+{tags:['travels'],price:'$412',badge:'Flight Find',title:'MSP to Lisbon, $412 round trip, possible error fare',meta:'Fares like this last hours. Fully refundable for 24 hours, so you can book first and panic later.',src:'Scraped from: a fare alert at 3am',rating:'5 of 5 layovers',tip:'Book it, then check the 24-hour cancel rule on that airline before you tell anyone. The tip is the cancel button, not the fare.'},
+{tags:['food','thrifts'],price:'BOGO',badge:'Cheap Eats',title:'Gas station coffee, buy one get one, with the app and a stern look',meta:'St. Paul, Maplewood and a suspicious Cottage Grove.',src:'Scraped from: the app, reluctantly',rating:'3 of 5 refills',tip:'The second cup is for later. Put it in the fridge. Cold coffee is a personality, not a problem.'}
+];
+const LEVELS=[
+{n:1,name:'Coupon Clipper',text:'2 out of 10 cheapskates. He is only being polite.',help:'Stack the paper coupon with the store app deal. Two small wins beat one big one, and you already do the clipping.'},
+{n:2,name:'The Cruise Ship Milkman',text:'4 out of 10. Would share a buffet with you. Would also count the plates.',help:'Free things are only free if you do not buy the upgrade. Take the buffet, skip the drink package, keep the receipt for nothing.'},
+{n:3,name:'The Monopoly Maestro',text:'6 out of 10. Huh huh. You said "peel."',help:'Treat every game piece like a coupon with a deadline. Photograph them, check the expiry, and trade the extras before they turn into stickers.'},
+{n:4,name:'Muppet-Tier Estate Graverobber',text:'8 out of 10, with a footnote. The footnote is that the coffee was still warm.',help:'Arrive on the last day, ask for the bundle price, and be kind. The family remembers who was polite, and politeness gets the extra box.'},
+{n:5,name:'The DIY Doctor',text:'10 out of 10 for savings, and a respectful note that actual professionals exist and are very good at their jobs.',help:'Watch the video twice, buy the part second-hand, and know the line where YouTube ends and a trained person begins. That line is the cheapest thing you will ever save.'}
+];
+const QUESTIONS=[
+{q:'You see a $4 shirt that is almost your size.',a:[['Walk past, it is not a bargain.',1],['Buy it, hem it, call it vintage.',3],['Buy six, resell five, wear one.',5]]},
+{q:'Fast food and you:',a:[['I use the app coupons.',1],['I play the game pieces.',3],['I have a spreadsheet of every promo since 2009.',5]]},
+{q:'A company offers you a refund. You:',a:[['Take the refund.',1],['Ask for the refund AND a coupon.',3],['Join the class action out of sheer principle.',5]]},
+{q:'A weekend plan:',a:[['Brunch, full price, at a place with a line.',1],['Estate sale hop, then free samples.',3],['Estate sale hop, fix the thing myself, sell it back.',5]]},
+{q:'Something at home breaks:',a:[['Call someone and pay them.',1],['Watch a video, then call someone.',3],['Watch a video, find the part at a thrift store, fix it.',5]]}
+];
+const LABEL={thrifts:'Thrifts',food:'Food & Freebies',travels:'Travels',weird:'Weird Junk'};
+const $=id=>document.getElementById(id);
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const feed=$('feed');
+function renderFeed(f){
+  const list=DEALS.filter(d=>f==='all'||d.tags.includes(f));
+  feed.innerHTML=list.map((d,i)=>`<li class="fade rule py-8 grid md:grid-cols-12 gap-4 md:gap-8">
+    <p class="md:col-span-2 font-serif text-5xl sm:text-6xl leading-none italic">${esc(d.price)}</p>
+    <div class="md:col-span-7">
+      <p class="cap text-gold">No. ${i+1} &nbsp;&middot;&nbsp; ${esc(d.badge)} &nbsp;&middot;&nbsp; ${d.tags.map(t=>LABEL[t]).join(', ')}</p>
+      <h3 class="font-serif text-2xl sm:text-3xl leading-tight mt-2">${esc(d.title)}</h3>
+      <p class="mt-2">${esc(d.meta)}</p>
+      <p class="cap mt-3">${esc(d.src)}</p>
+      <details class="mt-3"><summary class="cap cursor-pointer min-h-[44px] inline-flex items-center border-b border-ink">The stylist's note</summary><p class="mt-3 font-serif italic text-xl">${esc(d.tip)}</p></details>
+    </div>
+    <p class="md:col-span-3 md:text-right cap"><i class="fa-solid fa-star text-gold" aria-hidden="true"></i> TC rating<br><span class="font-serif text-xl normal-case tracking-normal italic">${esc(d.rating)}</span></p>
+  </li>`).join('');
+  $('empty').classList.toggle('hidden',list.length>0);
+  $('count').textContent=list.length===1?"1 piece. Lonely, but it's yours.":list.length+' pieces';
+}
+document.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  renderFeed(b.dataset.f);
+}));
+renderFeed('all');
+
+const quiz=$('quiz');
+quiz.innerHTML=QUESTIONS.map((x,i)=>`<fieldset class="mb-8"><legend class="font-serif text-2xl leading-snug mb-2"><span class="text-gold italic">${i+1}.</span> ${esc(x.q)}</legend>
+  ${x.a.map(o=>`<label class="opt"><input type="radio" name="q${i}" value="${o[1]}" class="mt-1"><span>${esc(o[0])}</span></label>`).join('')}</fieldset>`).join('');
+const bar=$('bar');
+function paint(l){bar.innerHTML=LEVELS.map(x=>`<span class="h-1.5 flex-1 ${x.n<=l?'bg-ink':'bg-mist'}"></span>`).join('')}
+paint(0);
+quiz.addEventListener('change',()=>{
+  const p=QUESTIONS.map((_,i)=>quiz.querySelector(`input[name=q${i}]:checked`)).filter(Boolean);
+  if(p.length<QUESTIONS.length)return;
+  const s=p.reduce((a,b)=>a+Number(b.value),0);
+  const lvl=s<=9?1:s<=13?2:s<=17?3:s<=21?4:5,L=LEVELS[lvl-1];
+  $('r-level').textContent='Level '+lvl+' of 5';$('r-title').textContent=L.name;$('r-text').textContent=L.text;
+  const h=$('r-help');h.textContent=L.help;h.classList.remove('hidden');$('r-again').classList.remove('hidden');paint(lvl);
+  if(matchMedia('(max-width:1023px)').matches)$('result').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'start'});
+});
+$('r-again').addEventListener('click',()=>{
+  quiz.reset();paint(0);$('r-level').textContent='Level ? of 5';$('r-title').textContent='Answer all five';
+  $('r-text').textContent='Your tier appears here. T.C. McThrifty will rate it. Dryly.';$('r-help').classList.add('hidden');$('r-again').classList.add('hidden');
+});
+
+$('tipform').addEventListener('submit',e=>{
+  e.preventDefault();
+  const w=$('t-where').value.trim(),ok=w.length>2&&$('t-what').value.trim().length>2;
+  $('w-err').classList.toggle('hidden',w.length>2);
+  $('thanks').classList.toggle('hidden',!ok);
+  if(ok){e.target.reset()}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lifetime Savings Tracker | TC McThrifty</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=Bowlby+One+SC&family=Press+Start+2P&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F4E7C5;--paper2:#EAD9AE;--ink:#151515;--mustard:#F2B705;--hunter:#1F5B3A;--hunter2:#2E7D4F;--orange:#EE7A1E;--red:#D7322A;--sky:#7FC6D9}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);background-image:radial-gradient(rgba(21,21,21,.08) 1.2px,transparent 1.3px);background-size:8px 8px;color:var(--ink);font-family:Archivo,system-ui,sans-serif;font-size:17px;line-height:1.55}
+.bowl{font-family:'Bowlby One SC',Impact,sans-serif;text-transform:uppercase;line-height:1.05}
+.px{font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.6}
+.zine{font-family:'Special Elite',monospace}
+.box{border:4px solid var(--ink);box-shadow:4px 4px 0 0 var(--ink);background:var(--paper)}
+.box-big{border:4px solid var(--ink);box-shadow:8px 8px 0 0 var(--ink)}
+.btn{border:4px solid var(--ink);box-shadow:4px 4px 0 0 var(--ink);background:var(--mustard);font-family:'Bowlby One SC',sans-serif;text-transform:uppercase;padding:.6rem 1rem;cursor:pointer;transition:transform .08s}
+.btn:hover,.btn:focus-visible{transform:translate(2px,2px);box-shadow:2px 2px 0 0 var(--ink)}
+.field{border:3px solid var(--ink);background:#fffaf0;padding:.55rem .7rem;width:100%;font:inherit;border-radius:3px}
+.field:focus{outline:3px solid var(--orange);outline-offset:1px}
+.bar{background:var(--hunter2);border:3px solid var(--ink);min-height:4px;transition:height .5s ease}
+.bar.cur{background:var(--orange)}
+.tag{display:inline-block;border:3px solid var(--ink);background:var(--mustard);padding:.1rem .5rem;transform:rotate(-2deg)}
+.flame{animation:flick 1s ease-in-out infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12) rotate(3deg)}}
+.pop{animation:pop .5s ease}
+@keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+.cut{border-top:4px dashed var(--ink)}
+@media (prefers-reduced-motion:reduce){.flame,.pop{animation:none}.bar{transition:none}}
+@media (max-width:640px){body{font-size:16px}.px{font-size:10px}}
+</style>
+</head>
+<body>
+<div class="bg-[#F2B705] border-b-4 border-black px py-2 px-3 overflow-x-auto whitespace-nowrap px">
+  <i class="fa-solid fa-receipt"></i> TC McTHRIFTY &middot; LIFETIME SAVINGS TRACKER &middot; ANONYMOUS &middot; NO ACCOUNT &middot; NO SHAME
+</div>
+
+<main class="max-w-5xl mx-auto px-4 py-6 sm:py-10">
+  <header class="mb-6">
+    <h1 class="bowl text-4xl sm:text-6xl">Lifetime Savings Tracker</h1>
+    <p class="mt-2 max-w-2xl">Log every find. What you paid, what it costs new. The big number goes up, the streak stays alive, and your wallet gets to feel smug. Sample finds are loaded so you can poke around.</p>
+  </header>
+
+  <!-- score panels -->
+  <section class="grid gap-5 md:grid-cols-3 mb-8" aria-label="Scoreboard">
+    <div class="box-big md:col-span-2 bg-[#1F5B3A] text-[#F4E7C5] p-5 sm:p-7">
+      <div class="px">LIFETIME SAVED</div>
+      <div id="total" class="bowl text-5xl sm:text-8xl mt-2 break-all text-[#F2B705]">$0.00</div>
+      <div id="roast" class="zine mt-3 text-base sm:text-lg"></div>
+    </div>
+    <div class="grid gap-5">
+      <div class="box p-4 bg-[#EE7A1E]">
+        <div class="px">STREAK</div>
+        <div class="flex items-center gap-3 mt-1">
+          <i id="flame" class="fa-solid fa-fire text-4xl flame"></i>
+          <span id="streak" class="bowl text-5xl">0</span>
+          <span id="streakUnit" class="bowl text-xl">days</span>
+        </div>
+        <div id="streakNote" class="text-sm mt-1"></div>
+      </div>
+      <div class="box p-4">
+        <div class="px">THE TALLY</div>
+        <div class="mt-1"><span id="count" class="bowl text-3xl">0</span> finds &middot; <span id="avgPct" class="bowl text-3xl">0%</span> off new</div>
+        <div id="paidNew" class="text-sm mt-1"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="grid gap-8 lg:grid-cols-5">
+    <!-- form -->
+    <section class="lg:col-span-2" aria-labelledby="logH">
+      <form id="form" class="box p-5 bg-[#EAD9AE]" novalidate>
+        <h2 id="logH" class="bowl text-2xl mb-3"><i class="fa-solid fa-tag"></i> Log a find</h2>
+        <label class="block mb-3"><span class="px block mb-1">WHAT DID YOU SCORE?</span>
+          <input id="item" class="field" maxlength="60" placeholder="e.g. Wool blazer, tags still on" autocomplete="off"></label>
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <label class="block"><span class="px block mb-1">YOU PAID</span>
+            <input id="paid" class="field" inputmode="decimal" placeholder="6.50" autocomplete="off"></label>
+          <label class="block"><span class="px block mb-1">COSTS NEW</span>
+            <input id="retail" class="field" inputmode="decimal" placeholder="189" autocomplete="off"></label>
+        </div>
+        <label class="block mb-3"><span class="px block mb-1">WHERE? (OPTIONAL)</span>
+          <input id="where" class="field" maxlength="40" placeholder="e.g. Savers on Lake St" autocomplete="off"></label>
+        <p id="err" class="text-[#D7322A] font-bold min-h-[1.5rem]" role="alert"></p>
+        <button class="btn w-full" type="submit">Add to the pile</button>
+        <p class="text-xs mt-3 zine">Stays in this browser only. Nothing leaves your phone.</p>
+      </form>
+      <div class="flex flex-wrap gap-3 mt-4">
+        <button id="resetSample" class="btn !bg-[#7FC6D9] !text-sm" type="button">Reload sample finds</button>
+        <button id="clearAll" class="btn !bg-[#F4E7C5] !text-sm" type="button">Start empty</button>
+      </div>
+    </section>
+
+    <!-- chart + list -->
+    <section class="lg:col-span-3" aria-labelledby="chartH">
+      <div class="box p-5">
+        <h2 id="chartH" class="bowl text-2xl mb-1"><i class="fa-solid fa-chart-column"></i> Savings by month</h2>
+        <p class="text-sm mb-4">Last 6 months. This month is orange.</p>
+        <div id="chart" class="flex items-end gap-2 sm:gap-4 h-56 border-b-4 border-black px-1" role="img" aria-label="Bar chart of savings by month"></div>
+        <div id="labels" class="flex gap-2 sm:gap-4 px-1 mt-2"></div>
+      </div>
+
+      <div class="cut my-6"></div>
+
+      <h2 class="bowl text-2xl mb-3"><i class="fa-solid fa-list"></i> The haul</h2>
+      <ul id="list" class="grid gap-3"></ul>
+    </section>
+  </div>
+
+  <footer class="cut mt-10 pt-4 zine text-sm">
+    TC McThrifty is not a financial advisor. Savings figures are only as honest as the sticker price you typed in.
+  </footer>
+</main>
+
+<script>
+(function(){
+  var KEY='tcm_savings_v1';
+  var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var $=function(id){return document.getElementById(id)};
+  var fmt=function(n){return '$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})};
+  var fmt0=function(n){return '$'+Math.round(n).toLocaleString('en-US')};
+
+  function dayKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+  function daysAgo(n){var d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()-n);return dayKey(d)}
+  function parseDay(s){var p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2],12,0,0,0)}
+
+  function sample(){
+    var rows=[
+      [0,'Pendleton wool blazer','Savers, Lake St',6.50,189],
+      [1,'Cast iron skillet, pre-seasoned by a stranger','Estate sale, Edina',4,45],
+      [2,'Vintage Twins satin jacket','Goodwill, Uptown',8,95],
+      [3,'Le Creuset dutch oven','Estate sale, Linden Hills',12,280],
+      [6,'Box of National Geographic 1974 to 1991','Garage sale',3,60],
+      [9,'Leather boots, barely scuffed','Arc Thrift',11,160],
+      [14,'Rolling Stone lifetime print sub (class action edition)','Courtroom, spiritually',0,120],
+      [22,'Stand mixer, one dent','Estate sale, St. Paul',18,350],
+      [33,'Tent, 4 person, one missing stake','Goodwill',9,130],
+      [41,'Vinyl crate, 40 records','Estate sale, Northeast',15,400],
+      [55,'Fleece, the good kind','Savers',5,99],
+      [68,'Dining chairs, set of four','Facebook Marketplace',25,480],
+      [80,'Winter parka, Minnesota certified','Plato\'s Closet',22,260],
+      [97,'Fondue set (unused, unfortunately)','Estate sale',6,70],
+      [120,'Bookshelf, solid oak','Curbside',0,300],
+      [140,'Wool socks, six pairs','Thrift',4,72]
+    ];
+    return rows.map(function(r,i){return {id:'s'+i,day:daysAgo(r[0]),item:r[1],where:r[2],paid:r[3],retail:r[4]}});
+  }
+
+  function load(){
+    try{var raw=localStorage.getItem(KEY);if(raw){var a=JSON.parse(raw);if(Array.isArray(a))return a}}catch(e){}
+    return sample();
+  }
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){}}
+  var items=load();
+
+  function saved(it){return Math.max(0,it.retail-it.paid)}
+
+  function streak(){
+    var days={};items.forEach(function(it){days[it.day]=1});
+    var d=new Date();d.setHours(12,0,0,0);
+    var n=0,startedYesterday=false;
+    if(!days[dayKey(d)]){d.setDate(d.getDate()-1);startedYesterday=true}
+    while(days[dayKey(d)]){n++;d.setDate(d.getDate()-1)}
+    return {n:n,alive:n>0&&startedYesterday,today:n>0&&!startedYesterday};
+  }
+
+  function roastFor(total,count){
+    if(count===0)return 'Nothing logged. The pile is empty and so is my soul. Go find a skillet.';
+    if(total<100)return 'Cute start. Somewhere a retail clerk just felt a chill.';
+    if(total<500)return 'That is a nice used car tire fund. Keep clipping.';
+    if(total<1500)return 'You could have paid full price for one couch. You paid for none of them.';
+    if(total<5000)return 'Butthead with a law degree would be proud. He would also ask where the nachos are.';
+    return 'Retail is legally afraid of you. Please keep this one anonymous.';
+  }
+
+  function render(){
+    var total=0,paidSum=0,retailSum=0;
+    items.forEach(function(it){total+=saved(it);paidSum+=it.paid;retailSum+=it.retail});
+    var el=$('total');el.textContent=fmt(total);el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');
+    $('roast').textContent=roastFor(total,items.length);
+    $('count').textContent=items.length;
+    $('avgPct').textContent=(retailSum>0?Math.round((1-paidSum/retailSum)*100):0)+'%';
+    $('paidNew').textContent=items.length?('Paid '+fmt(paidSum)+' for stuff that costs '+fmt(retailSum)+' new.'):'';
+
+    var s=streak();
+    $('streak').textContent=s.n;
+    $('streakUnit').textContent=s.n===1?'day':'days';
+    $('flame').style.opacity=s.n>0?'1':'.35';
+    $('streakNote').textContent=s.n===0?'Log a find today to light it.':(s.today?'Alive. Keep going.':'Log something today or it dies.');
+
+    // chart: last 6 months
+    var now=new Date(),buckets=[];
+    for(var i=5;i>=0;i--){var d=new Date(now.getFullYear(),now.getMonth()-i,1);buckets.push({y:d.getFullYear(),m:d.getMonth(),v:0,cur:i===0})}
+    items.forEach(function(it){var d=parseDay(it.day);buckets.forEach(function(b){if(b.y===d.getFullYear()&&b.m===d.getMonth())b.v+=saved(it)})});
+    var max=Math.max.apply(null,buckets.map(function(b){return b.v}).concat([1]));
+    var chart=$('chart'),labels=$('labels');chart.innerHTML='';labels.innerHTML='';
+    buckets.forEach(function(b){
+      var col=document.createElement('div');col.className='flex-1 flex flex-col justify-end items-center h-full min-w-0';
+      var v=document.createElement('div');v.className='px mb-1 text-[9px] sm:text-[10px]';v.textContent=b.v?fmt0(b.v):'';
+      var bar=document.createElement('div');bar.className='bar w-full'+(b.cur?' cur':'');bar.style.height=Math.max(b.v?4:0,(b.v/max)*85)+'%';
+      col.appendChild(v);col.appendChild(bar);chart.appendChild(col);
+      var l=document.createElement('div');l.className='flex-1 text-center px text-[9px] sm:text-[10px]';l.textContent=MONTHS[b.m].toUpperCase();labels.appendChild(l);
+    });
+
+    // list, newest first
+    var ul=$('list');ul.innerHTML='';
+    if(!items.length){var li=document.createElement('li');li.className='box p-4 zine';li.textContent='Nothing here yet. Add your first find on the left.';ul.appendChild(li)}
+    items.slice().sort(function(a,b){return a.day<b.day?1:a.day>b.day?-1:0}).forEach(function(it){
+      var li=document.createElement('li');li.className='box p-3 sm:p-4 flex items-start gap-3';
+      var body=document.createElement('div');body.className='flex-1 min-w-0';
+      var t=document.createElement('div');t.className='font-extrabold break-words';t.textContent=it.item;
+      var m=document.createElement('div');m.className='text-sm';
+      var d=parseDay(it.day);
+      m.textContent=MONTHS[d.getMonth()]+' '+d.getDate()+(it.where?' · '+it.where:'')+' · paid '+fmt(it.paid)+', new '+fmt(it.retail);
+      body.appendChild(t);body.appendChild(m);
+      var side=document.createElement('div');side.className='text-right shrink-0';
+      var tag=document.createElement('span');tag.className='tag bowl text-lg';tag.textContent='-'+fmt(saved(it));
+      var del=document.createElement('button');del.type='button';del.className='block ml-auto mt-2 text-xs underline';del.textContent='remove';
+      del.setAttribute('aria-label','Remove '+it.item);
+      del.addEventListener('click',function(){items=items.filter(function(x){return x.id!==it.id});save();render()});
+      side.appendChild(tag);side.appendChild(del);
+      li.appendChild(body);li.appendChild(side);ul.appendChild(li);
+    });
+  }
+
+  function num(v){var n=parseFloat(String(v).replace(/[$,\s]/g,''));return isFinite(n)?n:NaN}
+
+  $('form').addEventListener('submit',function(e){
+    e.preventDefault();
+    var item=$('item').value.trim(),paid=num($('paid').value),retail=num($('retail').value),where=$('where').value.trim(),err=$('err');
+    if(!item){err.textContent='Name the loot. "Stuff" is not a find.';return}
+    if(isNaN(paid)||paid<0){err.textContent='What you paid needs to be a number. Zero is allowed. Zero is the dream.';return}
+    if(isNaN(retail)||retail<=0){err.textContent='Put the new price in, even a guess. Look it up if you must.';return}
+    if(retail<=paid){err.textContent='That is not a steal, that is just shopping. New price has to beat what you paid.';return}
+    err.textContent='';
+    items.push({id:'u'+Date.now(),day:dayKey(new Date()),item:item,where:where,paid:paid,retail:retail});
+    save();render();
+    $('form').reset();$('item').focus();
+  });
+
+  $('resetSample').addEventListener('click',function(){items=sample();save();render()});
+  $('clearAll').addEventListener('click',function(){items=[];save();render()});
+  render();
+})();
+</script>
+</body>
+</html>

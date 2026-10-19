@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Twin Cities Steal Map</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Courier+Prime:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{colors:{pine:'#24402E',moss:'#4E6B3A',khaki:'#E9DFC4',paper:'#F5EEDB',bark:'#5B3A22',blaze:'#E2711D',river:'#6FA3B5',brick:'#B23A1E'},fontFamily:{sign:['"Alfa Slab One"','serif'],type:['"Courier Prime"','monospace'],hand:['"Permanent Marker"','cursive']}}}}
+</script>
+<style>
+:root{color-scheme:light}
+body{background:#E9DFC4;background-image:radial-gradient(rgba(91,58,34,.08) 1px,transparent 1px);background-size:14px 14px}
+.card{background:#F5EEDB;border:2px solid #5B3A22;box-shadow:5px 5px 0 #5B3A22}
+.chip[aria-pressed="true"]{background:#24402E;color:#F5EEDB}
+.pin{cursor:pointer;transition:transform .15s}
+.pin:hover,.pin:focus{transform:translateY(-4px)}
+.pin.on circle.head{stroke:#F5EEDB;stroke-width:4}
+.pin.off{opacity:.15;pointer-events:none}
+@keyframes drop{0%{transform:translateY(-30px);opacity:0}100%{transform:none;opacity:1}}
+.pin g.body{animation:drop .4s ease-out backwards}
+.pulse{animation:pulse 1.6s infinite}
+@keyframes pulse{0%{r:14;opacity:.6}100%{r:30;opacity:0}}
+</style>
+</head>
+<body class="font-type text-bark min-h-screen">
+<header class="bg-pine text-paper border-b-4 border-bark">
+  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-3">
+    <img src="mascot.png" alt="T.C. McThrifty mascot" class="w-10 h-10 rounded-full bg-khaki object-cover border-2 border-blaze" onerror="this.style.display='none'">
+    <div class="leading-tight">
+      <div class="font-sign text-lg sm:text-xl">Twin Cities Steal Map</div>
+      <div class="text-[11px] uppercase tracking-widest text-khaki/80">T.C. McThrifty · tap a pin, grab the deal</div>
+    </div>
+    <div class="ml-auto text-right text-xs"><div class="uppercase opacity-80">Pins showing</div><div id="count" class="font-sign text-xl text-blaze">0</div></div>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-4 py-5">
+  <div class="flex flex-wrap gap-2" id="chips">
+    <button class="chip border-2 border-pine px-3 py-1 rounded-full text-sm bg-paper" data-f="all" aria-pressed="true"><i class="fa-solid fa-map mr-1"></i>Everything</button>
+    <button class="chip border-2 border-pine px-3 py-1 rounded-full text-sm bg-paper" data-f="thrifts" aria-pressed="false"><i class="fa-solid fa-shirt mr-1"></i>Thrifts</button>
+    <button class="chip border-2 border-pine px-3 py-1 rounded-full text-sm bg-paper" data-f="food" aria-pressed="false"><i class="fa-solid fa-burger mr-1"></i>Food &amp; Freebies</button>
+    <button class="chip border-2 border-pine px-3 py-1 rounded-full text-sm bg-paper" data-f="travels" aria-pressed="false"><i class="fa-solid fa-plane mr-1"></i>Travels</button>
+    <button class="chip border-2 border-pine px-3 py-1 rounded-full text-sm bg-paper" data-f="weird" aria-pressed="false"><i class="fa-solid fa-feather mr-1"></i>Weird Junk</button>
+    <button id="random" class="ml-auto border-2 border-pine px-3 py-1 rounded-full text-sm bg-blaze text-white"><i class="fa-solid fa-dice mr-1"></i>Surprise me</button>
+  </div>
+
+  <div class="grid lg:grid-cols-[1.6fr_1fr] gap-5 mt-4">
+    <div class="card p-2 sm:p-3">
+      <svg id="map" viewBox="0 0 600 480" class="w-full h-auto block rounded bg-[#DCE7C8]" role="img" aria-label="Stylized map of the Twin Cities metro with deal pins">
+        <defs>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#5B3A22" stroke-opacity=".08"/></pattern>
+        </defs>
+        <rect width="600" height="480" fill="url(#grid)"/>
+        <!-- lakes -->
+        <g fill="#6FA3B5" opacity=".7">
+          <ellipse cx="200" cy="250" rx="12" ry="18"/><ellipse cx="185" cy="275" rx="9" ry="12"/><ellipse cx="215" cy="285" rx="8" ry="10"/>
+          <ellipse cx="350" cy="110" rx="16" ry="9"/><ellipse cx="455" cy="125" rx="22" ry="12"/><ellipse cx="60" cy="230" rx="30" ry="14"/>
+        </g>
+        <!-- city blobs -->
+        <path d="M170 160 Q240 130 285 175 Q300 240 270 290 Q220 310 180 280 Q150 230 170 160Z" fill="#F5EEDB" stroke="#5B3A22" stroke-width="2" stroke-dasharray="6 5"/>
+        <path d="M320 200 Q380 185 420 220 Q425 280 380 300 Q330 300 315 260Z" fill="#F5EEDB" stroke="#5B3A22" stroke-width="2" stroke-dasharray="6 5"/>
+        <!-- rivers -->
+        <path d="M140 0 C170 60 210 110 235 160 S255 250 300 290 S360 300 375 275 S420 300 450 340 S520 420 600 470" fill="none" stroke="#6FA3B5" stroke-width="12" stroke-linecap="round"/>
+        <path d="M0 400 C90 380 180 360 240 340 S290 310 300 292" fill="none" stroke="#6FA3B5" stroke-width="9" stroke-linecap="round"/>
+        <!-- highways -->
+        <g stroke="#B23A1E" stroke-opacity=".35" stroke-width="3" fill="none">
+          <path d="M0 210 H600"/><path d="M230 0 V480"/><path d="M370 0 V480"/>
+          <path d="M120 80 Q300 20 480 80 Q560 240 480 400 Q300 470 120 400 Q40 240 120 80Z"/>
+        </g>
+        <!-- labels -->
+        <g font-family="Alfa Slab One" fill="#24402E">
+          <text x="200" y="200" font-size="15">MINNEAPOLIS</text>
+          <text x="330" y="245" font-size="15">ST. PAUL</text>
+        </g>
+        <g font-family="Courier Prime" font-size="11" fill="#5B3A22">
+          <text x="250" y="60">Blaine</text><text x="300" y="140">Roseville</text><text x="430" y="190">Maplewood</text>
+          <text x="460" y="395">Cottage Grove</text><text x="200" y="375">Bloomington</text><text x="70" y="350">Eden Prairie</text>
+          <text x="255" y="330">MSP airport</text><text x="255" y="160">Northeast</text><text x="110" y="200">Golden Valley</text>
+          <text x="520" y="460" font-size="10">Mississippi River</text>
+        </g>
+        <!-- compass -->
+        <g transform="translate(550 50)"><circle r="22" fill="#F5EEDB" stroke="#5B3A22" stroke-width="2"/><path d="M0 -18 L6 0 L0 18 L-6 0Z" fill="#E2711D" stroke="#24402E"/><text y="-26" text-anchor="middle" font-family="Alfa Slab One" font-size="11" fill="#24402E">N</text></g>
+        <g id="pins"></g>
+      </svg>
+      <p class="text-[11px] mt-2 px-1">Not to scale. Not to price. Pins are approximate, so call before you drive.</p>
+    </div>
+
+    <aside>
+      <div id="deal" class="card p-5 lg:sticky lg:top-4">
+        <div class="flex items-center gap-3">
+          <img src="mascot.png" alt="" class="w-16 h-16 object-contain" onerror="this.style.display='none'">
+          <div><div class="font-sign text-xl text-pine">Pick a pin.</div><p class="text-sm">Every pin is a steal somebody tipped in. Tap one and I will tell you how to work it.</p></div>
+        </div>
+        <ul class="mt-4 text-sm space-y-1">
+          <li><i class="fa-solid fa-location-dot text-blaze mr-2"></i>Tap a pin to open its deal card</li>
+          <li><i class="fa-solid fa-filter text-moss mr-2"></i>Filter by what you are hunting</li>
+          <li><i class="fa-solid fa-dice text-bark mr-2"></i>Surprise me picks one for you</li>
+        </ul>
+      </div>
+      <div class="card p-4 mt-5">
+        <div class="text-xs uppercase tracking-widest">The list</div>
+        <ol id="list" class="mt-2 space-y-1 text-sm"></ol>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer class="text-center text-xs py-6">T.C. McThrifty · Anonymous. Not financial advice. Not paying full price.</footer>
+
+<script>
+const CAT={thrifts:{c:'#4E6B3A',i:'fa-shirt',n:'Thrifts'},food:{c:'#E2711D',i:'fa-burger',n:'Food & Freebies'},travels:{c:'#2F6E8C',i:'fa-plane',n:'Travels'},weird:{c:'#7B3F8C',i:'fa-feather',n:'Weird Junk'}};
+const DEALS=[
+{x:250,y:280,cat:'weird',tags:['thrifts','weird'],price:'70% OFF',where:'South Minneapolis',title:'Estate sale: 70% off retro taxidermy, Sunday only',meta:'Sat and Sun, 9am. Cash only. Bring a van and zero shame.',tip:'Go Sunday, not Saturday. Day two is when "firm" prices get negotiable and the owl starts looking like a bargain.',rating:'5 of 5 pelts'},
+{x:320,y:150,cat:'thrifts',tags:['thrifts'],price:'$5 BAG',where:'Roseville',title:'Bin store: fill-a-bag Tuesday, $5 a bag',meta:'Doors at 8. Elbows out by 8:01.',tip:'Wear gloves and bring your own bag. A bag you packed like a puzzle holds twice what theirs does.',rating:'4 of 5 flannels'},
+{x:290,y:315,cat:'travels',tags:['travels'],price:'$412 RT',where:'MSP airport',title:'MSP to Lisbon, $412 round trip, possible error fare',meta:'Fares like this last hours. Fully refundable for 24 hours, so you can book first and panic later.',tip:'Book it, then check the 24-hour cancel rule on that airline before you tell anyone. The tip is the cancel button, not the fare.',rating:'5 of 5 layovers'},
+{x:360,y:270,cat:'food',tags:['food'],price:'BOGO',where:'St. Paul',title:'Gas station coffee, buy one get one, with the app and a stern look',meta:'Also in Maplewood and a suspicious Cottage Grove.',tip:'The second cup is for later. Put it in the fridge. Cold coffee is a personality, not a problem.',rating:'3 of 5 refills'},
+{x:440,y:200,cat:'food',tags:['food'],price:'BOGO',where:'Maplewood',title:'Same coffee deal, shorter line',meta:'Same app, same stern look, fewer witnesses.',tip:'Go mid-morning. The commuters are gone and the pot is still fresh-ish.',rating:'3 of 5 refills'},
+{x:480,y:380,cat:'food',tags:['food'],price:'BOGO',where:'Cottage Grove',title:'The suspicious coffee',meta:'Technically the same deal. Spiritually a dare.',tip:'Check the date on the creamer. Savings do not cover regret.',rating:'2 of 5 refills'},
+{x:230,y:355,cat:'food',tags:['food'],price:'$0.00',where:'Bloomington (and any drive-thru)',title:'Free fries with the burger-chain game-piece trick',meta:'Any week the game is on. Peel, stack, redeem.',tip:'Check the app before you order. The free item is usually hiding under "rewards," not "menu."',rating:'5 of 5 fries'},
+{x:265,y:175,cat:'thrifts',tags:['thrifts'],price:'$1 RACK',where:'Northeast Minneapolis',title:'Church basement rummage sale: the $1 rack on the last hour',meta:'Saturday, the final hour. Everything left goes cheap.',tip:'The last hour is the real sale. Ask about the bag price before you start filling one.',rating:'4 of 5 sweaters'},
+{x:265,y:70,cat:'thrifts',tags:['thrifts'],price:'$2 BOX',where:'Blaine',title:'Library book sale: fill a box for $2 on the final day',meta:'Bring your own box. Theirs fall apart by the door.',tip:'Hardcovers stack better than paperbacks. Pack the box like a moving truck.',rating:'5 of 5 spines'},
+{x:95,y:330,cat:'weird',tags:['weird','thrifts'],price:'$10',where:'Eden Prairie',title:'Garage sale: a single ski and a box labeled "MISC CABLES"',meta:'Sunday until it rains.',tip:'Offer $10 for both and walk slowly. The box is the prize. The ski is a conversation.',rating:'4 of 5 cables'},
+{x:135,y:215,cat:'food',tags:['food'],price:'FREE',where:'Golden Valley',title:'Grocery store sample loop, Saturday at noon',meta:'Cheese, sausage, a juice nobody asked for.',tip:'One lap is a snack. Two laps is lunch. Three laps and they learn your name.',rating:'4 of 5 toothpicks'}
+];
+const INTRO=document.getElementById('deal').innerHTML;const NS='http://www.w3.org/2000/svg';const pins=document.getElementById('pins');let filt='all',active=null;
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+DEALS.forEach((d,i)=>{
+  const g=document.createElementNS(NS,'g');g.setAttribute('class','pin');g.setAttribute('tabindex','0');g.setAttribute('role','button');g.setAttribute('aria-label',d.title);g.dataset.i=i;
+  g.innerHTML=`<circle class="pulse" cx="${d.x}" cy="${d.y-22}" r="14" fill="${CAT[d.cat].c}" style="display:none"/><g class="body" style="animation-delay:${i*60}ms"><path d="M${d.x} ${d.y} C${d.x-6} ${d.y-10},${d.x-14} ${d.y-16},${d.x-14} ${d.y-24} A14 14 0 1 1 ${d.x+14} ${d.y-24} C${d.x+14} ${d.y-16},${d.x+6} ${d.y-10},${d.x} ${d.y}Z" fill="${CAT[d.cat].c}" stroke="#24402E" stroke-width="2"/><circle class="head" cx="${d.x}" cy="${d.y-24}" r="6" fill="#F5EEDB"/><text x="${d.x}" y="${d.y-20}" text-anchor="middle" font-family="Alfa Slab One" font-size="9" fill="#24402E">${i+1}</text></g>`;
+  g.onclick=()=>open(i);g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open(i)}};
+  pins.appendChild(g);
+});
+function apply(){
+  let n=0;const list=document.getElementById('list');list.innerHTML='';
+  DEALS.forEach((d,i)=>{const on=filt==='all'||d.tags.includes(filt);pins.children[i].classList.toggle('off',!on);if(on){n++;const li=document.createElement('li');li.innerHTML=`<button class="w-full text-left hover:text-blaze flex gap-2"><span class="font-sign w-6 shrink-0" style="color:${CAT[d.cat].c}">${i+1}</span><span class="flex-1">${esc(d.where)}: ${esc(d.title)}</span><span class="font-bold whitespace-nowrap">${esc(d.price)}</span></button>`;li.firstChild.onclick=()=>open(i);list.appendChild(li)}});
+  document.getElementById('count').textContent=n;
+  if(active!==null&&!(filt==='all'||DEALS[active].tags.includes(filt)))close();
+}
+function close(){if(active!==null){pins.children[active].classList.remove('on');pins.children[active].querySelector('.pulse').style.display='none'}active=null}
+function open(i){
+  close();active=i;const d=DEALS[i],C=CAT[d.cat];const p=pins.children[i];p.classList.add('on');p.querySelector('.pulse').style.display='';  document.getElementById('deal').innerHTML=`
+   <div class="flex items-center gap-2 text-xs uppercase tracking-widest"><span class="w-7 h-7 rounded-full grid place-items-center text-white" style="background:${C.c}"><i class="fa-solid ${C.i}"></i></span>Pin ${i+1} · ${esc(C.n)} <button id="x" class="ml-auto text-lg" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
+   <h2 class="font-sign text-2xl text-pine mt-2 leading-tight">${esc(d.title)}</h2>
+   <div class="flex items-center gap-3 mt-2"><span class="font-sign text-3xl text-blaze">${esc(d.price)}</span><span class="text-sm"><i class="fa-solid fa-location-dot mr-1"></i>${esc(d.where)}</span></div>
+   <p class="text-sm mt-2">${esc(d.meta)}</p>
+   <div class="mt-3 bg-khaki p-3 border-l-4 border-blaze"><div class="text-[11px] uppercase tracking-widest">How T.C. works it</div><p class="font-hand mt-1">${esc(d.tip)}</p></div>
+   <div class="mt-3 flex justify-between text-xs"><span>McThrifty rating: <b>${esc(d.rating)}</b></span><span>Verified by nobody. Go anyway.</span></div>
+   <div class="mt-4 flex gap-2"><button id="prev" class="flex-1 border-2 border-pine py-2 rounded"><i class="fa-solid fa-arrow-left mr-1"></i>Prev</button><button id="next" class="flex-1 border-2 border-pine py-2 rounded bg-pine text-paper">Next<i class="fa-solid fa-arrow-right ml-1"></i></button></div>`;
+  document.getElementById('x').onclick=()=>{close();document.getElementById('deal').innerHTML=INTRO};
+  const vis=DEALS.map((d,j)=>j).filter(j=>filt==='all'||DEALS[j].tags.includes(filt));const k=vis.indexOf(i);
+  document.getElementById('prev').onclick=()=>open(vis[(k-1+vis.length)%vis.length]);
+  document.getElementById('next').onclick=()=>open(vis[(k+1)%vis.length]);
+  if(window.innerWidth<1024)document.getElementById('deal').scrollIntoView({behavior:'smooth',block:'start'});
+}
+document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');filt=b.dataset.f;apply()});
+document.getElementById('random').onclick=()=>{const vis=DEALS.map((d,j)=>j).filter(j=>filt==='all'||DEALS[j].tags.includes(filt));if(vis.length)open(vis[Math.floor(Math.random()*vis.length)])};
+apply();
+</script>
+</body>
+</html>

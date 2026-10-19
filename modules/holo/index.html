@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HOLO PACK - T.C. McThrifty</title>
+<meta name="description" content="Tear open a booster pack of legendary thrift finds. Collect all 40.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Figtree:wght@500;700;800&family=Caveat:wght@600;700&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{hunter:'#1F5A3A',mustard:'#F2B705',tagred:'#D7322A',paper:'#F4E7C5',ink:'#151515',night:'#0c1410'},fontFamily:{display:['"Bowlby One"','Impact','sans-serif'],sans:['Figtree','system-ui','sans-serif'],hand:['Caveat','cursive'],mono:['"Roboto Mono"','monospace']}}}}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" crossorigin="anonymous" defer></script>
+<style>
+html,body{background:#0c1410;color:#F4E7C5;font-family:Figtree,system-ui,sans-serif;overflow-x:hidden}
+body{background:radial-gradient(1200px 700px at 50% -10%,#1F5A3A 0,#0c1410 60%)}
+.btn{font-family:'Bowlby One',sans-serif;border:4px solid #151515;box-shadow:4px 4px 0 #151515;min-height:48px;padding:8px 18px;font-size:15px;background:#F2B705;color:#151515}
+.btn.alt{background:#F4E7C5}.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 #151515}
+.btn:focus-visible,.slot:focus-visible,.pack:focus-visible,.tab:focus-visible{outline:4px solid #fff;outline-offset:3px}
+.tab{font-family:'Bowlby One',sans-serif;font-size:13px;min-height:44px;padding:6px 14px;border:3px solid #F4E7C5;color:#F4E7C5;background:transparent}
+.tab[aria-selected=true]{background:#F4E7C5;color:#151515}
+
+/* ---------- booster pack ---------- */
+.pack{position:relative;width:min(78vw,300px);aspect-ratio:3/4.4;margin:0 auto;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none;filter:drop-shadow(0 20px 30px rgba(0,0,0,.6))}
+.pack-body{position:absolute;inset:0;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#d7322a 0,#f2b705 35%,#1f5a3a 70%,#0f3a24 100%);border:4px solid #151515}
+.pack-body::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.0) 0 14px,rgba(255,255,255,.16) 14px 22px);animation:sheen 3.5s linear infinite}
+@keyframes sheen{to{background-position:200px 0}}
+.pack-art{position:absolute;inset:14% 8% 18%;display:grid;place-items:center;text-align:center}
+.pack-art img{width:70%;border:4px solid #151515;background:#F4E7C5;transform:rotate(-3deg)}
+.pack h2{font-family:'Bowlby One',sans-serif;color:#F4E7C5;text-shadow:3px 3px 0 #151515;line-height:.95}
+.crimp{position:absolute;left:0;right:0;height:26px;background:repeating-linear-gradient(90deg,#c9c9c9 0 6px,#8f8f8f 6px 12px);border-block:3px solid #151515;z-index:3}
+.crimp.top{top:0}.crimp.bot{bottom:0}
+.tear{position:absolute;left:0;right:0;top:0;height:26%;overflow:hidden;z-index:4;border-radius:10px 10px 0 0;transform-origin:0 100%;will-change:transform}
+.tear .strip{position:absolute;inset:0;border:4px solid #151515;border-bottom:0;background:linear-gradient(135deg,#d7322a,#f2b705)}
+.tear-hint{position:absolute;left:8px;right:8px;top:calc(26% - 2px);border-top:3px dashed #151515;z-index:5;pointer-events:none}
+.tear-hint span{position:absolute;right:0;top:-24px;font:700 11px 'Roboto Mono',monospace;color:#151515;background:#F4E7C5;padding:1px 6px;border:2px solid #151515}
+.pack.gone{animation:vanish .5s ease-in forwards}
+@keyframes vanish{to{transform:translateY(40px) scale(.9);opacity:0}}
+.flyoff{animation:fly .6s ease-in forwards}
+@keyframes fly{to{transform:translate(160%,-80px) rotate(35deg);opacity:0}}
+
+/* ---------- card ---------- */
+.stage{perspective:1000px}
+.card{--rx:0deg;--ry:0deg;--mx:50%;--my:50%;position:relative;width:min(72vw,280px);aspect-ratio:5/7;margin:0 auto;transform:rotateX(var(--rx)) rotateY(var(--ry));transform-style:preserve-3d;transition:transform .12s ease-out;touch-action:pan-y;cursor:pointer}
+.card.idle{transition:transform .5s ease-out}
+.flipper{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,1.3,.5,1)}
+.card.up .flipper{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;overflow:hidden;border:6px solid var(--bd,#151515)}
+.face.back{background:repeating-linear-gradient(45deg,#1F5A3A 0 10px,#17472d 10px 20px);display:grid;place-items:center}
+.face.back .logo{font-family:'Bowlby One',sans-serif;color:#F2B705;font-size:46px;text-shadow:3px 3px 0 #151515;text-align:center;line-height:.9;border:5px solid #F2B705;padding:14px 18px;border-radius:12px;background:#0f3a24}
+.face.front{transform:rotateY(180deg);background:var(--bg,#F4E7C5);color:#151515;display:flex;flex-direction:column;padding:8px}
+.c-head{display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
+.c-name{font-family:'Bowlby One',sans-serif;font-size:clamp(12px,3.6vw,15px);line-height:1.05}
+.badge{flex:none;font:700 9.5px 'Roboto Mono',monospace;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;border:2px solid #151515;background:var(--ac,#bbb);color:#151515}
+.art{position:relative;margin:6px 0;flex:1;min-height:0;display:grid;place-items:center;border:4px solid #151515;background:var(--art,#cfe3d3);overflow:hidden}
+.art .emoji{font-size:clamp(54px,18vw,92px);line-height:1;filter:drop-shadow(3px 4px 0 rgba(0,0,0,.25))}
+.art img{width:100%;height:100%;object-fit:cover}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:4px;font:700 11px 'Roboto Mono',monospace}
+.stats div{background:rgba(255,255,255,.55);border:2px solid #151515;padding:2px 5px}
+.stats b{display:block;font-size:13px}
+.weird{grid-column:1/-1;display:flex;align-items:center;gap:6px}
+.pips{display:flex;gap:2px}.pips i{width:9px;height:9px;border:2px solid #151515;background:transparent;display:block}.pips i.on{background:#D7322A}
+.flavor{font-family:Caveat,cursive;font-weight:700;font-size:clamp(15px,4.2vw,18px);line-height:1;margin-top:5px;min-height:2.1em}
+.num{position:absolute;bottom:3px;right:8px;font:700 9px 'Roboto Mono',monospace;opacity:.6}
+.foil,.glare{position:absolute;inset:0;pointer-events:none;border-radius:8px}
+.glare{background:radial-gradient(circle at var(--mx) var(--my),rgba(255,255,255,.55),transparent 45%);mix-blend-mode:soft-light;opacity:.8}
+.r-common{--bd:#151515;--ac:#cfcfcf}
+.r-rare{--bd:#8fb8ff;--ac:#8fb8ff;--bg:#eaf1ff;--art:#cfe0ff}
+.r-rare .foil{background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.75) 50%,transparent 65%);background-size:250% 100%;background-position:calc(var(--mx)*-1 + 120%) 0;mix-blend-mode:overlay;opacity:.9}
+.r-holo{--bd:#ff7bd5;--ac:#ff9de0;--bg:#fff0fb;--art:#ffd9f4}
+.r-holo .foil{background:repeating-linear-gradient(115deg,#ff0080,#ff8c00,#ffe600,#00ff95,#00c8ff,#a855ff,#ff0080 200px);background-size:220% 220%;background-position:var(--mx) var(--my);mix-blend-mode:color-dodge;opacity:.6}
+.r-holo .foil::after,.r-legendary .foil::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,rgba(255,255,255,.9) 0 1px,transparent 2px) 0 0/14px 14px;mix-blend-mode:overlay;opacity:.5;background-position:var(--mx) var(--my)}
+.r-legendary{--bd:#F2B705;--ac:#F2B705;--bg:#fff3c2;--art:#ffe58a}
+.r-legendary .foil{background:linear-gradient(120deg,#8a5a00,#ffe27a,#fff7c8,#ffd24a,#8a5a00 90%);background-size:260% 260%;background-position:var(--mx) var(--my);mix-blend-mode:color-dodge;opacity:.55}
+.r-legendary .face.front{box-shadow:inset 0 0 0 3px #fff7c8}
+.card.up.r-legendary,.card.up.r-holo{animation:glow 2.2s ease-in-out infinite alternate}
+.card.up.r-legendary{--gl:#F2B705}.card.up.r-holo{--gl:#ff7bd5}
+@keyframes glow{from{filter:drop-shadow(0 0 8px var(--gl))}to{filter:drop-shadow(0 0 26px var(--gl))}}
+.spark{position:fixed;z-index:80;pointer-events:none;font-size:22px;animation:burst 1s ease-out forwards}
+@keyframes burst{to{transform:translate(var(--dx),var(--dy)) scale(.3) rotate(240deg);opacity:0}}
+.flash{position:fixed;inset:0;z-index:70;pointer-events:none;background:radial-gradient(circle,#fff,transparent 70%);animation:fl .5s ease-out forwards}
+@keyframes fl{from{opacity:.9}to{opacity:0}}
+@media (prefers-reduced-motion:reduce){.pack-body::before,.card.up.r-legendary,.card.up.r-holo{animation:none}.flipper{transition:none}.pack.gone,.flyoff{animation-duration:.01s}.spark,.flash{display:none}}
+
+/* ---------- binder ---------- */
+.slot{position:relative;aspect-ratio:5/7;border:4px solid #151515;border-radius:10px;background:#16241c;color:#F4E7C5;display:grid;place-items:center;text-align:center;padding:4px;cursor:pointer;overflow:hidden}
+.slot.empty{border-style:dashed;border-color:#3b5a48;cursor:default;color:#5d7f6b}
+.slot.have{background:var(--bg);color:#151515;border-color:var(--bd)}
+.slot .e{font-size:clamp(30px,9vw,44px);line-height:1}
+.slot .n{font:700 clamp(8.5px,2.3vw,11px)/1.05 'Roboto Mono',monospace;margin-top:4px}
+.slot .x{position:absolute;top:2px;right:3px;font:700 10px 'Roboto Mono',monospace;background:#151515;color:#F4E7C5;padding:0 4px;border-radius:6px}
+.slot .nn{position:absolute;bottom:2px;left:4px;font:700 8.5px 'Roboto Mono',monospace;opacity:.55}
+.slot.have.r-holo::after,.slot.have.r-legendary::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.7) 50%,transparent 70%);background-size:250% 100%;animation:sl 3s linear infinite;mix-blend-mode:overlay;pointer-events:none}
+@keyframes sl{to{background-position:-250% 0}}
+.modal{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.82);display:grid;place-items:center;padding:16px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<main class="max-w-3xl mx-auto px-3 py-5 sm:py-8">
+  <header class="text-center">
+    <p class="font-display text-mustard text-xs tracking-widest">T.C. McTHRIFTY PRESENTS</p>
+    <h1 class="font-display text-4xl sm:text-6xl leading-none text-paper" style="text-shadow:4px 4px 0 #D7322A">HOLO PACK</h1>
+    <p class="mt-2 font-semibold text-paper/90">Five legendary thrift finds per pack. Tear it. Flip it. Tilt it. Keep it.</p>
+  </header>
+  <nav class="mt-5 flex justify-center gap-2" role="tablist" aria-label="Sections">
+    <button class="tab" role="tab" id="tab-open" aria-selected="true" aria-controls="v-open">Open a pack</button>
+    <button class="tab" role="tab" id="tab-binder" aria-selected="false" aria-controls="v-binder">Binder <span id="bcount">0/40</span></button>
+  </nav>
+
+  <!-- OPEN -->
+  <section id="v-open" class="mt-6" aria-labelledby="tab-open">
+    <div id="packStage">
+      <div class="pack" id="pack" tabindex="0" role="button" aria-label="Booster pack. Swipe across the top to tear it open, or press Enter.">
+        <div class="pack-body">
+          <div class="crimp bot"></div>
+          <div class="pack-art"><div>
+            <h2 class="text-3xl sm:text-4xl">HOLO<br>PACK</h2>
+            <img src="mascot.png" alt="" class="mt-3 mx-auto" width="150" height="112">
+            <p class="font-display text-paper text-[11px] mt-3" style="text-shadow:2px 2px 0 #151515">5 CARDS &middot; 1 RARE OR BETTER</p>
+          </div></div>
+        </div>
+        <div class="tear" id="tearTop"><div class="strip"><div class="crimp top" style="top:0"></div></div></div>
+        <div class="tear-hint"><span>&larr; swipe to tear &rarr;</span></div>
+      </div>
+      <p class="text-center mt-5"><button class="btn" id="tearBtn"><i class="fa-solid fa-hand-scissors"></i> Tear it open</button></p>
+      <p class="text-center mt-3 font-hand text-2xl text-mustard" id="packNote">Pack #1. Cost: $0.75. Retail value: priceless.</p>
+    </div>
+
+    <div id="reveal" class="hidden">
+      <p class="text-center font-mono font-bold text-sm text-paper/80" id="revealCount" aria-live="polite">Card 1 of 5</p>
+      <div class="stage mt-3"><div id="deck"></div></div>
+      <p class="text-center mt-3 font-hand text-2xl text-mustard" id="hint">Tap the card to flip it.</p>
+      <p class="text-center mt-3 flex justify-center gap-3 flex-wrap"><button class="btn alt" id="nextBtn">Flip</button></p>
+    </div>
+
+    <div id="summary" class="hidden">
+      <h2 class="font-display text-2xl text-center text-mustard">Your pull</h2>
+      <div id="pullGrid" class="mt-3 grid grid-cols-3 sm:grid-cols-5 gap-2"></div>
+      <p class="text-center mt-5 flex justify-center gap-3 flex-wrap"><button class="btn" id="againBtn"><i class="fa-solid fa-rotate-right"></i> Open another pack</button><button class="btn alt" id="toBinder"><i class="fa-solid fa-book-open"></i> See binder</button></p>
+    </div>
+  </section>
+
+  <!-- BINDER -->
+  <section id="v-binder" class="mt-6 hidden" aria-labelledby="tab-binder">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <p class="font-mono font-bold text-sm" id="binderStats"></p>
+      <button class="tab !min-h-[36px] !text-[11px]" id="resetBtn">Reset binder</button>
+    </div>
+    <div id="binderGrid" class="mt-3 grid grid-cols-4 sm:grid-cols-6 gap-2"></div>
+    <p class="mt-3 text-sm text-paper/70 font-semibold">Tap a card you own to look at it up close.</p>
+  </section>
+  <p class="mt-10 text-center text-paper/70 text-sm font-semibold">Est. in a Twin Cities thrift aisle. Not financial advice. Not paying full price.</p>
+</main>
+
+<div class="modal hidden" id="modal" role="dialog" aria-modal="true" aria-label="Card close-up"><div class="stage" id="modalCard"></div><button class="btn alt absolute" style="bottom:20px" id="closeModal">Close</button></div>
+
+<script>
+const $=(s,e=document)=>e.querySelector(s), $$=(s,e=document)=>[...e.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* id, name, art, rarity, paid, retail, weird 1-10, flavor */
+const POOL=[
+ ['flannel','The $5 Bag of Flannel','🧥','common','$5','$180',3,'Packed like a puzzle. Holds twice what theirs does.'],
+ ['cords','Mystery Cord Box','🔌','common','$1','$40',4,'One of these charges something. Probably.'],
+ ['pyrex','Lidless Pyrex','🥘','common','$0.50','$25',2,'The lid is at a different sale.'],
+ ['duck','Brass Duck','🦆','common','$2','$60',5,'Quacks, but in metal.'],
+ ['toilet','Crocheted Toilet Cover','🧶','common','$0.25','$18',7,'A skirt for a roll. Somehow a classic.'],
+ ['chairs','Folding Chairs, Set of 7','🪑','common','$7','$210',3,'Always seven. Nobody knows why.'],
+ ['tupper','Tupperware, No Lids','🥡','common','$1','$30',2,'The lids went where socks go.'],
+ ['cat','Ceramic Cat','🐱','common','$3','$45',5,'Staring. Always staring.'],
+ ['ency','Encyclopedia, 1987','📚','common','$4','$120',2,'Learn the world as it was in 1987.'],
+ ['tape','Cassette, Cursive Label','📼','common','$0.75','$12',4,'A mixtape from a person in love in 1991.'],
+ ['keys','Bag of Orphan Keys','🗝️','common','$1','$20',6,'Every key opens a door that is gone.'],
+ ['coffee','Gas Station Coffee, BOGO','☕','common','$0','$5',1,'The second cup is for later. Cold coffee is a personality.'],
+ ['fries','Free Fries, Game Piece','🍟','common','$0','$4.50',2,'Peel, stack, redeem.'],
+ ['wicker','Wicker Everything','🧺','common','$6','$140',3,'Wicker chair, wicker basket, wicker feelings.'],
+ ['ski','The Lonely Single Ski','🎿','common','$2','$300',6,'Where is the other one. Nobody knows.'],
+ ['board','Board Game, One Piece Missing','🎲','common','$1.50','$35',4,'Now it is a harder game.'],
+ ['lures','Fishing Lures x400','🎣','common','$5','$400',5,'Four hundred dreams of one fish.'],
+ ['fridge','Garage Fridge','🧊','common','$10','$700',3,'Contains one ancient ketchup.'],
+ ['blower','Snow Blower in August','❄️','common','$40','$900',3,'Best price of the year. Mark it and weep.'],
+ ['plates','Wall of Framed Plates','🍽️','common','$3','$90',4,'Plates for hanging, not eating. Rule unexplained.'],
+ ['sewing','Sewing Machine, Pre-Color-TV','🧵','common','$15','$450',3,'Outlives us all, and your hem.'],
+ ['treadmill','Treadmill Coat Rack','🏃','common','$0','$1,200',5,'The most-used treadmill function.'],
+ ['elvis','Velvet Elvis','🎸','rare','$12','$150',8,'It is always a velvet Elvis. He finds you.'],
+ ['natgeo','40 Years of National Geographic','🗺️','rare','$20','$600',5,'Yellow spines. Zero read. All mine.'],
+ ['owl','Taxidermy Owl','🦉','rare','$18','$400',9,'Judging you the whole walk-through. Negotiable on day two.'],
+ ['fur','Fur Coat in July','🦊','rare','$7','$1,100',6,'Seven dollars. Sweating is free.'],
+ ['accordion','The Lonely Accordion','🪗','rare','$25','$900',9,'You cannot unbuy an accordion. Ask me how I know.'],
+ ['clocks','Wall of Clocks','🕰️','rare','$15','$800',7,'Every one says a different time. Time is a suggestion.'],
+ ['hutch','The Hutch That Will Not Fit','🗄️','rare','$30','$2,200',6,'It will not fit. I tried anyway. Twice.'],
+ ['cuckoo','Cuckoo Clock, Cuckoos Wrong','🐦','rare','$14','$350',8,'Correct twice a day, like all of us.'],
+ ['rainbow','Rainbow Flannel, Pridefest Special','🌈','holo','$4','$220',7,'Found in the wild. Wild, and on sale.'],
+ ['eraser','Japanese Store Eraser Haul','✏️','holo','$9','$140',6,'Many tiny erasers. Zero regrets.'],
+ ['lisbon','Error Fare: MSP to Lisbon','✈️','holo','$412','$1,450',8,'Book first, panic later. 24 hours of freedom.'],
+ ['moose','Lodge Moose Head','🦌','holo','$35','$1,800',10,'It came with the wall. Wall not included.'],
+ ['waterbed','Waterbed, Empty (Hopefully)','🛏️','holo','$0','$600',10,'Do not ask. Do not check.'],
+ ['mothball','Mothball Time Capsule','🧳','holo','$6','$500',9,'Smells like 1974 and quality.'],
+ ['cockatiel','The Cockatiel Memorial Find','🕊️','legendary','$3','PRICELESS',1,'A small tribute, found secondhand, kept forever.'],
+ ['tc','T.C. McThrifty, Lvl 99','IMG','legendary','$0.75','INFINITY',10,'Spent today: $0.75. Lifetime saved: $84,911.43. Not paying full price.'],
+ ['piece','The Golden Game Piece','🏆','legendary','$0','$10,000',9,'Peeled it. Stacked it. Redeemed it. Told no one.'],
+ ['sunday','Estate Sale, Day Two, 100% Off','🏠','legendary','$0','$50,000',10,'Everything must go. I went. All of it.']
+];
+const C=Object.fromEntries(POOL.map((p,i)=>[p[0],{id:p[0],name:p[1],art:p[2],r:p[3],paid:p[4],retail:p[5],w:p[6],flavor:p[7],n:i+1}]));
+const IDS=POOL.map(p=>p[0]), BY=r=>IDS.filter(i=>C[i].r===r);
+const store={get(){try{return JSON.parse(localStorage.getItem('mct-holo'))||{owned:{},packs:0}}catch{return{owned:{},packs:0}}},set(v){try{localStorage.setItem('mct-holo',JSON.stringify(v))}catch{}}};
+let save=store.get();
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+function rollRarity(minRare){const x=Math.random();if(minRare)return x<.70?'rare':x<.94?'holo':'legendary';return x<.55?'common':x<.83?'rare':x<.96?'holo':'legendary'}
+function makePack(){const out=[];for(let i=0;i<4;i++)out.push(rnd(BY(rollRarity(false))));out.push(rnd(BY(rollRarity(true))));return out}
+const pad=n=>String(n).padStart(2,'0');
+
+/* ---------- card markup ---------- */
+function cardHTML(c,up){
+  const art=c.art==='IMG'?'<img src="mascot.png" alt="TC McThrifty">':`<span class="emoji" aria-hidden="true">${c.art}</span>`;
+  const pips=Array.from({length:10},(_,i)=>`<i class="${i<c.w?'on':''}"></i>`).join('');
+  return `<div class="card r-${c.r} ${up?'up':''}" tabindex="0" role="img" aria-label="${esc(c.name)}, ${c.r}, paid ${esc(c.paid)}, retail ${esc(c.retail)}, weirdness ${c.w} of 10. ${esc(c.flavor)}">
+   <div class="flipper">
+    <div class="face back"><div class="logo">T.C.<br>Mc<br>THRIFTY</div></div>
+    <div class="face front"><div class="c-head"><span class="c-name">${esc(c.name)}</span><span class="badge">${c.r}</span></div>
+      <div class="art">${art}</div>
+      <div class="stats"><div>PRICE PAID<b>${esc(c.paid)}</b></div><div>RETAIL<b>${esc(c.retail)}</b></div>
+        <div class="weird">WEIRDNESS<span class="pips" aria-hidden="true">${pips}</span></div></div>
+      <p class="flavor">${esc(c.flavor)}</p><span class="num">#${pad(c.n)}/${POOL.length}</span>
+      <div class="foil"></div><div class="glare"></div></div></div></div>`;
+}
+
+/* ---------- tilt: mouse, finger, or phone motion ---------- */
+const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function setTilt(el,px,py){ // px,py 0..1
+  if(calm)return;
+  el.classList.remove('idle');
+  el.style.setProperty('--ry',((px-.5)*34)+'deg'); el.style.setProperty('--rx',((.5-py)*34)+'deg');
+  el.style.setProperty('--mx',(px*100)+'%'); el.style.setProperty('--my',(py*100)+'%');
+}
+function resetTilt(el){el.classList.add('idle');el.style.setProperty('--ry','0deg');el.style.setProperty('--rx','0deg');el.style.setProperty('--mx','50%');el.style.setProperty('--my','50%')}
+document.addEventListener('pointermove',e=>{const c=e.target.closest?.('.card');if(!c)return;const r=c.getBoundingClientRect();setTilt(c,(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height)});
+document.addEventListener('pointerout',e=>{const c=e.target.closest?.('.card');if(c&&!c.contains(e.relatedTarget))resetTilt(c)});
+let motionOn=false;
+function enableMotion(){
+  if(motionOn||!('DeviceOrientationEvent' in window))return;
+  const go=()=>{motionOn=true;addEventListener('deviceorientation',e=>{if(e.gamma==null)return;const c=$('#modal:not(.hidden) .card')||$('#deck .card')||null;if(!c)return;setTilt(c,Math.min(1,Math.max(0,.5+e.gamma/60)),Math.min(1,Math.max(0,.5+((e.beta||0)-45)/60)))})};
+  if(typeof DeviceOrientationEvent.requestPermission==='function'){DeviceOrientationEvent.requestPermission().then(r=>{if(r==='granted')go()}).catch(()=>{})}else go();
+}
+
+/* ---------- effects ---------- */
+function burst(n,emoji){if(calm)return;const f=document.createElement('div');f.className='flash';document.body.append(f);setTimeout(()=>f.remove(),600);
+  for(let i=0;i<n;i++){const s=document.createElement('span');s.className='spark';s.textContent=emoji[i%emoji.length];s.style.left='50%';s.style.top='45%';s.style.setProperty('--dx',(Math.random()*500-250)+'px');s.style.setProperty('--dy',(Math.random()*500-250)+'px');document.body.append(s);setTimeout(()=>s.remove(),1100)}}
+
+/* ---------- views ---------- */
+function showTab(t){const o=t==='open';$('#v-open').classList.toggle('hidden',!o);$('#v-binder').classList.toggle('hidden',o);$('#tab-open').setAttribute('aria-selected',o);$('#tab-binder').setAttribute('aria-selected',!o);if(!o)drawBinder()}
+$('#tab-open').onclick=()=>showTab('open'); $('#tab-binder').onclick=()=>showTab('binder'); $('#toBinder').onclick=()=>showTab('binder');
+function counts(){const have=IDS.filter(i=>save.owned[i]).length;$('#bcount').textContent=have+'/'+POOL.length;return have}
+function drawBinder(){
+  const have=counts();const per=r=>`${BY(r).filter(i=>save.owned[i]).length}/${BY(r).length} ${r}`;
+  $('#binderStats').textContent=`${have}/${POOL.length} collected · ${per('common')} · ${per('rare')} · ${per('holo')} · ${per('legendary')} · ${save.packs} packs`;
+  $('#binderGrid').innerHTML=IDS.map(i=>{const c=C[i],n=save.owned[i];
+    return n?`<button class="slot have r-${c.r}" data-id="${i}" aria-label="${esc(c.name)}, ${c.r}, you have ${n}"><span class="e">${c.art==='IMG'?'<img src="mascot.png" alt="" class="w-10 h-10 object-cover">':c.art}</span><span class="n">${esc(c.name)}</span>${n>1?`<span class="x">x${n}</span>`:''}<span class="nn">#${pad(c.n)}</span></button>`
+      :`<div class="slot empty" aria-label="Empty slot ${c.n}"><span class="font-display text-xl">?</span><span class="nn">#${pad(c.n)}</span></div>`}).join('');
+}
+$('#binderGrid').addEventListener('click',e=>{const s=e.target.closest('.slot.have');if(s)openModal(s.dataset.id)});
+function openModal(id){$('#modalCard').innerHTML=cardHTML(C[id],true);$('#modal').classList.remove('hidden');enableMotion();$('#closeModal').focus()}
+$('#closeModal').onclick=()=>{$('#modal').classList.add('hidden')}; $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')$('#modal').classList.add('hidden')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#modal').classList.add('hidden')});
+let armed=false;
+$('#resetBtn').onclick=e=>{if(!armed){armed=true;e.target.textContent='Really? Tap again';setTimeout(()=>{armed=false;e.target.textContent='Reset binder'},3000);return}save={owned:{},packs:0};store.set(save);armed=false;e.target.textContent='Reset binder';drawBinder();setNote()};
+
+/* ---------- the pack ---------- */
+let pull=[],idx=0,opening=false;
+const pack=$('#pack'),tear=$('#tearTop');
+function setNote(){$('#packNote').textContent=`Pack #${save.packs+1}. Cost: $0.75. Retail value: priceless.`}
+function doOpen(){
+  if(opening)return;opening=true;enableMotion();
+  tear.classList.add('flyoff');pack.classList.add('gone');
+  setTimeout(()=>{$('#packStage').classList.add('hidden');startReveal(makePack())},calm?10:520);
+}
+window.__holo={C,POOL,start:ids=>{opening=true;$('#packStage').classList.add('hidden');startReveal(ids)}};
+$('#tearBtn').onclick=doOpen; pack.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();doOpen()}});
+let drag=null;
+pack.addEventListener('pointerdown',e=>{const r=pack.getBoundingClientRect();if(e.clientY-r.top>r.height*.42){return}drag={x:e.clientX,w:r.width,id:e.pointerId};pack.setPointerCapture(e.pointerId)});
+pack.addEventListener('pointermove',e=>{if(!drag)return;const dx=Math.max(0,e.clientX-drag.x),p=Math.min(1,dx/(drag.w*.55));tear.style.transform=`translateX(${dx*.4}px) rotate(${p*-9}deg)`;if(p>=1){drag=null;doOpen()}});
+const endDrag=()=>{if(!drag)return;drag=null;tear.style.transition='transform .25s';tear.style.transform='';setTimeout(()=>tear.style.transition='',260)};
+pack.addEventListener('pointerup',endDrag);pack.addEventListener('pointercancel',endDrag);
+
+function startReveal(ids){
+  pull=ids;idx=0;$('#reveal').classList.remove('hidden');$('#summary').classList.add('hidden');showCard();
+}
+function showCard(){
+  const c=C[pull[idx]];
+  $('#revealCount').textContent=`Card ${idx+1} of ${pull.length}`;
+  $('#deck').innerHTML=cardHTML(c,false);$('#hint').textContent='Tap the card to flip it.';$('#nextBtn').textContent='Flip';
+  const el=$('#deck .card');el.focus({preventScroll:true});
+  el.addEventListener('click',flip);el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}});
+}
+function flip(){
+  const el=$('#deck .card');
+  if(!el.classList.contains('up')){
+    el.classList.add('up');const c=C[pull[idx]];const isNew=!save.owned[c.id];
+    save.owned[c.id]=(save.owned[c.id]||0)+1;store.set(save);counts();
+    if(c.r==='legendary')burst(26,['✨','⭐','💛']);else if(c.r==='holo')burst(16,['✨','🌈','💖']);
+    $('#hint').textContent=(isNew?'NEW! ':'Duplicate. ')+({common:'A solid find.',rare:'Ooh, rare.',holo:'HOLO! Tilt it in the light.',legendary:'LEGENDARY. Frame it.'})[c.r];
+    $('#nextBtn').textContent=idx<pull.length-1?'Next card':'See my pull';
+  }else if(idx<pull.length-1){idx++;showCard()}else finish();
+}
+$('#nextBtn').onclick=flip;
+function finish(){
+  save.packs++;store.set(save);
+  $('#reveal').classList.add('hidden');$('#summary').classList.remove('hidden');
+  $('#pullGrid').innerHTML=pull.map(i=>{const c=C[i];return `<button class="slot have r-${c.r}" data-id="${i}" aria-label="${esc(c.name)}, ${c.r}"><span class="e">${c.art==='IMG'?'<img src="mascot.png" alt="" class="w-10 h-10 object-cover">':c.art}</span><span class="n">${esc(c.name)}</span></button>`}).join('');
+  $('#pullGrid').onclick=e=>{const s=e.target.closest('.slot');if(s)openModal(s.dataset.id)};
+}
+$('#againBtn').onclick=()=>{$('#summary').classList.add('hidden');const p=pack;p.classList.remove('gone');tear.classList.remove('flyoff');tear.style.transform='';opening=false;$('#packStage').classList.remove('hidden');setNote();pack.focus({preventScroll:true})};
+counts();setNote();
+</script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T.C. McThrifty Field Guide</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Courier+Prime:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{colors:{pine:'#24402E',moss:'#4E6B3A',khaki:'#E9DFC4',paper:'#F5EEDB',bark:'#5B3A22',sign:'#7A4B2A',blaze:'#E2711D',sky:'#7FA9B8'},fontFamily:{sign:['"Alfa Slab One"','serif'],type:['"Courier Prime"','monospace'],hand:['"Permanent Marker"','cursive']}}}}
+</script>
+<style>
+:root{color-scheme:light}
+body{background:#E9DFC4;background-image:radial-gradient(rgba(91,58,34,.08) 1px,transparent 1px);background-size:14px 14px}
+.woodsign{background:linear-gradient(180deg,#8A5632,#6B4024);box-shadow:inset 0 2px 0 rgba(255,255,255,.15),0 6px 0 #3E2614;border:3px solid #3E2614}
+.woodsign .grain{background:repeating-linear-gradient(90deg,transparent 0 22px,rgba(0,0,0,.07) 22px 24px)}
+.card{background:#F5EEDB;border:2px solid #5B3A22;box-shadow:5px 5px 0 #5B3A22}
+.marker{width:44px;height:44px;border-radius:9999px;background:#E2711D;border:3px solid #24402E;color:#fff;font-family:"Alfa Slab One";display:grid;place-items:center;box-shadow:0 3px 0 #24402E}
+.trail path{stroke-dasharray:10 10}
+.chip[aria-pressed="true"]{background:#24402E;color:#F5EEDB}
+.opt[aria-pressed="true"]{background:#4E6B3A;color:#fff;border-color:#24402E}
+.stamp{transform:rotate(-8deg);border:3px solid #B23A1E;color:#B23A1E}
+</style>
+<style>/* Prince QA: 44px tap targets */.chip{min-height:44px}</style>
+</head>
+<body class="font-type text-bark">
+
+<!-- ranger station header -->
+<header class="bg-pine text-paper sticky top-0 z-30 border-b-4 border-bark">
+  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-3">
+    <img src="mascot.png" alt="T.C. McThrifty mascot" class="w-10 h-10 rounded-full bg-khaki object-cover border-2 border-blaze">
+    <div class="leading-tight">
+      <div class="font-sign text-lg sm:text-xl">T.C. McThrifty</div>
+      <div class="text-[11px] uppercase tracking-widest text-khaki/80">Field Guide to the Twin Cities Cheap</div>
+    </div>
+    <nav class="ml-auto hidden md:flex gap-4 text-sm">
+      <a href="#m1" class="hover:text-blaze">1 Sightings</a><a href="#m2" class="hover:text-blaze">2 Radio Log</a><a href="#m3" class="hover:text-blaze">3 Field Test</a><a href="#m4" class="hover:text-blaze">4 Museum</a><a href="#m5" class="hover:text-blaze">5 Report</a>
+    </nav>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-4">
+
+<!-- trailhead -->
+<section class="pt-8 pb-6 grid md:grid-cols-[1.2fr_1fr] gap-8 items-center">
+  <div>
+    <div class="woodsign rounded-lg p-1 inline-block rotate-[-1.5deg]">
+      <div class="grain rounded px-5 py-4 text-paper">
+        <div class="text-xs tracking-[.3em] uppercase opacity-80">Trailhead · Elev. $0.75</div>
+        <h1 class="font-sign text-4xl sm:text-5xl leading-none mt-1">T.C. McThrifty</h1>
+        <div class="text-sm mt-2">Minnesota's Premier Anonymous Cheapskate &amp; Thrift Thrill-Seeker</div>
+      </div>
+    </div>
+    <p class="mt-6 text-lg">Squeezing every penny out of the Twin Cities (and beyond) so you don't have to.</p>
+    <p class="mt-3 text-sm bg-paper border-l-4 border-moss p-3">Yes, I have a day job. Yes, it pays fine. No, I will not pay full price for anything, ever. Names stay out of this. Savings stay in.</p>
+    <div class="mt-5 flex flex-wrap gap-3">
+      <a href="#m1" class="bg-blaze text-white font-sign px-5 py-3 rounded border-2 border-pine shadow-[0_4px_0_#24402E]"><i class="fa-solid fa-binoculars mr-2"></i>Start the trail</a>
+      <a href="#m3" class="bg-paper font-sign px-5 py-3 rounded border-2 border-pine shadow-[0_4px_0_#24402E]"><i class="fa-solid fa-compass mr-2"></i>Rate my cheap</a>
+    </div>
+  </div>
+  <div class="card p-4 rotate-[1deg]">
+    <div class="flex justify-between text-xs uppercase tracking-widest"><span>Trail map</span><span>Not to scale. Not to price.</span></div>
+    <div class="relative mt-2 aspect-[4/3] bg-[#DCE7C8] rounded border-2 border-bark overflow-hidden">
+      <svg viewBox="0 0 400 300" class="absolute inset-0 w-full h-full trail" aria-hidden="true">
+        <path d="M0 230 Q60 200 100 220 T200 210 T300 230 T400 215 V300 H0Z" fill="#7FA9B8" opacity=".55"/>
+        <g fill="#4E6B3A" opacity=".8"><path d="M40 90 l14 -30 l14 30z"/><path d="M60 110 l12 -26 l12 26z"/><path d="M320 70 l14 -30 l14 30z"/><path d="M340 95 l12 -26 l12 26z"/><path d="M190 60 l12 -26 l12 26z"/></g>
+        <path d="M45 175 C90 120,120 80,150 95 S230 160,250 120 S320 60,350 140 S300 200,200 175" fill="none" stroke="#5B3A22" stroke-width="4"/>
+      </svg>
+      <a href="#m1" class="marker absolute" style="left:7%;top:52%">1</a>
+      <a href="#m2" class="marker absolute" style="left:32%;top:24%">2</a>
+      <a href="#m3" class="marker absolute" style="left:57%;top:34%">3</a>
+      <a href="#m4" class="marker absolute" style="left:82%;top:38%">4</a>
+      <a href="#m5" class="marker absolute" style="left:44%;top:52%">5</a>
+      <img src="mascot.png" alt="" class="absolute right-2 bottom-2 w-20 drop-shadow">
+    </div>
+    <div class="grid grid-cols-2 gap-2 mt-3 text-sm">
+      <div class="bg-khaki p-2 border border-bark"><div class="text-[10px] uppercase">Spent today</div><div class="font-sign text-xl">$0.75</div></div>
+      <div class="bg-khaki p-2 border border-bark"><div class="text-[10px] uppercase">Lifetime saved</div><div class="font-sign text-xl">$84,911.43</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- marker 1 sightings -->
+<section id="m1" class="py-10 scroll-mt-20">
+  <div class="flex items-center gap-3"><span class="marker">1</span><div><h2 class="font-sign text-3xl text-pine">Recent Sightings</h2><p class="text-sm">The weekly deals and estate sales radar. Scraped fresh. Verified by nobody. Go anyway.</p></div></div>
+  <div class="flex flex-wrap gap-2 mt-5" id="chips">
+    <button class="chip border-2 border-pine px-3 py-1 rounded-full text-sm" data-f="all" aria-pressed="true">All habitats</button>
+    <button class="chip border-2 border-pine px-3 py-1 rounded-full text-sm" data-f="thrifts" aria-pressed="false"><i class="fa-solid fa-shirt mr-1"></i>Thrifts</button>
+    <button class="chip border-2 border-pine px-3 py-1 rounded-full text-sm" data-f="food" aria-pressed="false"><i class="fa-solid fa-burger mr-1"></i>Food &amp; Freebies</button>
+    <button class="chip border-2 border-pine px-3 py-1 rounded-full text-sm" data-f="travels" aria-pressed="false"><i class="fa-solid fa-plane mr-1"></i>Travels</button>
+    <button class="chip border-2 border-pine px-3 py-1 rounded-full text-sm" data-f="weird" aria-pressed="false"><i class="fa-solid fa-feather mr-1"></i>Weird Junk</button>
+    <span id="count" class="ml-auto text-sm self-center font-bold"></span>
+  </div>
+  <div id="feed" class="grid sm:grid-cols-2 gap-5 mt-5"></div>
+  <p id="empty" class="hidden mt-5 card p-4">Nothing in this pile. Either you are too picky or the good stuff is already in someone's trunk.</p>
+</section>
+
+<!-- marker 2 radio log -->
+<section id="m2" class="py-10 scroll-mt-20">
+  <div class="flex items-center gap-3"><span class="marker">2</span><div><h2 class="font-sign text-3xl text-pine">Ranger Station Radio Log</h2><p class="text-sm">Texts from last night. Screenshots, lightly redacted.</p></div></div>
+  <div class="grid md:grid-cols-2 gap-5 mt-5">
+    <div class="card p-4">
+      <div class="flex items-center gap-2 text-xs uppercase tracking-widest border-b-2 border-dashed border-bark pb-2"><i class="fa-solid fa-walkie-talkie text-blaze"></i>Channel 1 · Top Hat Pal 🎩 <span class="ml-auto">11:38 PM</span></div>
+      <ul class="mt-3 space-y-2 text-sm">
+        <li class="bg-khaki p-2 rounded w-fit max-w-[85%]">Coupons in hand? 🎩</li>
+        <li class="bg-moss text-white p-2 rounded w-fit max-w-[85%] ml-auto">Back at it with the game pieces, they hate to see me coming! 🍔🎩</li>
+        <li class="bg-khaki p-2 rounded w-fit max-w-[85%]">How many free fries is that</li>
+        <li class="bg-moss text-white p-2 rounded w-fit max-w-[85%] ml-auto">Enough that the app knows my name</li>
+      </ul>
+    </div>
+    <div class="card p-4">
+      <div class="flex items-center gap-2 text-xs uppercase tracking-widest border-b-2 border-dashed border-bark pb-2"><i class="fa-solid fa-walkie-talkie text-blaze"></i>Channel 2 · Group Chat 📜 <span class="ml-auto">Read 11:42 PM</span></div>
+      <ul class="mt-3 space-y-2 text-sm">
+        <li class="bg-khaki p-2 rounded w-fit max-w-[85%]">Wait, you still get both?</li>
+        <li class="bg-moss text-white p-2 rounded w-fit max-w-[85%] ml-auto">I fought a subscription that tried to cut me off, kept print AND digital forever. SUE ME (literally).</li>
+        <li class="bg-khaki p-2 rounded w-fit max-w-[85%]">huh huh. "literally."</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- marker 3 field test -->
+<section id="m3" class="py-10 scroll-mt-20">
+  <div class="flex items-center gap-3"><span class="marker">3</span><div><h2 class="font-sign text-3xl text-pine">Junior Ranger Field Test</h2><p class="text-sm">The Thrift-Level Meter. Five questions. No wrong answers, only wrong prices.</p></div></div>
+  <div class="grid md:grid-cols-[1.4fr_1fr] gap-5 mt-5">
+    <div id="quiz" class="space-y-4"></div>
+    <div class="card p-5 h-fit md:sticky md:top-24">
+      <div class="text-xs uppercase tracking-widest">Your badge</div>
+      <div class="flex items-center gap-3 mt-2">
+        <div id="badge" class="w-20 h-20 rounded-full border-4 border-pine grid place-items-center font-sign text-2xl bg-khaki">?</div>
+        <div><div class="font-sign text-xl" id="tier">Level ? / 5</div><div class="text-sm" id="tiertext">Answer all five. T.C. McThrifty will rate it. Dryly.</div></div>
+      </div>
+      <p id="tierhelp" class="text-sm mt-3 hidden bg-khaki p-3 border-l-4 border-blaze"></p>
+      <button id="reset" class="mt-4 text-sm underline"><i class="fa-solid fa-rotate-left mr-1"></i>Rate me again. I might lie this time.</button>
+    </div>
+  </div>
+</section>
+
+<!-- marker 4 museum -->
+<section id="m4" class="py-10 scroll-mt-20">
+  <div class="flex items-center gap-3"><span class="marker">4</span><div><h2 class="font-sign text-3xl text-pine">Visitor Center Museum</h2><p class="text-sm">Crazy finds and tributes. Photos coming. For now, imagine the smell.</p></div></div>
+  <div class="grid sm:grid-cols-3 gap-5 mt-5">
+    <figure class="card p-3 rotate-[-1deg]"><div class="aspect-square bg-khaki grid place-items-center text-5xl text-moss"><i class="fa-solid fa-eraser"></i></div><figcaption class="mt-2"><div class="font-sign">The Japanese Store Haul</div><div class="text-sm">Many tiny erasers. Zero regrets.</div></figcaption></figure>
+    <figure class="card p-3 rotate-[1deg]"><div class="aspect-square bg-khaki grid place-items-center text-5xl text-moss"><i class="fa-solid fa-rainbow"></i></div><figcaption class="mt-2"><div class="font-sign">The MN Pridefest Nature Thrifting Special</div><div class="text-sm">Rainbow flannel, found in the wild.</div></figcaption></figure>
+    <figure class="card p-3 rotate-[-.5deg]"><div class="aspect-square bg-khaki grid place-items-center text-5xl text-moss"><i class="fa-solid fa-dove"></i></div><figcaption class="mt-2"><div class="font-sign">The Late Great Cockatiel Memorial Thrift Find</div><div class="text-sm">A small tribute, found secondhand, kept forever.</div></figcaption></figure>
+  </div>
+</section>
+
+<!-- marker 5 report -->
+<section id="m5" class="py-10 scroll-mt-20">
+  <div class="flex items-center gap-3"><span class="marker">5</span><div><h2 class="font-sign text-3xl text-pine">Report a Sighting</h2><p class="text-sm">Got a tip? Submit a steal. Anonymous is fine. Cheap is required.</p></div></div>
+  <form id="tip" class="card p-5 mt-5 max-w-2xl space-y-4" novalidate>
+    <label class="block"><span class="font-bold">What's the steal?</span><textarea id="what" rows="3" class="mt-1 w-full border-2 border-bark bg-white p-2 rounded"></textarea><span id="whatErr" class="hidden text-sm text-[#B23A1E]">A steal needs a steal. What did you find?</span></label>
+    <label class="block"><span class="font-bold">Where? (city, link or cross streets)</span><input id="where" class="mt-1 w-full border-2 border-bark bg-white p-2 rounded"><span class="text-xs">Cross streets are fine. "By the big tree" is not.</span></label>
+    <button class="bg-blaze text-white font-sign px-5 py-3 rounded border-2 border-pine shadow-[0_4px_0_#24402E]"><i class="fa-solid fa-flag mr-2"></i>Submit the steal</button>
+  </form>
+  <div id="receipt" class="hidden card p-5 mt-5 max-w-2xl relative">
+    <div class="stamp absolute right-4 top-4 font-sign px-2 py-1 text-sm">LOGGED</div>
+    <div class="text-xs uppercase tracking-widest">Sighting report #0075</div>
+    <div class="font-sign text-2xl mt-1">Tip received</div>
+    <p class="mt-2 text-sm">Filed under "might be a steal." Reviewed by nobody until I have had coffee.</p>
+    <p class="mt-2 text-sm">If it checks out, it ends up on the radar. If it does not, I will pretend I never saw it.</p>
+    <div class="mt-3 border-t-2 border-dashed border-bark pt-2 flex justify-between font-bold"><span>Total</span><span>$0.00</span></div>
+    <button id="again" class="mt-3 underline text-sm">Back to saving</button>
+  </div>
+</section>
+</main>
+
+<footer class="bg-pine text-khaki mt-6 border-t-4 border-bark">
+  <div class="max-w-5xl mx-auto px-4 py-6 text-sm flex flex-wrap gap-3 items-center">
+    <i class="fa-solid fa-tree text-blaze"></i><span class="font-sign text-paper">T.C. McThrifty</span>
+    <span>Est. in a Twin Cities thrift aisle. Not financial advice. Not paying full price. Pack it in, pack it out, pay nothing.</span>
+  </div>
+</footer>
+
+<script>
+const DEALS=[
+{tags:['thrifts','weird'],price:'70% OFF',badge:'Estate Sale',icon:'fa-feather',title:'South Mpls estate sale: 70% off retro taxidermy, Sunday only',meta:'Sat and Sun, 9am. Cash only. Bring a van and zero shame.',src:'a flyer stapled to a pole',rating:'5 of 5 pelts',tip:'Go Sunday, not Saturday. Day two is when "firm" prices get negotiable and the owl starts looking like a bargain.'},
+{tags:['food'],price:'$0.00',badge:'Free Fries',icon:'fa-burger',title:'Free fries with a burger-chain game-piece trick',meta:'Any drive-thru, any week the game is on. Peel, stack, redeem.',src:'a very long comment thread',rating:'5 of 5 fries',tip:'Check the app before you order. The free item is usually hiding under "rewards," not "menu." Read the fine print once, then never again.'},
+{tags:['thrifts'],price:'$5 BAG',badge:'Thrift Store',icon:'fa-shirt',title:'Roseville bin store: fill-a-bag Tuesday, $5 a bag',meta:'Doors at 8. Elbows out by 8:01.',src:'the bin store newsletter',rating:'4 of 5 flannels',tip:'Wear gloves and bring your own bag. A bag you packed like a puzzle holds twice what theirs does.'},
+{tags:['travels'],price:'$412 RT',badge:'Flight Find',icon:'fa-plane',title:'MSP to Lisbon, $412 round trip, possible error fare',meta:'Fares like this last hours. Fully refundable for 24 hours, so you can book first and panic later.',src:'a fare alert at 3am',rating:'5 of 5 layovers',tip:'Book it, then check the 24-hour cancel rule on that airline before you tell anyone. The tip is the cancel button, not the fare.'},
+{tags:['food','thrifts'],price:'BOGO',badge:'Cheap Eats',icon:'fa-mug-hot',title:'Gas station coffee, buy one get one, with the app and a stern look',meta:'St. Paul, Maplewood and a suspicious Cottage Grove.',src:'the app, reluctantly',rating:'3 of 5 refills',tip:'The second cup is for later. Put it in the fridge. Cold coffee is a personality, not a problem.'}];
+const LEVELS=[
+{n:1,name:'Coupon Clipper',text:'2 out of 10 cheapskates. He is only being polite.',help:'Stack the paper coupon with the store app deal. Two small wins beat one big one, and you already do the clipping.'},
+{n:2,name:'The Cruise Ship Milkman',text:'4 out of 10. Would share a buffet with you. Would also count the plates.',help:'Free things are only free if you do not buy the upgrade. Take the buffet, skip the drink package, keep the receipt for nothing.'},
+{n:3,name:'The Monopoly Maestro',text:'6 out of 10. Huh huh. You said "peel."',help:'Treat every game piece like a coupon with a deadline. Photograph them, check the expiry, and trade the extras before they turn into stickers.'},
+{n:4,name:'Muppet-Tier Estate Graverobber',text:'8 out of 10, with a footnote. The footnote is that the coffee was still warm.',help:'Arrive on the last day, ask for the bundle price, and be kind. The family remembers who was polite, and politeness gets the extra box.'},
+{n:5,name:'The DIY Doctor',text:'10 out of 10 for savings, and a respectful note that actual professionals exist and are very good at their jobs.',help:'Watch the video twice, buy the part second-hand, and know the line where YouTube ends and a trained person begins. That line is the cheapest thing you will ever save.'}];
+const QUESTIONS=[
+{q:'You see a $4 shirt that is almost your size.',a:[['Walk past, it is not a bargain.',1],['Buy it, hem it, call it vintage.',3],['Buy six, resell five, wear one.',5]]},
+{q:'Fast food and you:',a:[['I use the app coupons.',1],['I play the game pieces.',3],['I have a spreadsheet of every promo since 2009.',5]]},
+{q:'A company offers you a refund. You:',a:[['Take the refund.',1],['Ask for the refund AND a coupon.',3],['Join the class action out of sheer principle.',5]]},
+{q:'A weekend plan:',a:[['Brunch, full price, at a place with a line.',1],['Estate sale hop, then free samples.',3],['Estate sale hop, fix the thing myself, sell it back.',5]]},
+{q:'Something at home breaks:',a:[['Call someone and pay them.',1],['Watch a video, then call someone.',3],['Watch a video, find the part at a thrift store, fix it.',5]]}];
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const feed=document.getElementById('feed');
+function render(f){
+  const list=DEALS.filter(d=>f==='all'||d.tags.includes(f));
+  document.getElementById('count').textContent=list.length+' sighted';
+  document.getElementById('empty').classList.toggle('hidden',list.length>0);
+  feed.innerHTML=list.map((d,i)=>`<article class="card p-4 flex flex-col">
+    <div class="flex items-start gap-3"><div class="w-12 h-12 shrink-0 rounded-full bg-moss text-white grid place-items-center text-xl"><i class="fa-solid ${d.icon}"></i></div>
+    <div class="min-w-0"><div class="text-[11px] uppercase tracking-widest">Sighting #${String(i+1).padStart(3,'0')} · ${esc(d.badge)}</div><h3 class="font-sign text-lg leading-tight text-pine">${esc(d.title)}</h3></div>
+    <div class="ml-auto font-sign text-blaze text-lg whitespace-nowrap">${esc(d.price)}</div></div>
+    <p class="text-sm mt-2">${esc(d.meta)}</p>
+    <dl class="text-xs mt-3 grid grid-cols-2 gap-2"><div class="bg-khaki p-2"><dt class="uppercase">Spotted via</dt><dd>${esc(d.src)}</dd></div><div class="bg-khaki p-2"><dt class="uppercase">Ranger rating</dt><dd>${esc(d.rating)}</dd></div></dl>
+    <p class="font-hand text-sm mt-3 text-bark"><i class="fa-solid fa-pen-nib mr-1 text-blaze"></i>${esc(d.tip)}</p></article>`).join('');
+}
+document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');render(b.dataset.f)});
+render('all');
+const ans={};const quiz=document.getElementById('quiz');
+quiz.innerHTML=QUESTIONS.map((q,i)=>`<fieldset class="card p-4"><legend class="font-bold px-1">Q${i+1}. ${esc(q.q)}</legend><div class="grid gap-2 mt-2">${q.a.map(a=>`<button type="button" class="opt text-left border-2 border-bark bg-white p-2 rounded text-sm" data-q="${i}" data-v="${a[1]}" aria-pressed="false">${esc(a[0])}</button>`).join('')}</div></fieldset>`).join('');
+quiz.addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b)return;quiz.querySelectorAll(`[data-q="${b.dataset.q}"]`).forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');ans[b.dataset.q]=+b.dataset.v;score()});
+function score(){const v=Object.values(ans);if(v.length<5){document.getElementById('tier').textContent=`Level ? / 5`;document.getElementById('tiertext').textContent=`${v.length} of 5 answered. Keep hiking.`;return}
+  const avg=v.reduce((a,b)=>a+b,0)/5;const L=LEVELS[Math.min(4,Math.max(0,Math.round((avg-1)/1)))];
+  document.getElementById('badge').textContent=L.n;document.getElementById('badge').style.background='#E2711D';document.getElementById('badge').style.color='#fff';
+  document.getElementById('tier').textContent=`Level ${L.n} / 5 · ${L.name}`;document.getElementById('tiertext').textContent=L.text;
+  const h=document.getElementById('tierhelp');h.textContent='Ranger tip: '+L.help;h.classList.remove('hidden')}
+document.getElementById('reset').onclick=()=>{for(const k in ans)delete ans[k];quiz.querySelectorAll('.opt').forEach(x=>x.setAttribute('aria-pressed','false'));const b=document.getElementById('badge');b.textContent='?';b.style.background='';b.style.color='';document.getElementById('tierhelp').classList.add('hidden');document.getElementById('tier').textContent='Level ? / 5';document.getElementById('tiertext').textContent='Answer all five. T.C. McThrifty will rate it. Dryly.'};
+const tip=document.getElementById('tip');
+tip.onsubmit=e=>{e.preventDefault();const w=document.getElementById('what').value.trim();document.getElementById('whatErr').classList.toggle('hidden',!!w);if(!w)return;tip.classList.add('hidden');document.getElementById('receipt').classList.remove('hidden')};
+document.getElementById('again').onclick=()=>{tip.reset();tip.classList.remove('hidden');document.getElementById('receipt').classList.add('hidden')};
+</script>
+</body>
+</html>
